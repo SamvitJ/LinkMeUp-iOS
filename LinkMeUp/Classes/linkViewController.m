@@ -654,10 +654,10 @@
 {
     float score;
     
-    if (abs(resultDuration - [self.sharedData.selectedLink.duration floatValue]) <= 3.0f)
+    if (fabsf(resultDuration - [self.sharedData.selectedLink.duration floatValue]) <= 3.0f)
         score = 30.0f;
     
-    else if (abs(resultDuration - [self.sharedData.selectedLink.duration floatValue])/[self.sharedData.selectedLink.duration floatValue] <= 0.03f)
+    else if (fabsf(resultDuration - [self.sharedData.selectedLink.duration floatValue])/[self.sharedData.selectedLink.duration floatValue] <= 0.03f)
         score = 15.0f;
     
     else
