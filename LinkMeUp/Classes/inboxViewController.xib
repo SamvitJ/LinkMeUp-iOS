@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="inboxViewController">
+            <connections>
+                <outlet property="segControl" destination="hlD-px-07b" id="X3a-VM-fT9"/>
+                <outlet property="tableView" destination="f1d-mP-018" id="0uK-1N-9K1"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="atk-Yl-qPj">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9TY-yU-4vF">
+                            <rect key="frame" x="6" y="32" width="146" height="35"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Link">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Me">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue-ThinItalic"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Up">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2s-lS-TXl">
+                            <rect key="frame" x="178" y="36" width="128" height="29"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Inbox">
+                                    <attributes>
+                                        <color key="NSColor" red="0.95543424349999995" green="1" blue="0.91188581889999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="20" name="GillSans"/>
+                                        <font key="NSOriginalFont" size="17" name="GillSans"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.35887257859999999" green="0.037858143380000001" blue="0.58153300379999995" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="77" id="xf4-Lp-PAB"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="f1d-mP-018">
+                    <rect key="frame" x="0.0" y="105" width="320" height="325"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hlD-px-07b">
+                    <rect key="frame" x="-4" y="77" width="328" height="29"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.20105014741420746" green="0.2257116436958313" blue="0.2577800452709198" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="27l-Ty-np6"/>
+                    </constraints>
+                    <segments>
+                        <segment title="Received"/>
+                        <segment title="Sent"/>
+                    </segments>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </segmentedControl>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="atk-Yl-qPj" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="0cS-mg-DKB"/>
+                <constraint firstAttribute="bottom" secondItem="f1d-mP-018" secondAttribute="bottom" constant="50" id="3gt-QS-9qm"/>
+                <constraint firstItem="f1d-mP-018" firstAttribute="top" secondItem="hlD-px-07b" secondAttribute="bottom" id="8dJ-Kj-0iR"/>
+                <constraint firstItem="f1d-mP-018" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="8ed-mD-bg3"/>
+                <constraint firstItem="hlD-px-07b" firstAttribute="top" secondItem="atk-Yl-qPj" secondAttribute="bottom" id="THJ-h5-mTQ"/>
+                <constraint firstAttribute="trailing" secondItem="atk-Yl-qPj" secondAttribute="trailing" id="glJ-U3-Bva"/>
+                <constraint firstItem="hlD-px-07b" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="-4" id="ji1-QU-2Hc"/>
+                <constraint firstItem="atk-Yl-qPj" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="m20-iz-0iC"/>
+                <constraint firstAttribute="trailing" secondItem="f1d-mP-018" secondAttribute="trailing" id="pzW-GW-CLi"/>
+                <constraint firstAttribute="trailing" secondItem="hlD-px-07b" secondAttribute="trailing" constant="-4" id="sV7-Md-vHl"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>

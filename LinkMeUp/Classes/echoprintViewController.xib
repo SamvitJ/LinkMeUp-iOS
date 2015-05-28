@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+    <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="echoprintViewController">
+            <connections>
+                <outlet property="artistField" destination="x22-Lh-YC2" id="08y-Ts-VZV"/>
+                <outlet property="currentArtistLabel" destination="S7A-V6-tPc" id="vSk-4h-oji"/>
+                <outlet property="currentSongLabel" destination="Mhc-p6-1Hf" id="lXj-mc-me5"/>
+                <outlet property="playButton" destination="XUF-jB-l6N" id="Dcc-Xm-RIQ"/>
+                <outlet property="statusLabel" destination="fcI-DA-Lr6" id="7yN-S6-vpl"/>
+                <outlet property="statusLine" destination="Fy5-el-4pF" id="LdE-7L-K40"/>
+                <outlet property="titleField" destination="saI-bj-U1j" id="Sun-o1-g0a"/>
+                <outlet property="view" destination="6" id="7"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="6">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fcI-DA-Lr6">
+                    <rect key="frame" x="20" y="257" width="257" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <attributedString key="attributedText">
+                        <fragment content="Identifying current song...">
+                            <attributes>
+                                <color key="NSColor" red="0.95686274509803926" green="1" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="20" name="GillSans"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5NX-DK-VvI">
+                    <rect key="frame" x="1" y="379" width="158" height="50"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <color key="backgroundColor" red="0.52630739800000004" green="0.0" blue="0.1092811211" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="Add Message">
+                        <color key="titleColor" red="0.94893550389780135" green="1" blue="0.91964695668334673" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="addMessage:" destination="-1" eventType="touchUpInside" id="Rus-GI-qB6"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="kMA-d3-YUT">
+                    <rect key="frame" x="161" y="379" width="158" height="50"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <color key="backgroundColor" red="0.52630739800000004" green="0.0" blue="0.1092811211" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="Just Send!">
+                        <color key="titleColor" red="0.94893550390000003" green="1" blue="0.91964695669999996" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="justSend:" destination="-1" eventType="touchUpInside" id="9J1-pV-Kbc"/>
+                    </connections>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="S7A-V6-tPc">
+                    <rect key="frame" x="75" y="283" width="257" height="25"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <attributedString key="attributedText">
+                        <fragment content=" ">
+                            <attributes>
+                                <color key="NSColor" red="0.95686274509803926" green="1" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="18" name="GillSans"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Mhc-p6-1Hf">
+                    <rect key="frame" x="75" y="256" width="240" height="25"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <attributedString key="attributedText">
+                        <fragment content=" ">
+                            <attributes>
+                                <color key="NSColor" red="0.95686274509803926" green="1" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="20" name="GillSans"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" id="uX6-Gs-NxF">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SiX-xr-0cs">
+                            <rect key="frame" x="6" y="32" width="146" height="35"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Link">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Me">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue-ThinItalic"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Up">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0bg-Br-zlM">
+                            <rect key="frame" x="178" y="36" width="128" height="29"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Send a Song!">
+                                    <attributes>
+                                        <color key="NSColor" red="0.95543424349999995" green="1" blue="0.91188581889999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="20" name="GillSans"/>
+                                        <font key="NSOriginalFont" size="17" name="GillSans"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.52630739800000004" green="0.0" blue="0.1092811211" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="nen-Q4-KFK">
+                    <rect key="frame" x="198" y="334" width="84" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="Try Again">
+                        <color key="titleColor" red="0.94893550390000003" green="1" blue="0.91964695669999996" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="tryAgainPressed:" destination="-1" eventType="touchUpInside" id="qtf-b3-lSb"/>
+                    </connections>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Echoprint " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Fy5-el-4pF">
+                    <rect key="frame" x="20" y="440" width="121" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="XUF-jB-l6N">
+                    <rect key="frame" x="194" y="436" width="93" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                    <state key="normal" title="Play Sample">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="playSample:" destination="-1" eventType="touchUpInside" id="i2g-ss-3cV"/>
+                    </connections>
+                </button>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="saI-bj-U1j">
+                    <rect key="frame" x="103" y="131" width="200" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="x22-Lh-YC2">
+                    <rect key="frame" x="103" y="167" width="200" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wht-Xg-hQU">
+                    <rect key="frame" x="43" y="140" width="33" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                    <color key="textColor" red="0.95686274510000002" green="1" blue="0.91372549020000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8n6-7i-VVT">
+                    <rect key="frame" x="43" y="176" width="41" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                    <color key="textColor" red="0.95686274510000002" green="1" blue="0.91372549020000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="416-S9-314">
+                    <rect key="frame" x="20" y="100" width="257" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <attributedString key="attributedText">
+                        <fragment content="Enter song info:">
+                            <attributes>
+                                <color key="NSColor" red="0.95686274509803926" green="1" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="20" name="GillSans"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.13766507980000001" green="0.41731639970000001" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+            <gestureRecognizers/>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="fRa-NG-oHC" appends="YES" id="u12-ju-KLr"/>
+                <outletCollection property="gestureRecognizers" destination="YXp-nA-HoU" appends="YES" id="cFT-UG-n3H"/>
+            </connections>
+        </view>
+        <swipeGestureRecognizer direction="right" id="fRa-NG-oHC">
+            <connections>
+                <action selector="swipeRight:" destination="-1" id="wKd-Je-2gV"/>
+            </connections>
+        </swipeGestureRecognizer>
+        <swipeGestureRecognizer direction="left" id="YXp-nA-HoU">
+            <connections>
+                <action selector="swipeLeft:" destination="-1" id="5h5-sm-hcY"/>
+            </connections>
+        </swipeGestureRecognizer>
+    </objects>
+</document>

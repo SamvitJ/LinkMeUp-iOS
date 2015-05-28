@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="legalInfoViewController">
+            <connections>
+                <outlet property="header" destination="izd-Ca-wMR" id="U3s-82-IbC"/>
+                <outlet property="headerLabel" destination="rbH-L0-zMT" id="nYf-Aj-eEy"/>
+                <outlet property="legalText" destination="HCt-kV-RgR" id="5ws-ec-CJg"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="izd-Ca-wMR">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbH-L0-zMT">
+                            <rect key="frame" x="179" y="36" width="128" height="29"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Legal Info">
+                                    <attributes>
+                                        <color key="NSColor" red="0.95543424349999995" green="1" blue="0.91188581889999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="20" name="GillSans"/>
+                                        <font key="NSOriginalFont" size="17" name="GillSans"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.20679859819999999" green="0.28263619540000001" blue="0.36999782920000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="77" id="VO1-3y-XdB"/>
+                    </constraints>
+                </view>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HCt-kV-RgR">
+                    <rect key="frame" x="10" y="77" width="305" height="403"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="izd-Ca-wMR" secondAttribute="trailing" id="3gE-uB-JbP"/>
+                <constraint firstItem="izd-Ca-wMR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="BRB-Se-wBu"/>
+                <constraint firstAttribute="bottom" secondItem="HCt-kV-RgR" secondAttribute="bottom" id="PLA-Ib-N8C"/>
+                <constraint firstItem="HCt-kV-RgR" firstAttribute="top" secondItem="izd-Ca-wMR" secondAttribute="bottom" id="ZuP-XR-vEK"/>
+                <constraint firstItem="HCt-kV-RgR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="ZwV-B1-00Q"/>
+                <constraint firstItem="izd-Ca-wMR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bq6-rz-tQg"/>
+                <constraint firstAttribute="trailing" secondItem="HCt-kV-RgR" secondAttribute="trailing" constant="5" id="rvc-sd-WCp"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="8Fw-oE-kXY" appends="YES" id="d2k-Y5-phg"/>
+            </connections>
+        </view>
+        <swipeGestureRecognizer direction="right" id="8Fw-oE-kXY">
+            <connections>
+                <action selector="swipeRight:" destination="-1" id="eti-Df-Fco"/>
+            </connections>
+        </swipeGestureRecognizer>
+    </objects>
+</document>

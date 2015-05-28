@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="findContactsViewController">
+            <connections>
+                <outlet property="continueButton" destination="4n2-LL-E6a" id="OiS-4r-yYR"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RJK-5z-l9H">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XzE-nB-ivD">
+                            <rect key="frame" x="6" y="32" width="146" height="35"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Link">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Me">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue-ThinItalic"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Up">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bEl-pb-sp3">
+                            <rect key="frame" x="178" y="36" width="128" height="29"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Find Friends">
+                                    <attributes>
+                                        <color key="NSColor" red="0.95543424349999995" green="1" blue="0.91188581889999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="20" name="GillSans"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.20679859819999999" green="0.28263619540000001" blue="0.36999782920000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="77" id="D9v-5z-V3m"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp works best when you're " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKU-N3-d35">
+                    <rect key="frame" x="20" y="121" width="292" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="connected with your friends." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BvW-5B-ZyR">
+                    <rect key="frame" x="20" y="151" width="292" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp uses your address book" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PHY-8c-ymV">
+                    <rect key="frame" x="20" y="202" width="267" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="to help you find and add your friends," lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="noh-mX-hhe">
+                    <rect key="frame" x="20" y="231" width="292" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="so you can start sharing right away." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B8D-hf-Xi3">
+                    <rect key="frame" x="20" y="260" width="272" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tco-yj-Azj">
+                    <rect key="frame" x="20" y="289" width="0.0" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4n2-LL-E6a">
+                    <rect key="frame" x="0.0" y="420" width="320" height="60"/>
+                    <color key="backgroundColor" red="0.13766507980000001" green="0.41731639970000001" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="YFm-gh-C2w"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="ChalkboardSE-Light" family="Chalkboard SE" pointSize="19"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="Continue                            &gt;">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="continuePressed:" destination="-1" eventType="touchUpInside" id="LKf-Ll-IN0"/>
+                    </connections>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp does not autoadd your contacts." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mEC-Gf-K19">
+                    <rect key="frame" x="20" y="317" width="319" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="RJK-5z-l9H" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="FHU-1f-uei"/>
+                <constraint firstAttribute="bottom" secondItem="4n2-LL-E6a" secondAttribute="bottom" id="VYb-um-FhI"/>
+                <constraint firstAttribute="trailing" secondItem="4n2-LL-E6a" secondAttribute="trailing" id="XVK-QP-Hex"/>
+                <constraint firstItem="4n2-LL-E6a" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lWT-Nb-e6i"/>
+                <constraint firstItem="RJK-5z-l9H" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="rFV-fJ-1rt"/>
+                <constraint firstAttribute="trailing" secondItem="RJK-5z-l9H" secondAttribute="trailing" id="rpA-5G-gV5"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-214" y="139"/>
+        </view>
+    </objects>
+</document>

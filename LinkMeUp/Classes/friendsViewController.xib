@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="friendsViewController">
+            <connections>
+                <outlet property="mySearchBar" destination="F7f-4N-Iwe" id="vlj-gl-9zD"/>
+                <outlet property="searchDisplayController" destination="AMX-yZ-AFX" id="HFa-1y-8Ku"/>
+                <outlet property="tableView" destination="duh-Lb-k3F" id="Pzt-cS-F8D"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YIY-JE-S6W">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c7X-07-TNA">
+                            <rect key="frame" x="6" y="32" width="146" height="35"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Link">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Me">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue-ThinItalic"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Up">
+                                    <attributes>
+                                        <color key="NSColor" red="0.73471125855081709" green="1" blue="0.89794554693764195" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="28" name="HelveticaNeue"/>
+                                        <font key="NSOriginalFont" size="17" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WeC-u7-vJb">
+                            <rect key="frame" x="178" y="36" width="128" height="29"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Friends">
+                                    <attributes>
+                                        <color key="NSColor" red="0.95543424349999995" green="1" blue="0.91188581889999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="20" name="GillSans"/>
+                                        <font key="NSOriginalFont" size="17" name="GillSans"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.33997416499999999" green="0.62890815730000005" blue="0.013974316420000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="77" id="oWN-f9-0v4"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="67" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="duh-Lb-k3F">
+                    <rect key="frame" x="0.0" y="121" width="320" height="309"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <searchBar contentMode="redraw" text="" placeholder="Search by username or email" translatesAutoresizingMaskIntoConstraints="NO" id="F7f-4N-Iwe" customClass="SearchBarNoCancel">
+                    <rect key="frame" x="0.0" y="77" width="276" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="MAc-vp-xb6"/>
+                    </constraints>
+                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="tsh-X9-gUa"/>
+                    </connections>
+                </searchBar>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="haD-hm-LGV">
+                    <rect key="frame" x="276" y="77" width="44" height="44"/>
+                    <color key="backgroundColor" red="0.79042339324951172" green="0.79036778211593628" blue="0.79042947292327881" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="ppZ-GK-uc4"/>
+                        <constraint firstAttribute="height" constant="44" id="ur4-Tq-J6I"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="duh-Lb-k3F" secondAttribute="trailing" id="1J7-iC-Q0g"/>
+                <constraint firstItem="YIY-JE-S6W" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="1gy-5X-kJh"/>
+                <constraint firstItem="haD-hm-LGV" firstAttribute="leading" secondItem="F7f-4N-Iwe" secondAttribute="trailing" id="2Ov-RY-18E"/>
+                <constraint firstItem="F7f-4N-Iwe" firstAttribute="top" secondItem="YIY-JE-S6W" secondAttribute="bottom" id="BO3-nK-XBK"/>
+                <constraint firstItem="duh-Lb-k3F" firstAttribute="top" secondItem="haD-hm-LGV" secondAttribute="bottom" id="CwQ-0j-BuE"/>
+                <constraint firstItem="duh-Lb-k3F" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Npu-az-OB7"/>
+                <constraint firstItem="duh-Lb-k3F" firstAttribute="top" secondItem="F7f-4N-Iwe" secondAttribute="bottom" id="OYN-HB-lxc"/>
+                <constraint firstAttribute="trailing" secondItem="haD-hm-LGV" secondAttribute="trailing" id="ZAt-TX-IbD"/>
+                <constraint firstItem="haD-hm-LGV" firstAttribute="top" secondItem="YIY-JE-S6W" secondAttribute="bottom" id="hq0-Sr-dWm"/>
+                <constraint firstAttribute="bottom" secondItem="duh-Lb-k3F" secondAttribute="bottom" constant="50" id="l8Q-fP-Xn4"/>
+                <constraint firstItem="F7f-4N-Iwe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="rlD-73-N3c"/>
+                <constraint firstItem="YIY-JE-S6W" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="uo8-P5-45j"/>
+                <constraint firstAttribute="trailing" secondItem="YIY-JE-S6W" secondAttribute="trailing" id="zfE-NK-fwr"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+        </view>
+        <searchDisplayController id="AMX-yZ-AFX">
+            <connections>
+                <outlet property="delegate" destination="-1" id="g7q-Sz-nMg"/>
+                <outlet property="searchBar" destination="F7f-4N-Iwe" id="Vem-hc-lY2"/>
+                <outlet property="searchContentsController" destination="-1" id="MTK-6g-Y76"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="4Bw-df-8yb"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="q0u-cL-UlN"/>
+            </connections>
+        </searchDisplayController>
+    </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
