@@ -8,11 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1D3623260D0F684500981E51 /* LinkMeUpAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* LinkMeUpAppDelegate.m */; };
-		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
-		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		51D5905A18CEC53F006D1C06 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 51D5905918CEC53F006D1C06 /* libstdc++.dylib */; };
 		51F573EB187F9B5300B85689 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 51F573EA187F9B5300B85689 /* libstdc++.6.0.9.dylib */; };
 		9AC8898A13A69876002C92D4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC8898913A69876002C92D4 /* AVFoundation.framework */; };
@@ -74,6 +72,8 @@
 		F17AC6BD19B6BABD00BF95CE /* Privacy Policy.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6BB19B6BABD00BF95CE /* Privacy Policy.rtf */; };
 		F17AC6C119B7956C00BF95CE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6C019B7956C00BF95CE /* Credits.rtf */; };
 		F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */; };
+		F18704021B17CDFB007D8C00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704011B17CDFB007D8C00 /* main.m */; };
+		F18704041B17CE0D007D8C00 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F18704031B17CE0D007D8C00 /* MainWindow.xib */; };
 		F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */; };
 		F1874CB21A3CA17100E4CF43 /* findContactsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */; };
 		F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */; };
@@ -153,11 +153,8 @@
 		1D6058910D05DD3D006BFB54 /* LinkMeUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinkMeUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		28D7ACF60DDB3853001CB0EB /* echoprintViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = echoprintViewController.h; sourceTree = "<group>"; };
 		28D7ACF70DDB3853001CB0EB /* echoprintViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = echoprintViewController.mm; sourceTree = "<group>"; };
-		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		32CA4F630368D1EE00C91783 /* LinkMeUp_Prefix.pch */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = LinkMeUp_Prefix.pch; sourceTree = "<group>"; };
 		51D5905918CEC53F006D1C06 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		51F573EA187F9B5300B85689 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		547F808A18C76966000FEDB7 /* CodeGenWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodeGenWrapper.h; sourceTree = "<group>"; };
@@ -255,6 +252,9 @@
 		F17AC6C019B7956C00BF95CE /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = "Legal Text/Credits.rtf"; sourceTree = "<group>"; };
 		F17C33E21992C74F00482A38 /* YouTubeSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeSearchBar.h; sourceTree = "<group>"; };
 		F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YouTubeSearchBar.m; sourceTree = "<group>"; };
+		F18704001B17CDB2007D8C00 /* LinkMeUp_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinkMeUp_Prefix.pch; path = Classes/LinkMeUp_Prefix.pch; sourceTree = "<group>"; };
+		F18704011B17CDFB007D8C00 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
+		F18704031B17CE0D007D8C00 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Classes/MainWindow.xib; sourceTree = "<group>"; };
 		F1874CAE1A3CA17100E4CF43 /* findContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = findContactsViewController.h; sourceTree = "<group>"; };
 		F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = findContactsViewController.m; sourceTree = "<group>"; };
 		F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = findContactsViewController.xib; path = Classes/findContactsViewController.xib; sourceTree = "<group>"; };
@@ -402,8 +402,8 @@
 				F1B9D35419A6692100AAC8C4 /* Playback Icons */,
 				F11DE415198ED2E600CD814E /* Toolbar Icons */,
 				F1D7B276198316EC00A920A7 /* Tabbar Icons */,
-				32CA4F630368D1EE00C91783 /* LinkMeUp_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
+				F18704001B17CDB2007D8C00 /* LinkMeUp_Prefix.pch */,
+				F18704011B17CDFB007D8C00 /* main.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -825,7 +825,7 @@
 			isa = PBXGroup;
 			children = (
 				F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */,
-				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
+				F18704031B17CE0D007D8C00 /* MainWindow.xib */,
 				F1D7B20419749BF000A920A7 /* verificationViewController.xib */,
 				F15849C71954A6BD005EAB1B /* DefaultSettingsViewController.xib */,
 			);
@@ -989,11 +989,11 @@
 			files = (
 				F11DE4751990094000CD814E /* searchViewController.xib in Resources */,
 				E577724219B003C20057910F /* login-button-small.png in Resources */,
-				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				E577723019B0038C0057910F /* glyphicons_136_cogwheel.png in Resources */,
 				E577725519B003DE0057910F /* buttonAddFriend.png in Resources */,
 				E577727E19B004AE0057910F /* glyphicons_049_star.png in Resources */,
 				F17AC6BC19B6BABD00BF95CE /* Terms of Use.rtf in Resources */,
+				F18704041B17CE0D007D8C00 /* MainWindow.xib in Resources */,
 				F1D7B245197D988E00A920A7 /* messagesTableViewCell.xib in Resources */,
 				F1F0F7541A02D43200BD45E3 /* icon_app_180.png in Resources */,
 				F17AC6BD19B6BABD00BF95CE /* Privacy Policy.rtf in Resources */,
@@ -1049,11 +1049,11 @@
 			files = (
 				F1D7B20519749BF000A920A7 /* verificationViewController.m in Sources */,
 				F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */,
-				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */,
 				F1C74D9F199FF456001D5333 /* settingsViewController.m in Sources */,
 				F15849CB1954D7A4005EAB1B /* myLogInViewController.m in Sources */,
 				F11CFB19196F44CC0030B212 /* songInfoViewController.m in Sources */,
+				F18704021B17CDFB007D8C00 /* main.m in Sources */,
 				F11DE4741990094000CD814E /* searchViewController.m in Sources */,
 				1D3623260D0F684500981E51 /* LinkMeUpAppDelegate.m in Sources */,
 				F101DCB319A292A400D0D057 /* reactionTableViewCell.m in Sources */,
