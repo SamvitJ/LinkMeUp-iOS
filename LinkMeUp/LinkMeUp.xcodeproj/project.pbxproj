@@ -74,17 +74,6 @@
 		F17AC6BD19B6BABD00BF95CE /* Privacy Policy.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6BB19B6BABD00BF95CE /* Privacy Policy.rtf */; };
 		F17AC6C119B7956C00BF95CE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6C019B7956C00BF95CE /* Credits.rtf */; };
 		F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */; };
-		F187041D1B18CFA1007D8C00 /* echoprintViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F187040F1B18CFA1007D8C00 /* echoprintViewController.mm */; };
-		F187041E1B18CFA1007D8C00 /* friendsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704101B18CFA1007D8C00 /* friendsTableViewController.m */; };
-		F187041F1B18CFA1007D8C00 /* musicStreamingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704111B18CFA1007D8C00 /* musicStreamingViewController.m */; };
-		F18704201B18CFA1007D8C00 /* inboxTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704121B18CFA1007D8C00 /* inboxTableViewController.m */; };
-		F18704211B18CFA1007D8C00 /* optionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704171B18CFA1007D8C00 /* optionsViewController.m */; };
-		F18704221B18CFA1007D8C00 /* youtubeSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704181B18CFA1007D8C00 /* youtubeSearchViewController.m */; };
-		F18704231B18CFA1007D8C00 /* messageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F187041A1B18CFA1007D8C00 /* messageViewController.m */; };
-		F187042C1B18D0A0007D8C00 /* MicrophoneInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = F18704241B18D0A0007D8C00 /* MicrophoneInput.mm */; };
-		F187042D1B18D0A0007D8C00 /* FPGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = F18704261B18D0A0007D8C00 /* FPGenerator.mm */; };
-		F187042E1B18D0A0007D8C00 /* CodeGenWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F18704281B18D0A0007D8C00 /* CodeGenWrapper.mm */; };
-		F187042F1B18D0A0007D8C00 /* TSLibraryImport.mm in Sources */ = {isa = PBXBuildFile; fileRef = F187042B1B18D0A0007D8C00 /* TSLibraryImport.mm */; };
 		F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */; };
 		F1874CB21A3CA17100E4CF43 /* findContactsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */; };
 		F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */; };
@@ -1037,7 +1026,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1D7B20519749BF000A920A7 /* verificationViewController.m in Sources */,
-				F18704231B18CFA1007D8C00 /* messageViewController.m in Sources */,
 				F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */,
@@ -1045,31 +1033,22 @@
 				F15849CB1954D7A4005EAB1B /* myLogInViewController.m in Sources */,
 				F11CFB19196F44CC0030B212 /* songInfoViewController.m in Sources */,
 				F11DE4741990094000CD814E /* searchViewController.m in Sources */,
-				F18704201B18CFA1007D8C00 /* inboxTableViewController.m in Sources */,
 				1D3623260D0F684500981E51 /* LinkMeUpAppDelegate.m in Sources */,
 				F101DCB319A292A400D0D057 /* reactionTableViewCell.m in Sources */,
 				F1D7B23F197C618500A920A7 /* replyViewController.m in Sources */,
 				F11DE414198ED22E00CD814E /* SearchBarNoCancel.m in Sources */,
 				F1D7B249197ED69000A920A7 /* linkViewController.m in Sources */,
 				F1A17D8B196107030095BB7E /* contactsViewController.m in Sources */,
-				F187041D1B18CFA1007D8C00 /* echoprintViewController.mm in Sources */,
-				F187042E1B18D0A0007D8C00 /* CodeGenWrapper.mm in Sources */,
 				F11DE3F1198C1C9400CD814E /* searchResultsViewController.m in Sources */,
 				F1D7B24F197EF17A00A920A7 /* sentLinkViewController.m in Sources */,
 				F1A17DCC1961E6FE0095BB7E /* Link.m in Sources */,
-				F187042F1B18D0A0007D8C00 /* TSLibraryImport.mm in Sources */,
-				F187042D1B18D0A0007D8C00 /* FPGenerator.mm in Sources */,
 				F17AC6A819B69BDA00BF95CE /* legalInfoViewController.m in Sources */,
 				F1D7B244197D988E00A920A7 /* messagesTableViewCell.m in Sources */,
-				F187042C1B18D0A0007D8C00 /* MicrophoneInput.mm in Sources */,
 				F1C74DA419A006C1001D5333 /* settingsTableViewCell.m in Sources */,
-				F187041E1B18CFA1007D8C00 /* friendsTableViewController.m in Sources */,
 				F1A17DF61964C8620095BB7E /* friendsViewController.m in Sources */,
 				F1D7B21519770AFE00A920A7 /* LinkTableViewCell.m in Sources */,
 				F1A17D75195E8C790095BB7E /* FriendRequest.m in Sources */,
-				F18704221B18CFA1007D8C00 /* youtubeSearchViewController.m in Sources */,
 				F15849C51953E8D6005EAB1B /* DefaultSettingsViewController.m in Sources */,
-				F18704211B18CFA1007D8C00 /* optionsViewController.m in Sources */,
 				F11CFAD21969E4770030B212 /* mySignUpViewController.m in Sources */,
 				F1D7B252197EF1BC00A920A7 /* receivedLinkViewController.m in Sources */,
 				F1F38E591A02BA0300F07B44 /* Reachability.m in Sources */,
@@ -1077,7 +1056,6 @@
 				F1A17DF01964C21F0095BB7E /* inboxViewController.m in Sources */,
 				F101DCA819A273E300D0D057 /* likeloveStatusViewController.m in Sources */,
 				F1A17DE919647EB30095BB7E /* Constants.m in Sources */,
-				F187041F1B18CFA1007D8C00 /* musicStreamingViewController.m in Sources */,
 				F11DE400198D903800CD814E /* videoTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
