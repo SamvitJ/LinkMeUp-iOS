@@ -74,6 +74,17 @@
 		F17AC6BD19B6BABD00BF95CE /* Privacy Policy.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6BB19B6BABD00BF95CE /* Privacy Policy.rtf */; };
 		F17AC6C119B7956C00BF95CE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6C019B7956C00BF95CE /* Credits.rtf */; };
 		F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */; };
+		F187041D1B18CFA1007D8C00 /* echoprintViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F187040F1B18CFA1007D8C00 /* echoprintViewController.mm */; };
+		F187041E1B18CFA1007D8C00 /* friendsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704101B18CFA1007D8C00 /* friendsTableViewController.m */; };
+		F187041F1B18CFA1007D8C00 /* musicStreamingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704111B18CFA1007D8C00 /* musicStreamingViewController.m */; };
+		F18704201B18CFA1007D8C00 /* inboxTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704121B18CFA1007D8C00 /* inboxTableViewController.m */; };
+		F18704211B18CFA1007D8C00 /* optionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704171B18CFA1007D8C00 /* optionsViewController.m */; };
+		F18704221B18CFA1007D8C00 /* youtubeSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F18704181B18CFA1007D8C00 /* youtubeSearchViewController.m */; };
+		F18704231B18CFA1007D8C00 /* messageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F187041A1B18CFA1007D8C00 /* messageViewController.m */; };
+		F187042C1B18D0A0007D8C00 /* MicrophoneInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = F18704241B18D0A0007D8C00 /* MicrophoneInput.mm */; };
+		F187042D1B18D0A0007D8C00 /* FPGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = F18704261B18D0A0007D8C00 /* FPGenerator.mm */; };
+		F187042E1B18D0A0007D8C00 /* CodeGenWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F18704281B18D0A0007D8C00 /* CodeGenWrapper.mm */; };
+		F187042F1B18D0A0007D8C00 /* TSLibraryImport.mm in Sources */ = {isa = PBXBuildFile; fileRef = F187042B1B18D0A0007D8C00 /* TSLibraryImport.mm */; };
 		F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */; };
 		F1874CB21A3CA17100E4CF43 /* findContactsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */; };
 		F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */; };
@@ -154,29 +165,18 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
-		28D7ACF60DDB3853001CB0EB /* echoprintViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = echoprintViewController.h; sourceTree = "<group>"; };
-		28D7ACF70DDB3853001CB0EB /* echoprintViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = echoprintViewController.mm; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* LinkMeUp_Prefix.pch */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = LinkMeUp_Prefix.pch; sourceTree = "<group>"; };
 		51D5905918CEC53F006D1C06 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		51F573EA187F9B5300B85689 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
-		547F808A18C76966000FEDB7 /* CodeGenWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodeGenWrapper.h; sourceTree = "<group>"; };
-		547F808B18C76966000FEDB7 /* CodeGenWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CodeGenWrapper.mm; sourceTree = "<group>"; };
-		547F808C18C76966000FEDB7 /* FPGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPGenerator.h; sourceTree = "<group>"; };
-		547F808D18C76966000FEDB7 /* FPGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FPGenerator.mm; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* LinkMeUp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LinkMeUp-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
-		9AC8897313A69840002C92D4 /* MicrophoneInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophoneInput.h; sourceTree = "<group>"; };
-		9AC8897413A69840002C92D4 /* MicrophoneInput.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MicrophoneInput.mm; sourceTree = "<group>"; };
 		9AC8898913A69876002C92D4 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		9AC8899013A69880002C92D4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		9AC889CF13A69AD0002C92D4 /* TSLibraryImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSLibraryImport.h; sourceTree = "<group>"; };
-		9AC889D013A69AD6002C92D4 /* TSLibraryImport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TSLibraryImport.mm; sourceTree = "<group>"; };
 		9AC88A0013A6A4B4002C92D4 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		9AC88A6E13A6ACEA002C92D4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		9AC88A7213A6AD1A002C92D4 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		9AC88A7B13A6AD2F002C92D4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		9AC88A8213A6AD3A002C92D4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		E575E5AE19B11AA800E5B6FB /* echoprintViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = echoprintViewController.xib; path = Classes/echoprintViewController.xib; sourceTree = "<group>"; };
 		E577722E19B0038C0057910F /* glyphicons_136_cogwheel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = glyphicons_136_cogwheel.png; path = "Images/Settings Icon/glyphicons_136_cogwheel.png"; sourceTree = "<group>"; };
 		E577723219B003980057910F /* Back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Back.png; path = "Images/Back Icon/Back.png"; sourceTree = "<group>"; };
 		E577723419B003AA0057910F /* iconTick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iconTick.png; path = "Images/Checkmark Icon/iconTick.png"; sourceTree = "<group>"; };
@@ -210,9 +210,6 @@
 		F11CFB16196F44CC0030B212 /* songInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = songInfoViewController.h; sourceTree = "<group>"; };
 		F11CFB17196F44CC0030B212 /* songInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = songInfoViewController.m; sourceTree = "<group>"; };
 		F11CFB18196F44CC0030B212 /* songInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = songInfoViewController.xib; path = Classes/songInfoViewController.xib; sourceTree = "<group>"; };
-		F11DE3E2198C123100CD814E /* youtubeSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = youtubeSearchViewController.h; sourceTree = "<group>"; };
-		F11DE3E3198C123100CD814E /* youtubeSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = youtubeSearchViewController.m; sourceTree = "<group>"; };
-		F11DE3E4198C123100CD814E /* youtubeSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = youtubeSearchViewController.xib; path = Classes/youtubeSearchViewController.xib; sourceTree = "<group>"; };
 		F11DE3EE198C1C9400CD814E /* searchResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = searchResultsViewController.h; sourceTree = "<group>"; };
 		F11DE3EF198C1C9400CD814E /* searchResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = searchResultsViewController.m; sourceTree = "<group>"; };
 		F11DE3F0198C1C9400CD814E /* searchResultsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = searchResultsViewController.xib; path = Classes/searchResultsViewController.xib; sourceTree = "<group>"; };
@@ -224,15 +221,6 @@
 		F11DE4721990094000CD814E /* searchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = searchViewController.m; sourceTree = "<group>"; };
 		F11DE4731990094000CD814E /* searchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = searchViewController.xib; path = Classes/searchViewController.xib; sourceTree = "<group>"; };
 		F12B14A11A75944300A722F7 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		F12B5668194A27E00017BF7F /* messageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = messageViewController.xib; path = Classes/messageViewController.xib; sourceTree = "<group>"; };
-		F12B566B194A283A0017BF7F /* messageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = messageViewController.m; sourceTree = "<group>"; };
-		F12B566C194A283A0017BF7F /* messageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = messageViewController.h; sourceTree = "<group>"; };
-		F12B567F194B834A0017BF7F /* musicStreamingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = musicStreamingViewController.h; sourceTree = "<group>"; };
-		F12B5680194B834A0017BF7F /* musicStreamingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = musicStreamingViewController.m; sourceTree = "<group>"; };
-		F12B5681194B834A0017BF7F /* musicStreamingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = musicStreamingViewController.xib; path = Classes/musicStreamingViewController.xib; sourceTree = "<group>"; };
-		F12B5695194CD72D0017BF7F /* inboxTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inboxTableViewController.h; sourceTree = "<group>"; };
-		F12B5696194CD72D0017BF7F /* inboxTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = inboxTableViewController.m; sourceTree = "<group>"; };
-		F12B5697194CD72D0017BF7F /* inboxTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = inboxTableViewController.xib; path = Classes/inboxTableViewController.xib; sourceTree = "<group>"; };
 		F12B56E0194E7F6C0017BF7F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F1584764194F924C005EAB1B /* GTL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GTL.xcodeproj; path = trunk/Source/GTL.xcodeproj; sourceTree = "<group>"; };
 		F158477619539981005EAB1B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -255,13 +243,32 @@
 		F17AC6C019B7956C00BF95CE /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = "Legal Text/Credits.rtf"; sourceTree = "<group>"; };
 		F17C33E21992C74F00482A38 /* YouTubeSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeSearchBar.h; sourceTree = "<group>"; };
 		F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YouTubeSearchBar.m; sourceTree = "<group>"; };
+		F187040F1B18CFA1007D8C00 /* echoprintViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = echoprintViewController.mm; path = Replaced/echoprintViewController.mm; sourceTree = "<group>"; };
+		F18704101B18CFA1007D8C00 /* friendsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = friendsTableViewController.m; path = Replaced/friendsTableViewController.m; sourceTree = "<group>"; };
+		F18704111B18CFA1007D8C00 /* musicStreamingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = musicStreamingViewController.m; path = Replaced/musicStreamingViewController.m; sourceTree = "<group>"; };
+		F18704121B18CFA1007D8C00 /* inboxTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = inboxTableViewController.m; path = Replaced/inboxTableViewController.m; sourceTree = "<group>"; };
+		F18704131B18CFA1007D8C00 /* echoprintViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = echoprintViewController.h; path = Replaced/echoprintViewController.h; sourceTree = "<group>"; };
+		F18704141B18CFA1007D8C00 /* messageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messageViewController.h; path = Replaced/messageViewController.h; sourceTree = "<group>"; };
+		F18704151B18CFA1007D8C00 /* optionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = optionsViewController.h; path = Replaced/optionsViewController.h; sourceTree = "<group>"; };
+		F18704161B18CFA1007D8C00 /* youtubeSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = youtubeSearchViewController.h; path = Replaced/youtubeSearchViewController.h; sourceTree = "<group>"; };
+		F18704171B18CFA1007D8C00 /* optionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = optionsViewController.m; path = Replaced/optionsViewController.m; sourceTree = "<group>"; };
+		F18704181B18CFA1007D8C00 /* youtubeSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = youtubeSearchViewController.m; path = Replaced/youtubeSearchViewController.m; sourceTree = "<group>"; };
+		F18704191B18CFA1007D8C00 /* musicStreamingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = musicStreamingViewController.h; path = Replaced/musicStreamingViewController.h; sourceTree = "<group>"; };
+		F187041A1B18CFA1007D8C00 /* messageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = messageViewController.m; path = Replaced/messageViewController.m; sourceTree = "<group>"; };
+		F187041B1B18CFA1007D8C00 /* inboxTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inboxTableViewController.h; path = Replaced/inboxTableViewController.h; sourceTree = "<group>"; };
+		F187041C1B18CFA1007D8C00 /* friendsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = friendsTableViewController.h; path = Replaced/friendsTableViewController.h; sourceTree = "<group>"; };
+		F18704241B18D0A0007D8C00 /* MicrophoneInput.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MicrophoneInput.mm; path = "Replaced/Echoprint Song ID/MicrophoneInput.mm"; sourceTree = "<group>"; };
+		F18704251B18D0A0007D8C00 /* MicrophoneInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MicrophoneInput.h; path = "Replaced/Echoprint Song ID/MicrophoneInput.h"; sourceTree = "<group>"; };
+		F18704261B18D0A0007D8C00 /* FPGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FPGenerator.mm; path = "Replaced/Echoprint Song ID/FPGenerator.mm"; sourceTree = "<group>"; };
+		F18704271B18D0A0007D8C00 /* CodeGenWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CodeGenWrapper.h; path = "Replaced/Echoprint Song ID/CodeGenWrapper.h"; sourceTree = "<group>"; };
+		F18704281B18D0A0007D8C00 /* CodeGenWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CodeGenWrapper.mm; path = "Replaced/Echoprint Song ID/CodeGenWrapper.mm"; sourceTree = "<group>"; };
+		F18704291B18D0A0007D8C00 /* FPGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPGenerator.h; path = "Replaced/Echoprint Song ID/FPGenerator.h"; sourceTree = "<group>"; };
+		F187042A1B18D0A0007D8C00 /* TSLibraryImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSLibraryImport.h; path = "Replaced/Echoprint Song ID/TSLibraryImport.h"; sourceTree = "<group>"; };
+		F187042B1B18D0A0007D8C00 /* TSLibraryImport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TSLibraryImport.mm; path = "Replaced/Echoprint Song ID/TSLibraryImport.mm"; sourceTree = "<group>"; };
 		F1874CAE1A3CA17100E4CF43 /* findContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = findContactsViewController.h; sourceTree = "<group>"; };
 		F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = findContactsViewController.m; sourceTree = "<group>"; };
 		F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = findContactsViewController.xib; path = Classes/findContactsViewController.xib; sourceTree = "<group>"; };
 		F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = glyphicons_343_thumbs_up_selected.png; path = "Images/Toolbar Icons/glyphicons_343_thumbs_up_selected.png"; sourceTree = "<group>"; };
-		F1A17D52195DFAEC0095BB7E /* friendsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = friendsTableViewController.h; sourceTree = "<group>"; };
-		F1A17D53195DFAEC0095BB7E /* friendsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = friendsTableViewController.m; sourceTree = "<group>"; };
-		F1A17D54195DFAEC0095BB7E /* friendsTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = friendsTableViewController.xib; path = Classes/friendsTableViewController.xib; sourceTree = "<group>"; };
 		F1A17D73195E8C790095BB7E /* FriendRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequest.h; sourceTree = "<group>"; };
 		F1A17D74195E8C790095BB7E /* FriendRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendRequest.m; sourceTree = "<group>"; };
 		F1A17D89196107030095BB7E /* contactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = contactsViewController.m; sourceTree = "<group>"; };
@@ -284,9 +291,6 @@
 		F1C74D9E199FF456001D5333 /* settingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = settingsViewController.xib; path = Classes/settingsViewController.xib; sourceTree = "<group>"; };
 		F1C74DA219A006C1001D5333 /* settingsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = settingsTableViewCell.h; sourceTree = "<group>"; };
 		F1C74DA319A006C1001D5333 /* settingsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = settingsTableViewCell.m; sourceTree = "<group>"; };
-		F1D7B1D0196F493000A920A7 /* optionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = optionsViewController.h; sourceTree = "<group>"; };
-		F1D7B1D1196F493000A920A7 /* optionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = optionsViewController.m; sourceTree = "<group>"; };
-		F1D7B1D2196F493000A920A7 /* optionsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = optionsViewController.xib; path = Classes/optionsViewController.xib; sourceTree = "<group>"; };
 		F1D7B20219749BF000A920A7 /* verificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = verificationViewController.h; sourceTree = "<group>"; };
 		F1D7B20319749BF000A920A7 /* verificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = verificationViewController.m; sourceTree = "<group>"; };
 		F1D7B20419749BF000A920A7 /* verificationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = verificationViewController.xib; path = Classes/verificationViewController.xib; sourceTree = "<group>"; };
@@ -412,7 +416,6 @@
 			isa = PBXGroup;
 			children = (
 				F1FF125019BA885C00FBAD8C /* Images.xcassets */,
-				E575E5A619B119D800E5B6FB /* Replaced Files */,
 				F1D7B20E19749BFB00A920A7 /* Login and Setup */,
 				F11CFB1D196F44E20030B212 /* Profile */,
 				F11CFB1C196F44DC0030B212 /* Inbox */,
@@ -451,20 +454,6 @@
 				9AC88A8213A6AD3A002C92D4 /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		E575E5A619B119D800E5B6FB /* Replaced Files */ = {
-			isa = PBXGroup;
-			children = (
-				E575E5AE19B11AA800E5B6FB /* echoprintViewController.xib */,
-				F1D7B1D2196F493000A920A7 /* optionsViewController.xib */,
-				F11DE3E4198C123100CD814E /* youtubeSearchViewController.xib */,
-				F12B5697194CD72D0017BF7F /* inboxTableViewController.xib */,
-				F1A17D54195DFAEC0095BB7E /* friendsTableViewController.xib */,
-				F12B5681194B834A0017BF7F /* musicStreamingViewController.xib */,
-				F12B5668194A27E00017BF7F /* messageViewController.xib */,
-			);
-			name = "Replaced Files";
 			sourceTree = "<group>";
 		};
 		F11CFAEA196B1E8F0030B212 /* Model */ = {
@@ -723,14 +712,14 @@
 		F1A17DEA19648EDF0095BB7E /* Echoprint Song ID */ = {
 			isa = PBXGroup;
 			children = (
-				547F808A18C76966000FEDB7 /* CodeGenWrapper.h */,
-				547F808B18C76966000FEDB7 /* CodeGenWrapper.mm */,
-				547F808C18C76966000FEDB7 /* FPGenerator.h */,
-				547F808D18C76966000FEDB7 /* FPGenerator.mm */,
-				9AC889D013A69AD6002C92D4 /* TSLibraryImport.mm */,
-				9AC889CF13A69AD0002C92D4 /* TSLibraryImport.h */,
-				9AC8897313A69840002C92D4 /* MicrophoneInput.h */,
-				9AC8897413A69840002C92D4 /* MicrophoneInput.mm */,
+				F18704251B18D0A0007D8C00 /* MicrophoneInput.h */,
+				F18704241B18D0A0007D8C00 /* MicrophoneInput.mm */,
+				F18704271B18D0A0007D8C00 /* CodeGenWrapper.h */,
+				F18704281B18D0A0007D8C00 /* CodeGenWrapper.mm */,
+				F18704291B18D0A0007D8C00 /* FPGenerator.h */,
+				F18704261B18D0A0007D8C00 /* FPGenerator.mm */,
+				F187042A1B18D0A0007D8C00 /* TSLibraryImport.h */,
+				F187042B1B18D0A0007D8C00 /* TSLibraryImport.mm */,
 			);
 			name = "Echoprint Song ID";
 			sourceTree = "<group>";
@@ -768,21 +757,21 @@
 		F1A17DF21964C8160095BB7E /* Replaced Files */ = {
 			isa = PBXGroup;
 			children = (
+				F18704131B18CFA1007D8C00 /* echoprintViewController.h */,
+				F187040F1B18CFA1007D8C00 /* echoprintViewController.mm */,
+				F187041C1B18CFA1007D8C00 /* friendsTableViewController.h */,
+				F18704101B18CFA1007D8C00 /* friendsTableViewController.m */,
+				F18704191B18CFA1007D8C00 /* musicStreamingViewController.h */,
+				F18704111B18CFA1007D8C00 /* musicStreamingViewController.m */,
+				F187041B1B18CFA1007D8C00 /* inboxTableViewController.h */,
+				F18704121B18CFA1007D8C00 /* inboxTableViewController.m */,
+				F18704141B18CFA1007D8C00 /* messageViewController.h */,
+				F187041A1B18CFA1007D8C00 /* messageViewController.m */,
+				F18704151B18CFA1007D8C00 /* optionsViewController.h */,
+				F18704171B18CFA1007D8C00 /* optionsViewController.m */,
+				F18704161B18CFA1007D8C00 /* youtubeSearchViewController.h */,
+				F18704181B18CFA1007D8C00 /* youtubeSearchViewController.m */,
 				F1A17DEA19648EDF0095BB7E /* Echoprint Song ID */,
-				F1D7B1D0196F493000A920A7 /* optionsViewController.h */,
-				F1D7B1D1196F493000A920A7 /* optionsViewController.m */,
-				F11DE3E2198C123100CD814E /* youtubeSearchViewController.h */,
-				F11DE3E3198C123100CD814E /* youtubeSearchViewController.m */,
-				28D7ACF60DDB3853001CB0EB /* echoprintViewController.h */,
-				28D7ACF70DDB3853001CB0EB /* echoprintViewController.mm */,
-				F12B566C194A283A0017BF7F /* messageViewController.h */,
-				F12B566B194A283A0017BF7F /* messageViewController.m */,
-				F12B567F194B834A0017BF7F /* musicStreamingViewController.h */,
-				F12B5680194B834A0017BF7F /* musicStreamingViewController.m */,
-				F1A17D52195DFAEC0095BB7E /* friendsTableViewController.h */,
-				F1A17D53195DFAEC0095BB7E /* friendsTableViewController.m */,
-				F12B5695194CD72D0017BF7F /* inboxTableViewController.h */,
-				F12B5696194CD72D0017BF7F /* inboxTableViewController.m */,
 			);
 			name = "Replaced Files";
 			sourceTree = "<group>";
@@ -1048,6 +1037,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1D7B20519749BF000A920A7 /* verificationViewController.m in Sources */,
+				F18704231B18CFA1007D8C00 /* messageViewController.m in Sources */,
 				F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */,
@@ -1055,22 +1045,31 @@
 				F15849CB1954D7A4005EAB1B /* myLogInViewController.m in Sources */,
 				F11CFB19196F44CC0030B212 /* songInfoViewController.m in Sources */,
 				F11DE4741990094000CD814E /* searchViewController.m in Sources */,
+				F18704201B18CFA1007D8C00 /* inboxTableViewController.m in Sources */,
 				1D3623260D0F684500981E51 /* LinkMeUpAppDelegate.m in Sources */,
 				F101DCB319A292A400D0D057 /* reactionTableViewCell.m in Sources */,
 				F1D7B23F197C618500A920A7 /* replyViewController.m in Sources */,
 				F11DE414198ED22E00CD814E /* SearchBarNoCancel.m in Sources */,
 				F1D7B249197ED69000A920A7 /* linkViewController.m in Sources */,
 				F1A17D8B196107030095BB7E /* contactsViewController.m in Sources */,
+				F187041D1B18CFA1007D8C00 /* echoprintViewController.mm in Sources */,
+				F187042E1B18D0A0007D8C00 /* CodeGenWrapper.mm in Sources */,
 				F11DE3F1198C1C9400CD814E /* searchResultsViewController.m in Sources */,
 				F1D7B24F197EF17A00A920A7 /* sentLinkViewController.m in Sources */,
 				F1A17DCC1961E6FE0095BB7E /* Link.m in Sources */,
+				F187042F1B18D0A0007D8C00 /* TSLibraryImport.mm in Sources */,
+				F187042D1B18D0A0007D8C00 /* FPGenerator.mm in Sources */,
 				F17AC6A819B69BDA00BF95CE /* legalInfoViewController.m in Sources */,
 				F1D7B244197D988E00A920A7 /* messagesTableViewCell.m in Sources */,
+				F187042C1B18D0A0007D8C00 /* MicrophoneInput.mm in Sources */,
 				F1C74DA419A006C1001D5333 /* settingsTableViewCell.m in Sources */,
+				F187041E1B18CFA1007D8C00 /* friendsTableViewController.m in Sources */,
 				F1A17DF61964C8620095BB7E /* friendsViewController.m in Sources */,
 				F1D7B21519770AFE00A920A7 /* LinkTableViewCell.m in Sources */,
 				F1A17D75195E8C790095BB7E /* FriendRequest.m in Sources */,
+				F18704221B18CFA1007D8C00 /* youtubeSearchViewController.m in Sources */,
 				F15849C51953E8D6005EAB1B /* DefaultSettingsViewController.m in Sources */,
+				F18704211B18CFA1007D8C00 /* optionsViewController.m in Sources */,
 				F11CFAD21969E4770030B212 /* mySignUpViewController.m in Sources */,
 				F1D7B252197EF1BC00A920A7 /* receivedLinkViewController.m in Sources */,
 				F1F38E591A02BA0300F07B44 /* Reachability.m in Sources */,
@@ -1078,6 +1077,7 @@
 				F1A17DF01964C21F0095BB7E /* inboxViewController.m in Sources */,
 				F101DCA819A273E300D0D057 /* likeloveStatusViewController.m in Sources */,
 				F1A17DE919647EB30095BB7E /* Constants.m in Sources */,
+				F187041F1B18CFA1007D8C00 /* musicStreamingViewController.m in Sources */,
 				F11DE400198D903800CD814E /* videoTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
