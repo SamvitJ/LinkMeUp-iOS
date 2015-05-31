@@ -104,6 +104,9 @@
         self.facebookFriends = [[NSMutableArray alloc] init];   // NSDictionary<FBGraphUser>
         self.suggestedFriends = [[NSMutableArray alloc] init];  // PFUser
         
+        // address book
+        self.addressBookData = [[NSMutableArray alloc] init];   // NSDictionary
+        
         // links
         self.receivedLinkData = [[NSMutableArray alloc] init];  // NSDictionary
         self.sentLinkData = [[NSMutableArray alloc] init];      // NSDictionary
@@ -525,8 +528,12 @@
     
     // find LMU users among contacts
     
+    // save address book data
+    // returns false if no access granted
+    [self saveAddressBookContacts];
+    
     // construct list of all phone numbers in contacts
-    NSArray *allContacts = self.me[@"address_book"];
+    NSArray *allContacts = self.addressBookData;
     NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
     
     for (id idContact in allContacts)
@@ -568,7 +575,7 @@
         }
     }
     
-    //NSLog(@"%@", allPhoneNumbers);
+    // NSLog(@"%@", allPhoneNumbers);
     
     // query for LMU users with included phone numbers
     PFQuery *query = [PFUser query];
@@ -591,11 +598,16 @@
         }
         else
         {
-            NSLog(@"Error querying for mobile contacts %@ %@", error, [error localizedDescription]);
+            NSLog(@"Error querying for LMU users among mobile contacts %@ %@", error, [error localizedDescription]);
         }
         
+        // update data model properties
+        self.suggestedFriends = [addrBookSuggestions mutableCopy];
         
+        loadedSuggestions = YES;
+        [self postConnectionsNotification];
         
+        /*
         // if not linked with FB, we're done
         if (!self.isLinkedWithFB)
         {
@@ -609,7 +621,7 @@
             
             return;
         }
-        
+    
         // otherwise...
         
         // load facebook friends
@@ -667,6 +679,7 @@
                 [self postConnectionsNotification];
             }
         }];
+         */
     }];
 }
 
@@ -674,6 +687,98 @@
 {
     self.loadedConnections = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedConnections" object:nil userInfo:nil];
+}
+
+- (BOOL)saveAddressBookContacts
+{
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
+    
+    // return false if permission denied or error
+    if (!addressBook)
+        return false;
+    
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    NSArray *ABRcontacts = [(__bridge NSArray *) allPeople copy];
+    
+    NSMutableArray *contacts = [[NSMutableArray alloc] init];
+    
+    for (id person in ABRcontacts)
+    {
+        // name
+        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonFirstNameProperty);
+        
+        if (!firstName)
+            firstName = @"";
+        
+        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonLastNameProperty);
+        
+        if (!lastName)
+            lastName = @"";
+        
+        // phone number
+        ABMultiValueRef ABRphoneNumbers = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonPhoneProperty);
+        NSMutableArray *phoneNumbers = [[NSMutableArray alloc] init];
+        
+        if (ABMultiValueGetCount(ABRphoneNumbers) > 0)
+        {
+            long indexCount = ABMultiValueGetCount(ABRphoneNumbers);
+            for (long index = 0; index < indexCount; index++)
+            {
+                CFStringRef CFSRtype = ABMultiValueCopyLabelAtIndex(ABRphoneNumbers, index);
+                NSString *type = (__bridge_transfer NSString *)ABAddressBookCopyLocalizedLabel(CFSRtype);
+                
+                if ([type isEqualToString:@"iPhone"] || [type isEqualToString:@"mobile"])
+                {
+                    NSString *phone = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(ABRphoneNumbers, index);
+                    
+                    // remove all non-numeric characters
+                    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+                    phone = [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
+                    
+                    [phoneNumbers addObject:phone];
+                }
+                
+                CFRelease(CFSRtype);
+            }
+        }
+        
+        CFRelease(ABRphoneNumbers);
+        
+        // email
+        ABMultiValueRef ABRemails = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonEmailProperty);
+        NSMutableArray *emails = [[NSMutableArray alloc] init];
+        
+        if (ABMultiValueGetCount(ABRemails) > 0)
+            emails = (__bridge_transfer NSMutableArray *)ABMultiValueCopyArrayOfAllValues(ABRemails);
+        
+        CFRelease(ABRemails);
+        
+        // NSLog(@"%@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
+        
+        // add to array
+        [contacts addObject:@{@"name": [[firstName stringByAppendingString:@" "] stringByAppendingString:lastName], @"phone": phoneNumbers, @"email": emails}];
+    }
+    
+    // save locally
+    self.addressBookData = contacts;
+    
+    // save to Parse
+    PFUser *me = self.me;
+    me[@"address_book"] = contacts;
+    
+    [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving my address book %@ %@", error, [error userInfo]);
+        }
+        else
+        {
+            NSLog(@"Address book saved");
+        }
+    }];
+    
+    // return success
+    return true;
 }
 
 

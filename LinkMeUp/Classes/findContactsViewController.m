@@ -43,27 +43,21 @@
 
 - (IBAction)continuePressed:(id)sender
 {
-    // save address book
-    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized)
-    {
-        [appDelegate saveContacts];
-        [self returnAndLaunch];
-    }
-    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
+    // ask for address book permission
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
     {
         ABAddressBookRequestAccessWithCompletion(ABAddressBookCreateWithOptions(NULL, nil), ^(bool granted, CFErrorRef error) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if (granted)
-                    [appDelegate saveContacts];
-            
                 [self returnAndLaunch];
                 
             });
         });
+    }
+    else // kABAuthorizationStatusAuthorized || kABAuthorizationStatusDenied
+    {
+        [self returnAndLaunch];
     }
 }
 

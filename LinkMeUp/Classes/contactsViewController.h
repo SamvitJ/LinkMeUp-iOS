@@ -25,16 +25,8 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *sendSong;
 @property (weak, nonatomic) IBOutlet UIView *header;
-@property (nonatomic, strong) NSMutableArray *buttons;
-
-// UI state
-@property (nonatomic) BOOL allFriendsSelected;
 
 // link
 @property (nonatomic, strong) Link *myLink;
-
-// friends
-@property (nonatomic, strong) NSMutableArray *myFriends;       // PFUser
-@property (nonatomic, strong) NSMutableArray *selectedFriends; // BOOL
 
 @end

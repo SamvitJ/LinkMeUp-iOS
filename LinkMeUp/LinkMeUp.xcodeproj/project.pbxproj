@@ -74,6 +74,7 @@
 		F17AC6BD19B6BABD00BF95CE /* Privacy Policy.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6BB19B6BABD00BF95CE /* Privacy Policy.rtf */; };
 		F17AC6C119B7956C00BF95CE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6C019B7956C00BF95CE /* Credits.rtf */; };
 		F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */; };
+		F18704331B18E6BF007D8C00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F18704321B18E6BF007D8C00 /* MessageUI.framework */; };
 		F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */; };
 		F1874CB21A3CA17100E4CF43 /* findContactsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */; };
 		F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */; };
@@ -254,6 +255,7 @@
 		F18704291B18D0A0007D8C00 /* FPGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPGenerator.h; path = "Replaced/Echoprint Song ID/FPGenerator.h"; sourceTree = "<group>"; };
 		F187042A1B18D0A0007D8C00 /* TSLibraryImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSLibraryImport.h; path = "Replaced/Echoprint Song ID/TSLibraryImport.h"; sourceTree = "<group>"; };
 		F187042B1B18D0A0007D8C00 /* TSLibraryImport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TSLibraryImport.mm; path = "Replaced/Echoprint Song ID/TSLibraryImport.mm"; sourceTree = "<group>"; };
+		F18704321B18E6BF007D8C00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		F1874CAE1A3CA17100E4CF43 /* findContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = findContactsViewController.h; sourceTree = "<group>"; };
 		F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = findContactsViewController.m; sourceTree = "<group>"; };
 		F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = findContactsViewController.xib; path = Classes/findContactsViewController.xib; sourceTree = "<group>"; };
@@ -317,6 +319,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F18704331B18E6BF007D8C00 /* MessageUI.framework in Frameworks */,
 				F12B14A21A75944300A722F7 /* AddressBookUI.framework in Frameworks */,
 				F12B14A01A75943E00A722F7 /* AddressBook.framework in Frameworks */,
 				F15847831953A59C005EAB1B /* Accounts.framework in Frameworks */,
@@ -417,6 +420,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F18704321B18E6BF007D8C00 /* MessageUI.framework */,
 				F12B14A11A75944300A722F7 /* AddressBookUI.framework */,
 				F1697B541A02CCBF00E0F9FD /* FacebookSDK.framework */,
 				F1F38E4F1A02B95C00F07B44 /* Bolts.framework */,

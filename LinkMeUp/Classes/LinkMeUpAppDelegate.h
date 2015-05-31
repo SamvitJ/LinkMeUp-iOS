@@ -38,9 +38,6 @@
 - (void)loadData;
 - (void)setUpApplicationViewControllers;
 
-// address book
-- (void)saveContacts;
-
 // update application badge count
 - (void)updateApplicationBadge;
 

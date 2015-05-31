@@ -22,9 +22,6 @@
 #import "searchViewController.h"
 #import "friendsViewController.h"
 
-#import <AddressBook/AddressBook.h>
-#import <AVFoundation/AVFoundation.h>
-
 @interface LinkMeUpAppDelegate ()
 @end
 
@@ -300,88 +297,6 @@
                                   orientation:friendsIcon.imageOrientation];
     friends.title = @"Friends";
     rightNav.tabBarItem = friends;
-}
-
-#pragma mark - Address book
-
-- (void)saveContacts
-{
-    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
-    
-    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
-    NSArray *ABRcontacts = [(__bridge NSArray *) allPeople copy];
-    
-    NSMutableArray *contacts = [[NSMutableArray alloc] init];
-    
-    for (id person in ABRcontacts)
-    {
-        // name
-        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonFirstNameProperty);
-        
-        if (!firstName)
-            firstName = @"";
-        
-        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonLastNameProperty);
-        
-        if (!lastName)
-            lastName = @"";
-        
-        // phone number
-        ABMultiValueRef ABRphoneNumbers = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonPhoneProperty);
-        NSMutableArray *phoneNumbers = [[NSMutableArray alloc] init];
-        
-        if (ABMultiValueGetCount(ABRphoneNumbers) > 0)
-        {
-            long indexCount = ABMultiValueGetCount(ABRphoneNumbers);
-            for (long index = 0; index < indexCount; index++)
-            {
-                CFStringRef CFSRtype = ABMultiValueCopyLabelAtIndex(ABRphoneNumbers, index);
-                NSString *type = (__bridge_transfer NSString *)ABAddressBookCopyLocalizedLabel(CFSRtype);
-                
-                if ([type isEqualToString:@"iPhone"] || [type isEqualToString:@"mobile"])
-                {
-                    NSString *phone = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(ABRphoneNumbers, index);
-                    
-                    // remove all non-numeric characters
-                    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-                    phone = [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
-                    
-                    [phoneNumbers addObject:phone];
-                }
-                
-                CFRelease(CFSRtype);
-            }
-        }
-        
-        CFRelease(ABRphoneNumbers);
-        
-        // email
-        ABMultiValueRef ABRemails = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonEmailProperty);
-        NSMutableArray *emails = [[NSMutableArray alloc] init];
-        
-        if (ABMultiValueGetCount(ABRemails) > 0)
-            emails = (__bridge_transfer NSMutableArray *)ABMultiValueCopyArrayOfAllValues(ABRemails);
-        
-        CFRelease(ABRemails);
-        
-        // print
-        NSLog(@"%@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
-        [contacts addObject:@{@"name": [[firstName stringByAppendingString:@" "] stringByAppendingString:lastName], @"phone": phoneNumbers, @"email": emails}];
-    }
-    
-    PFUser *me = [PFUser currentUser];
-    me[@"address_book"] = contacts;
-    
-    [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error)
-        {
-            NSLog(@"Error saving my address book %@ %@", error, [error userInfo]);
-        }
-        else
-        {
-            NSLog(@"Address book saved");
-        }
-    }];
 }
 
 #pragma mark - Push notifications

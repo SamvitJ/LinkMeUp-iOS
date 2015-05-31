@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import <AddressBook/AddressBook.h>
+#import <AVFoundation/AVFoundation.h>
+
 #import <ParseFacebookUtils/PFFacebookUtils.h>
 
 #import "Link.h"
@@ -78,6 +81,10 @@
 @property (nonatomic) BOOL isLinkedWithFB;
 @property (nonatomic, strong) NSMutableArray *pendingRequests;  // PFUser (sent by me)
 @property (nonatomic, strong) NSMutableArray *suggestedFriends; // PFUser
+
+// address book
+@property (nonatomic, strong) NSMutableArray *addressBookData;  // NSDictionary
+@property (nonatomic, strong) NSMutableArray *nonUserContacts;  // NSDictionary
 
 // links
 @property (nonatomic, strong) NSMutableArray *receivedLinkData;
