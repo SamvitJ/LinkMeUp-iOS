@@ -35,25 +35,27 @@ tableContent: [ [sectionTitle, sectionContent], [sectionTitle, sectionContent], 
     sectionContent: [ userAndState, userAndState, ...]
     (NSMutableArray *)
  
-        userAndState: { "user": (PFUser *)user, "selected": (BOOL)selected }
+        userAndState: { "user": (PFUser *)user, "selected": (NSNumber)selected, @"isLmuUser": (NSNumber)isLmuUser }
         (NSMutableDictionary *)
 
 Alternatively...
  tableContent[indexPath.section][0] -> (NSString *)sectionTitle
  tableContent[indexPath.section][1][indexPath.row][@"user"] -> (PFUser *)user
- tableContent[indexPath.section][1][indexPath.row][@"selected"] -> (BOOL)selected
+ tableContent[indexPath.section][1][indexPath.row][@"selected"] -> (NSNumber)selected
+ tableContent[indexPath.section][1][indexPath.row][@"isLmuUser"] -> (NSNumber)isLmuUser
  
 Example
- ["A", [{"user": Aaron, "selected": no}, {"user": Alexander, "selected": no}, ...] ]
- ["B", [{"user": Becky, "selected": no}, {"user": Bob, "selected": yes}, {"user": Brad, "selected": yes}, ...] ]
+ ["A", [{"user": Aaron, "selected": no, "isLmuUser": yes}, ...] ]
+ ["B", [{"user": Becky, "selected": no, "isLmuUser": no}, {"user": Bob, "selected": yes, "isLmuUser": yes}, ...] ]
  ["C", [] ]
  ...
- ["Z", [{"user":Zayn, "selected": yes}, ...] ]
+ ["Z", [{"user":Zayn, "selected": yes, "isLmuUser": yes}, ...] ]
 
  tableContent[2][0] -> "C"
  tableContent[1][1][2][@"user"] -> Bob
  tableContent[1][1][2][@"selected"] -> @YES
- tableContent[25][1] -> [{"user":Zayn, "selected": yes}, ...]
+ tableContent[1][1][2][@"isLmuUser"] -> @YES
+ tableContent[25][1] -> [{"user":Zayn, "selected": yes, "isLmuUser": yes}, ...]
 *************************************************** */
 
 @property (nonatomic, strong) NSString *predicateFormat;
@@ -81,7 +83,7 @@ Example
 
 #pragma mark - Data notification methods
 
-- (void)didFinishLoadingFriendList
+- (void)didFinishLoadingConnections
 {
     if (![self.tableContent count]) // empty or nil array
     {
@@ -97,8 +99,8 @@ Example
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(didFinishLoadingFriendList)
-                                                     name:@"loadedFriendList"
+                                                 selector:@selector(didFinishLoadingConnections)
+                                                     name:@"loadedConnections"
                                                    object:nil];
     }
     return self;
@@ -186,7 +188,7 @@ Example
     self.tableView.dataSource = nil;
     
     // unsubscribe from notifications
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedFriendList" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedConnections" object:nil];
 }
 
 #pragma mark - Local data/UI state methods
@@ -201,10 +203,15 @@ Example
         NSString *sectionTitle = [NSString stringWithFormat:@"%c", c];
         NSMutableArray *sectionContent = [[NSMutableArray alloc] init];
         
-        NSArray *filteredArray = [self.sharedData.myFriends filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
+        NSArray *filteredFriends = [self.sharedData.myFriends filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
         
-        for (PFUser *user in filteredArray)
-            [sectionContent addObject:[@{@"user":user, @"selected": @NO} mutableCopy]];
+        NSArray *filteredContacts = [self.sharedData.nonUserContacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
+        
+        for (NSDictionary *friend in filteredFriends)
+            [sectionContent addObject:[@{@"user":friend, @"selected": @NO, @"isLmuUser": @YES} mutableCopy]];
+        
+        for (NSDictionary *contact in filteredContacts)
+            [sectionContent addObject:[@{@"user":contact, @"selected": @NO, @"isLmuUser": @NO} mutableCopy]];
         
         [self.tableContent addObject:@[sectionTitle, sectionContent]];
     }
@@ -268,7 +275,7 @@ Example
             {
                 for (NSDictionary *userAndState in sectionData[1])
                 {
-                    if ([userAndState[@"selected"] boolValue] == YES)
+                    if (([userAndState[@"isLmuUser"] boolValue] == YES) && ([userAndState[@"selected"] boolValue] == YES))
                     {
                         PFUser *myFriend = userAndState[@"user"];
                         [receivers addObject:myFriend];
@@ -444,9 +451,14 @@ Example
 {
     static NSString *CellIdentifier = @"Friends";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    //[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    if (cell == nil)
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.backgroundColor = [UIColor whiteColor];
+    cell.textLabel.font = GILL_20;
+    
+    /*if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         
@@ -459,12 +471,18 @@ Example
         // remove residual subviews (checkbox buttons)
         // could muck with detail text labels
         [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    }
+    }*/
     
     // set cell text label
-    PFUser *displayPerson = self.tableContent[indexPath.section][1][indexPath.row][@"user"];
-    cell.textLabel.text = [Constants nameElseUsername:displayPerson];
+    NSDictionary *displayPerson = self.tableContent[indexPath.section][1][indexPath.row][@"user"];
+    cell.textLabel.text = [Constants nameElseUsername:(PFUser *)displayPerson];
 
+    // if LMU user, add icon to cell
+    /* if ([self.tableContent[indexPath.section][1][indexPath.row][@"isLmuUser"] boolValue] == YES)
+    {
+        cell.imageView.image = [UIImage imageNamed:@"icon_app_58.png"];
+    } */
+    
     // add checkbox
     UIButton *checkbox = [self createCheckbox];
     checkbox.tag = [self encodeIndexPath:indexPath];
@@ -489,6 +507,8 @@ Example
         checkbox.backgroundColor = [UIColor whiteColor];
     }
     
+    // NSLog(@"Cell for row at index path %u %@", checkbox.tag, indexPath);
+    
     return cell;
 }
 
@@ -500,7 +520,7 @@ Example
     long index = (long)clicked.tag;
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self rowForEncodedTag:index] inSection:[self sectionForEncodedTag:index]];
- 
+    
     [self toggleStateForIndexPath:indexPath];
 }
 
@@ -540,6 +560,17 @@ Example
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    /*UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UIButton *checkbox = (UIButton *)[cell viewWithTag:[self encodeIndexPath:indexPath]];
+    
+    if (!checkbox.selected)
+    {
+        cell.layer.borderColor = [UIColor greenColor].CGColor;
+        cell.layer.borderWidth = 2.0f;
+    }
+    
+    else cell.layer.borderColor = [UIColor clearColor].CGColor;*/
+    
     [self toggleStateForIndexPath:indexPath];
 }
 
@@ -549,6 +580,8 @@ Example
 {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     UIButton *checkbox = (UIButton *)[cell viewWithTag:[self encodeIndexPath:indexPath]];
+    
+    NSLog(@"Before toggling state %@ %lu", indexPath, (unsigned long)[checkbox state]);
     
     if ([self.tableContent[indexPath.section][1][indexPath.row][@"selected"] boolValue] == NO)
     {
@@ -564,7 +597,7 @@ Example
         [Constants enableButton:self.sendSong];
     }
     
-    else
+    else // @"selected" = YES
     {
         self.tableContent[indexPath.section][1][indexPath.row][@"selected"] = @NO;
         
@@ -577,6 +610,8 @@ Example
         if (![self anyFriendsSelected])
             [Constants disableButton:self.sendSong];
     }
+    
+    NSLog(@"After toggling state %@ %lu\n", indexPath, (unsigned long)[checkbox state]);
 }
 
 - (long)encodeIndexPath:(NSIndexPath *)indexPath
@@ -604,7 +639,9 @@ Example
     checkbox.layer.borderColor = [UIColor lightGrayColor].CGColor;
     checkbox.layer.borderWidth = 2.0f;
     
-    [checkbox setImage:nil forState:UIControlStateSelected];
+    /*[checkbox setImage:nil forState:UIControlStateNormal];
+    [checkbox setImage:nil forState:UIControlStateHighlighted];
+    [checkbox setImage:nil forState:UIControlStateDisabled];*/
     [checkbox setImage:[UIImage imageNamed:@"iconTick"] forState:UIControlStateSelected];
     
     [checkbox addTarget:self action:@selector(toggleChecked:) forControlEvents:UIControlEventTouchUpInside];

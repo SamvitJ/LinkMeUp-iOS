@@ -106,6 +106,7 @@
         
         // address book
         self.addressBookData = [[NSMutableArray alloc] init];   // NSDictionary
+        self.nonUserContacts = [[NSMutableArray alloc] init];   // NSDictionary
         
         // links
         self.receivedLinkData = [[NSMutableArray alloc] init];  // NSDictionary
@@ -530,13 +531,13 @@
     
     // save address book data
     // returns false if no access granted
-    [self saveAddressBookContacts];
+    BOOL savedABContacts = [self saveAddressBookContacts];
+    NSLog(@"Could save contacts %@", savedABContacts ? @"Yes" : @"No");
     
     // construct list of all phone numbers in contacts
-    NSArray *allContacts = self.addressBookData;
     NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
     
-    for (id idContact in allContacts)
+    for (id idContact in self.addressBookData)
     {
         NSDictionary *contact = (NSDictionary *)idContact;
         NSArray *phones = contact[@"phone"];
@@ -546,37 +547,13 @@
             NSString *phone = (NSString *)idPhone;
             
             // remove all non-numeric characters
-            NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-            phone = [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
+            phone = [Constants removeNonNumericFromPhoneNumber:phone];
             
-            // add phone
-            [allPhoneNumbers addObject:phone];
-            
-            // add truncated phone variants (no area code, no extension)
-            const NSInteger sansAC = 7;
-            const NSInteger sansExt = 10;
-            
-            NSString *phoneSansAC = nil;
-            NSString *phoneSansExt = nil;
-            
-            if ([phone length] > sansAC)
-            {
-                phoneSansAC = [phone substringFromIndex:[phone length] - sansAC];
-                [allPhoneNumbers addObject:phoneSansAC];
-                
-                if ([phone length] > sansExt)
-                {
-                    phoneSansExt = [phone substringFromIndex:[phone length] - sansExt];
-                    [allPhoneNumbers addObject:phoneSansExt];
-                }
-            }
-            
-            //NSLog(@"%@ %@ %@ %@", contact[@"name"], phone, phoneSansAC, phoneSansExt);
+            // add both variants of phone number (with and without country code)
+            [allPhoneNumbers addObjectsFromArray:[Constants allVariantsOfPhoneNumber:phone]];
         }
     }
-    
-    // NSLog(@"%@", allPhoneNumbers);
-    
+        
     // query for LMU users with included phone numbers
     PFQuery *query = [PFUser query];
     [query whereKey:@"mobile_number" containedIn: allPhoneNumbers];
@@ -601,7 +578,57 @@
             NSLog(@"Error querying for LMU users among mobile contacts %@ %@", error, [error localizedDescription]);
         }
         
+        
+        
+        // populate list of non-user contacts
+        
+        // initialize temp variable
+        NSMutableArray *newNonUserContacts = [[NSMutableArray alloc] init];
+        
+        NSArray *allUsers = [[self.myFriends arrayByAddingObjectsFromArray:self.requestSenders]
+                             arrayByAddingObjectsFromArray:addrBookSuggestions];
+        
+        for (NSDictionary *contact in self.addressBookData)
+        {
+            // default: not LinkMeUp user
+            BOOL isUser = false;
+            
+            NSArray *phoneArray = contact[@"phone"];
+            for (__strong NSString *phone in phoneArray)
+            {
+                for (PFUser *user in allUsers)
+                {
+                    // remove all non-numeric characters
+                    phone = [Constants removeNonNumericFromPhoneNumber:phone];
+                    
+                    NSString *userNumber = user[@"mobile_number"];
+                    
+                    // if (user phone number not in Parse)...
+                    if (!userNumber)
+                        continue;
+
+                    // else... check for equality
+                    if ([Constants comparePhone1:userNumber withPhone2:phone])
+                    {
+                        isUser = true;
+                        break;
+                    }
+                }
+                
+                if (isUser)
+                    break;
+            }
+            
+            if (!isUser)
+                [newNonUserContacts addObject:contact];
+        }
+        
+        // NSLog(@"Non user contacts: %@", newNonUserContacts);
+        
+        
+        
         // update data model properties
+        self.nonUserContacts = newNonUserContacts;
         self.suggestedFriends = [addrBookSuggestions mutableCopy];
         
         loadedSuggestions = YES;
@@ -626,6 +653,7 @@
         
         // load facebook friends
         FBRequest* myFacebookFriends = [FBRequest requestForMyFriends];
+        //[FBSession setActiveSession: [PFFacebookUtils session]];
         //[FBSession setActiveSession: [myFacebookFriends session]];
         [myFacebookFriends startWithCompletionHandler: ^(FBRequestConnection *connection, NSDictionary* result, NSError *error) {
             if (!error)
@@ -769,11 +797,11 @@
     [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error)
         {
-            NSLog(@"Error saving my address book %@ %@", error, [error userInfo]);
+            NSLog(@"Error saving address book to Parse %@ %@", error, [error userInfo]);
         }
         else
         {
-            NSLog(@"Address book saved");
+            NSLog(@"Address book saved to Parse");
         }
     }];
     

@@ -79,12 +79,6 @@
     return [NSNumber numberWithFloat:((hours * 3600.0) + (minutes * 60.0) + (seconds * 1.0))];
 }
 
-// returns name of user if not null; else returns username
-+ (NSString *)nameElseUsername:(PFUser *)user
-{
-    return ([user objectForKey:@"name"] ? [user objectForKey:@"name"] : user.username);
-}
-
 // returns comma-separated string representation of array objects
 + (NSString *)stringForArray:(NSArray *)array withKey:(NSString *)key
 {
@@ -126,6 +120,74 @@
     }
     
     return stringRepresentation;
+}
+
+
+
+#pragma mark - PFUser name
+
+// returns name of user if not null; else returns username
++ (NSString *)nameElseUsername:(PFUser *)user
+{
+    return ([user objectForKey:@"name"] ? [user objectForKey:@"name"] : user.username);
+}
+
+
+
+#pragma mark - Phone numbers
+
+// remove all non-numeric characters (i.e. (, ), -) from phone number
++ (NSString *)removeNonNumericFromPhoneNumber:(NSString *)phone
+{
+    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    return [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
+}
+
+// return array containing both variants of phone number (w/ and w/o country code), if applicable
++ (NSArray *)allVariantsOfPhoneNumber:(NSString *)phone
+{
+    NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
+    
+    // add original
+    [allPhoneNumbers addObject:phone];
+    
+    // add other variant if applicable
+    if ([phone length] > phoneLengthSansUSCC)
+    {
+        NSString *phoneSansCC = [phone substringFromIndex:[phone length] - phoneLengthSansUSCC];
+        [allPhoneNumbers addObject:phoneSansCC];
+    }
+    else if ([phone length] == phoneLengthSansUSCC)
+    {
+        NSString *phoneWithCC = [@"1" stringByAppendingString:phone];
+        [allPhoneNumbers addObject:phoneWithCC];
+    }
+    else // non standard (i.e. international)
+    {
+        // do nothing
+    }
+
+    return [allPhoneNumbers copy];
+}
+
+// returns true if phone numbers are equal, else return false
++ (BOOL)comparePhone1:(NSString *)phone1 withPhone2:(NSString *)phone2
+{
+    NSArray *allVariantsPhone1 = [Constants allVariantsOfPhoneNumber:phone1];
+    NSArray *allVariantsPhone2 = [Constants allVariantsOfPhoneNumber:phone2];
+    
+    for (NSString *phone1 in allVariantsPhone1)
+    {
+        for (NSString *phone2 in allVariantsPhone2)
+        {
+            if ([phone1 isEqualToString:phone2])
+            {
+                return true;
+            }
+        }
+    }
+    
+    return false;
 }
 
 
