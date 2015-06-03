@@ -8,18 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+
 #import "LinkMeUpAppDelegate.h"
 
 #import "Link.h"
 #import "Data.h"
 
-@interface contactsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface contactsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate>
 
 // the shared application data model
 @property (nonatomic, weak) Data *sharedData;
 
 // VC state
 @property (nonatomic) BOOL isForwarding;
+@property (nonatomic, strong) NSIndexPath *lastSelected;
 
 // UI elements
 @property (weak, nonatomic) IBOutlet UITableView *tableView;

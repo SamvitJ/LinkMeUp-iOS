@@ -176,11 +176,11 @@
     NSArray *allVariantsPhone1 = [Constants allVariantsOfPhoneNumber:phone1];
     NSArray *allVariantsPhone2 = [Constants allVariantsOfPhoneNumber:phone2];
     
-    for (NSString *phone1 in allVariantsPhone1)
+    for (NSString *phone1Variant in allVariantsPhone1)
     {
-        for (NSString *phone2 in allVariantsPhone2)
+        for (NSString *phone2Variant in allVariantsPhone2)
         {
-            if ([phone1 isEqualToString:phone2])
+            if ([phone1Variant isEqualToString:phone2Variant])
             {
                 return true;
             }

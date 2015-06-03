@@ -17,13 +17,14 @@
 #import "inboxViewController.h"
 
 
+
 @interface contactsViewController ()
 
 // PRIVATE PROPERTIES **********************************************
 
 @property (nonatomic, strong) NSMutableArray *tableContent;
-/* 
-Internal structure of tableContent ***************
+/* ****************************************
+Internal structure of tableContent
  (see -populateTableContent)
  
 tableContent: [ [sectionTitle, sectionContent], [sectionTitle, sectionContent], ... ]
@@ -56,7 +57,7 @@ Example
  tableContent[1][1][2][@"selected"] -> @YES
  tableContent[1][1][2][@"isLmuUser"] -> @YES
  tableContent[25][1] -> [{"user":Zayn, "selected": yes, "isLmuUser": yes}, ...]
-*************************************************** */
+**************************************** */
 
 @property (nonatomic, strong) NSString *predicateFormat;
 
@@ -198,20 +199,44 @@ Example
     // initialize table content
     self.tableContent = [[NSMutableArray alloc] init];
     
+    // Single (merged) contacts array
+    // NSArray *allContacts = [self.sharedData.myFriends arrayByAddingObjectsFromArray: self.sharedData.nonUserContacts];
+    
     for (char c = 'A'; c <= 'Z'; c++)
     {
         NSString *sectionTitle = [NSString stringWithFormat:@"%c", c];
         NSMutableArray *sectionContent = [[NSMutableArray alloc] init];
         
+        NSSortDescriptor *sortByName = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        NSSortDescriptor *sortByUsername = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES];
+        
         NSArray *filteredFriends = [self.sharedData.myFriends filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
+        NSArray *sortedFriends = [filteredFriends sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortByName, sortByUsername, nil]];
         
-        NSArray *filteredContacts = [self.sharedData.nonUserContacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
+        NSArray *filteredNonUsers = [self.sharedData.nonUserContacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
+        NSArray *sortedNonUsers = [filteredNonUsers sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]];
         
-        for (NSDictionary *friend in filteredFriends)
+        for (NSDictionary *friend in sortedFriends)
             [sectionContent addObject:[@{@"user":friend, @"selected": @NO, @"isLmuUser": @YES} mutableCopy]];
         
-        for (NSDictionary *contact in filteredContacts)
-            [sectionContent addObject:[@{@"user":contact, @"selected": @NO, @"isLmuUser": @NO} mutableCopy]];
+        for (NSDictionary *nonUser in sortedNonUsers)
+            [sectionContent addObject:[@{@"user":nonUser, @"selected": @NO, @"isLmuUser": @NO} mutableCopy]];
+        
+        /* Single (merged) contacts array
+         
+        NSArray *filteredContacts = [allContacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
+    
+        NSArray *sortedContacts = [filteredContacts sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]];
+
+        for (NSDictionary *contact in sortedContacts)
+        {
+            BOOL isLmuUser = NO;
+            
+            if (contact[@"nonUserContact"] == nil)
+                isLmuUser = YES;
+            
+            [sectionContent addObject:[@{@"user":contact, @"selected": @NO, @"isLmuUser": [NSNumber numberWithBool:isLmuUser]} mutableCopy]];
+        }*/
         
         [self.tableContent addObject:@[sectionTitle, sectionContent]];
     }
@@ -233,6 +258,61 @@ Example
     }
     
     return hasSelectedRecipients;
+}
+
+#pragma mark - MFMessageComposeViewControllerDelegate delegate
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    switch (result)
+    {
+        case MessageComposeResultCancelled:
+        {
+            NSLog(@"Cancelled");
+            
+            // deselect cell
+            self.tableContent[self.lastSelected.section][1][self.lastSelected.row][@"selected"] = @NO;
+            [self.tableView reloadData];
+            
+            [self dismissViewControllerAnimated:YES completion:nil];
+            
+            break;
+        }
+        case MessageComposeResultFailed:
+        {
+            NSLog(@"Failed to send");
+            
+            [[[UIAlertView alloc] initWithTitle:@"Unknown Error"
+                                        message:@"Failed to Send SMS"
+                                       delegate:self
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles: nil] show];
+            
+            // deselect cell
+            self.tableContent[self.lastSelected.section][1][self.lastSelected.row][@"selected"] = @NO;
+            [self.tableView reloadData];
+            
+            [self dismissViewControllerAnimated:YES completion:nil];
+            
+            break;
+        }
+            
+        case MessageComposeResultSent:
+        {
+            NSLog(@"Message sent");
+            
+            [self dismissViewControllerAnimated:YES completion: ^{
+                
+                [self transitionToNextVC];
+                
+            }];
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
 }
 
 #pragma mark - UI action methods
@@ -315,7 +395,6 @@ Example
 
                         [self.myLink.receiversData addObject:friendData];
                     }
-                    
                 }
             }
             
@@ -390,6 +469,11 @@ Example
         }
     }];
 
+    [self transitionToNextVC];
+}
+
+- (void)transitionToNextVC
+{
     // take user to inbox
     if (self.isForwarding)
     {
@@ -418,6 +502,96 @@ Example
         myTBC.selectedViewController = leftNav;
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
+}
+
+- (void)toggleChecked:(id)sender
+{
+    UIButton *clicked = (UIButton *)sender;
+    long index = (long)clicked.tag;
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self rowForEncodedTag:index] inSection:[self sectionForEncodedTag:index]];
+    
+    [self toggleStateForIndexPath:indexPath];
+}
+
+- (void)toggleStateForIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UIButton *checkbox = (UIButton *)[cell viewWithTag:[self encodeIndexPath:indexPath]];
+    
+    //NSLog(@"Before toggling state %@ %lu", indexPath, (unsigned long)[checkbox state]);
+    
+    NSMutableDictionary *userAndState = self.tableContent[indexPath.section][1][indexPath.row];
+    
+    if ([userAndState[@"selected"] boolValue] == NO)
+    {
+        userAndState[@"selected"] = @YES;
+        
+        checkbox.selected = YES;
+        checkbox.backgroundColor = [UIColor greenColor];
+        
+        cell.layer.borderColor = [UIColor greenColor].CGColor;
+        cell.layer.borderWidth = 2.0f;
+        
+        // enable button
+        [Constants enableButton:self.sendSong];
+        
+        // record indexPath of cell
+        self.lastSelected = indexPath;
+        
+        // if not LMU user, present text message UI
+        if ([userAndState[@"isLmuUser"] boolValue] == NO)
+        {
+            // send text message
+            MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
+            if([MFMessageComposeViewController canSendText])
+            {
+                NSMutableString *message = [[NSMutableString alloc] init];
+                // NSString *htmlLink = @"<a href=\"https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8\"> LinkMeUp.</a>";
+                
+                if (!self.myLink.isSong)
+                {
+                    NSLog(@"%@", self.myLink.videoId);
+                    
+                    [message appendString:[NSString stringWithFormat:@"Check out %@ at www.youtube.com/watch?v=%@.", self.myLink.title, self.myLink.videoId]];
+                }
+                else
+                {
+                    NSLog(@"%@", self.myLink.previewURL);
+                    
+                    [message appendString:[NSString stringWithFormat:@"Check out %@ by %@.", self.myLink.title, self.myLink.artist]];
+                }
+                
+                [message appendString:self.myLink.annotation];
+                [message appendString:@"\n\n"];
+                [message appendString:@"Sent via LinkMeUp, available at https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8"];
+                
+                controller.body = message;
+                
+                controller.recipients = [NSArray arrayWithObjects:[userAndState[@"user"][@"phone"] firstObject], nil];
+                controller.messageComposeDelegate = self;
+                
+                [self presentViewController:controller animated:YES completion:nil];
+            }
+            
+        }
+    }
+    
+    else // @"selected" = YES
+    {
+        userAndState[@"selected"] = @NO;
+        
+        checkbox.selected = NO;
+        checkbox.backgroundColor = [UIColor whiteColor];
+        
+        cell.layer.borderColor = [UIColor clearColor].CGColor;
+        
+        // disable button if no recipients selected
+        if (![self anyFriendsSelected])
+            [Constants disableButton:self.sendSong];
+    }
+    
+    //NSLog(@"After toggling state %@ %lu\n", indexPath, (unsigned long)[checkbox state]);
 }
 
 #pragma mark - Table view data source
@@ -473,15 +647,18 @@ Example
         [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     }*/
     
-    // set cell text label
-    NSDictionary *displayPerson = self.tableContent[indexPath.section][1][indexPath.row][@"user"];
-    cell.textLabel.text = [Constants nameElseUsername:(PFUser *)displayPerson];
+    // cell data
+    NSMutableDictionary *userAndState = self.tableContent[indexPath.section][1][indexPath.row];
+    
+    // cell text label
+    cell.textLabel.text = [Constants nameElseUsername:(PFUser *)userAndState[@"user"]];
 
     // if LMU user, add icon to cell
-    /* if ([self.tableContent[indexPath.section][1][indexPath.row][@"isLmuUser"] boolValue] == YES)
+    if ([userAndState[@"isLmuUser"] boolValue] == YES)
     {
-        cell.imageView.image = [UIImage imageNamed:@"icon_app_58.png"];
-    } */
+        cell.detailTextLabel.text = @"LinkMeUp";
+        //cell.imageView.image = [UIImage imageNamed:@"icon_app_58.png"];
+    }
     
     // add checkbox
     UIButton *checkbox = [self createCheckbox];
@@ -490,7 +667,7 @@ Example
     [cell addSubview:checkbox];
     
     // set cell state
-    if ([self.tableContent[indexPath.section][1][indexPath.row][@"selected"] boolValue] == YES)
+    if ([userAndState[@"selected"] boolValue] == YES)
     {
         cell.layer.borderColor = [UIColor greenColor].CGColor;
         cell.layer.borderWidth = 2.0f;
@@ -510,18 +687,6 @@ Example
     // NSLog(@"Cell for row at index path %u %@", checkbox.tag, indexPath);
     
     return cell;
-}
-
-#pragma mark - Table view action
-
-- (void)toggleChecked:(id)sender
-{
-    UIButton *clicked = (UIButton *)sender;
-    long index = (long)clicked.tag;
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self rowForEncodedTag:index] inSection:[self sectionForEncodedTag:index]];
-    
-    [self toggleStateForIndexPath:indexPath];
 }
 
 #pragma mark - Table view delegate
@@ -575,44 +740,6 @@ Example
 }
 
 #pragma mark - UI helper methods
-
-- (void)toggleStateForIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    UIButton *checkbox = (UIButton *)[cell viewWithTag:[self encodeIndexPath:indexPath]];
-    
-    NSLog(@"Before toggling state %@ %lu", indexPath, (unsigned long)[checkbox state]);
-    
-    if ([self.tableContent[indexPath.section][1][indexPath.row][@"selected"] boolValue] == NO)
-    {
-        self.tableContent[indexPath.section][1][indexPath.row][@"selected"] = @YES;
-        
-        checkbox.selected = YES;
-        checkbox.backgroundColor = [UIColor greenColor];
-        
-        cell.layer.borderColor = [UIColor greenColor].CGColor;
-        cell.layer.borderWidth = 2.0f;
-        
-        // enable button
-        [Constants enableButton:self.sendSong];
-    }
-    
-    else // @"selected" = YES
-    {
-        self.tableContent[indexPath.section][1][indexPath.row][@"selected"] = @NO;
-        
-        checkbox.selected = NO;
-        checkbox.backgroundColor = [UIColor whiteColor];
-        
-        cell.layer.borderColor = [UIColor clearColor].CGColor;
-        
-        // disable button if no recipients selected
-        if (![self anyFriendsSelected])
-            [Constants disableButton:self.sendSong];
-    }
-    
-    NSLog(@"After toggling state %@ %lu\n", indexPath, (unsigned long)[checkbox state]);
-}
 
 - (long)encodeIndexPath:(NSIndexPath *)indexPath
 {

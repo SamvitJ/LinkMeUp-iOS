@@ -11,7 +11,6 @@
 #import "Data.h"
 #import "Constants.h"
 
-// test
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 

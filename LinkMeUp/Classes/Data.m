@@ -346,6 +346,7 @@
     [newRequestsQuery whereKey:@"accepted" equalTo:@NO];
     [newRequestsQuery orderByDescending:@"createdAt"];
     [newRequestsQuery includeKey:@"sender"];
+    [newRequestsQuery setLimit: 1000];
     [newRequestsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
@@ -397,6 +398,7 @@
     [newFriendsQuery whereKey:@"accepted" equalTo:@YES];
     [newFriendsQuery orderByDescending:@"createdAt"];
     [newFriendsQuery includeKey:@"receiver"];
+    [newFriendsQuery setLimit: 1000];
     [newFriendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
@@ -424,6 +426,7 @@
             
             PFRelation *myFriends = [self.me relationForKey:@"friends"];
             PFQuery *friendsQuery = [myFriends query];
+            [friendsQuery setLimit: 1000];
             [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error)
                 {
@@ -462,6 +465,7 @@
     [pendingRequestsQuery whereKey:@"accepted" equalTo:@NO];
     [pendingRequestsQuery orderByDescending:@"createdAt"];
     [pendingRequestsQuery includeKey:@"receiver"];
+    [pendingRequestsQuery setLimit: 1000];
     [pendingRequestsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
@@ -559,19 +563,13 @@
     [query whereKey:@"mobile_number" containedIn: allPhoneNumbers];
     [query whereKey:@"objectId" notContainedIn:excludedIDs]; // slow operation
     [query whereKey:@"objectId" notEqualTo:self.me.objectId];
+    [query setLimit: 1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
             // The find succeeded
             NSLog(@"Successfully retrieved %lu friend suggestions (address book).", (unsigned long)[objects count]);
             addrBookSuggestions = objects;
-
-            // print address book suggestions
-            /* for (id object in addrBookSuggestions)
-            {
-                PFUser *contact = (PFUser *)object;
-                NSLog(@"%@", [Constants nameElseUsername:contact]);
-            }*/
         }
         else
         {
@@ -620,7 +618,19 @@
             }
             
             if (!isUser)
-                [newNonUserContacts addObject:contact];
+            {
+                // add if phone number (mobile or iPhone) known
+                if ([contact[@"phone"] count])
+                {
+                    [newNonUserContacts addObject:contact];
+                    
+                    /* Code for single (merged) contacts array
+                    NSMutableDictionary *nonUserContact = [[NSMutableDictionary alloc] initWithDictionary:contact];
+                    [nonUserContact setObject:[NSNumber numberWithBool:@YES] forKey:@"nonUserContact"];
+                
+                    [newNonUserContacts addObject: nonUserContact];*/
+                }
+            }
         }
         
         // NSLog(@"Non user contacts: %@", newNonUserContacts);
@@ -801,7 +811,7 @@
         }
         else
         {
-            NSLog(@"Address book saved to Parse");
+            // NSLog(@"Address book saved to Parse");
         }
     }];
     
@@ -836,6 +846,7 @@
     [receivedLinksQuery whereKey:@"receivers" equalTo:self.me];
     [receivedLinksQuery includeKey:@"sender"];
     [receivedLinksQuery orderByDescending:@"updatedAt"];
+    [receivedLinksQuery setLimit: 1000];
     [receivedLinksQuery findObjectsInBackgroundWithBlock:^(NSArray *parseRecLinks, NSError *error) {
         if (!error)
         {
@@ -960,6 +971,7 @@
     PFQuery *sentLinksQuery = [Link query];
     [sentLinksQuery whereKey:@"sender" equalTo:self.me];
     [sentLinksQuery orderByDescending:@"lastReceiverUpdateTime"];
+    [sentLinksQuery setLimit: 1000];
     [sentLinksQuery findObjectsInBackgroundWithBlock:^(NSArray *parseSentLinks, NSError *error) {
         if (!error)
         {

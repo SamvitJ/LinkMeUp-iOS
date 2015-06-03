@@ -378,17 +378,33 @@
     [self.view addGestureRecognizer:tap];
     
     // send text message
-    /* MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
-    if([MFMessageComposeViewController canSendText])
+    /*MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
+    if ([MFMessageComposeViewController canSendText])
     {
         controller.body = @"https://www.youtube.com/watch?v=ZDR433b0HJY";
-        controller.recipients = [NSArray arrayWithObjects:@"4256987871", nil];
+        controller.recipients = [NSArray arrayWithObjects:@"4256987871", @"4256154655", nil];
         controller.messageComposeDelegate = self;
         [self presentViewController:controller animated:YES completion:nil];
-    } */
+    }*/
 }
 
-// MFMessageComposeViewControllerDelegate delegate method
+- (void)viewWillAppear:(BOOL)animated
+{
+    // set view background
+    self.view.backgroundColor = BLUE_200;
+    
+    if (self.sharedData.newSong)
+        [self clearAndInitialize];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - MFMessageComposeViewControllerDelegate delegate
+
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
     switch (result)
@@ -422,21 +438,6 @@
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    // set view background
-    self.view.backgroundColor = BLUE_200;
-    
-    if (self.sharedData.newSong)
-        [self clearAndInitialize];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - UI helper methods
