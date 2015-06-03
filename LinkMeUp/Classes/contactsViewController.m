@@ -542,38 +542,7 @@ Example
         // if not LMU user, present text message UI
         if ([userAndState[@"isLmuUser"] boolValue] == NO)
         {
-            // send text message
-            MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
-            if([MFMessageComposeViewController canSendText])
-            {
-                NSMutableString *message = [[NSMutableString alloc] init];
-                // NSString *htmlLink = @"<a href=\"https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8\"> LinkMeUp.</a>";
-                
-                if (!self.myLink.isSong)
-                {
-                    NSLog(@"%@", self.myLink.videoId);
-                    
-                    [message appendString:[NSString stringWithFormat:@"Check out %@ at www.youtube.com/watch?v=%@.", self.myLink.title, self.myLink.videoId]];
-                }
-                else
-                {
-                    NSLog(@"%@", self.myLink.previewURL);
-                    
-                    [message appendString:[NSString stringWithFormat:@"Check out %@ by %@.", self.myLink.title, self.myLink.artist]];
-                }
-                
-                [message appendString:self.myLink.annotation];
-                [message appendString:@"\n\n"];
-                [message appendString:@"Sent via LinkMeUp, available at https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8"];
-                
-                controller.body = message;
-                
-                controller.recipients = [NSArray arrayWithObjects:[userAndState[@"user"][@"phone"] firstObject], nil];
-                controller.messageComposeDelegate = self;
-                
-                [self presentViewController:controller animated:YES completion:nil];
-            }
-            
+            [self showMessageComposeInterfaceForUser:userAndState[@"user"]];
         }
     }
     
@@ -592,6 +561,62 @@ Example
     }
     
     //NSLog(@"After toggling state %@ %lu\n", indexPath, (unsigned long)[checkbox state]);
+}
+
+- (void)showMessageComposeInterfaceForUser:(NSDictionary *)user
+{
+    // send text message
+    MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
+    if([MFMessageComposeViewController canSendText])
+    {
+        NSMutableString *message = [[NSMutableString alloc] init];
+        // NSString *htmlLink = @"<a href=\"https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8\"> LinkMeUp.</a>";
+        // NSString *availableAt = @"available at https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8";
+        
+        if ([self.myLink.annotation isEqualToString:@""])
+        {
+            if (!self.myLink.isSong)
+            {
+                NSLog(@"%@", self.myLink.videoId);
+                
+                [message appendString:[NSString stringWithFormat:@"Check out %@ at www.youtube.com/watch?v=%@.", self.myLink.title, self.myLink.videoId]];
+            }
+            else
+            {
+                NSLog(@"%@", self.myLink.previewURL);
+                
+                [message appendString:[NSString stringWithFormat:@"Check out %@ by %@.", self.myLink.title, self.myLink.artist]];
+            }
+        }
+        else
+        {
+            if (!self.myLink.isSong)
+            {
+                NSLog(@"%@", self.myLink.videoId);
+                
+                [message appendString:[NSString stringWithFormat:@"www.youtube.com/watch?v=%@.", self.myLink.videoId]];
+            }
+            else
+            {
+                NSLog(@"%@", self.myLink.previewURL);
+                
+                [message appendString:[NSString stringWithFormat:@"%@ | %@.", self.myLink.title, self.myLink.artist]];
+            }
+            
+            [message appendString:@"\n\n"];
+            [message appendString:self.myLink.annotation];
+        }
+        
+        [message appendString:@"\n\n"];
+        [message appendString:@"Sent via LinkMeUp."];
+        
+        controller.body = message;
+        
+        controller.recipients = [NSArray arrayWithObjects:[user[@"phone"] firstObject], nil];
+        controller.messageComposeDelegate = self;
+        
+        [self presentViewController:controller animated:YES completion:nil];
+    }
 }
 
 #pragma mark - Table view data source

@@ -436,6 +436,10 @@
             }
             
             // allow user interaction
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.mainActivityIndicator stopAnimating];
+            });
+            
             [self.tableView reloadData];
             self.tableView.hidden = NO;
             
@@ -745,6 +749,13 @@
     UIButton *backButton = [Constants createBackButtonWithText:@"Search"];
     [backButton addTarget:self action:@selector(backButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.header addSubview:backButton];
+    
+    // start activity indicator
+    self.mainActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.mainActivityIndicator.center = CGPointMake(self.view.frame.size.width / 2.0, 170.0f + (IS_IPHONE5 ? 30.0f : 0.0f));
+    self.mainActivityIndicator.transform = CGAffineTransformMakeScale(1.6f, 1.6f);
+    [self.mainActivityIndicator startAnimating];
+    [self.view addSubview: self.mainActivityIndicator];
     
     // use screen space
     if (IS_IPHONE5)
