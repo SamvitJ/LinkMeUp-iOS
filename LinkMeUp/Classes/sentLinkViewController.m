@@ -183,7 +183,17 @@
         return 1;
     
     else // (section == kLinkMessages)
-        return (loadedLinkData ? 1 + [self.sortedData count] : 0);
+    {
+        if (self.sharedData.selectedLink.isText)
+        {
+            return (loadedLinkData ? 1 : 0);
+        }
+        
+        else
+        {
+            return (loadedLinkData ? 1 + [self.sortedData count] : 0);
+        }
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

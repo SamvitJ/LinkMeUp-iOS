@@ -351,7 +351,7 @@
         if (!error)
         {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %lu friend requests.", (unsigned long)[objects count]);
+            NSLog(@"Successfully retrieved %lu received friend requests.", (unsigned long)[objects count]);
             newFriendRequests = (NSMutableArray *)objects;
             
             // friend request information
@@ -430,7 +430,7 @@
             [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error)
                 {
-                    NSLog(@"Successfully retrieved %lu friends", (unsigned long)[objects count]);
+                    NSLog(@"Successfully retrieved %lu friends.", (unsigned long)[objects count]);
                     newMyFriends = (NSMutableArray *)objects;
                     
                     // update data model
@@ -469,21 +469,22 @@
     [pendingRequestsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
+            NSLog(@"Successfully retrieved %lu pending, sent friend requests.", (unsigned long)[objects count]);
+            
             // recipients of friend requests
             for (int i = 0; i < [objects count]; i++)
             {
                 FriendRequest *pending = objects[i];
-                newPendingRequests[i] = pending.receiver;
+                newPendingRequests[i] = (pending.receiver ? pending.receiver : [NSNull null]);
             }
             
             // update data model
             self.pendingRequests = newPendingRequests;
         }
-        
         else
         {
             // Log details of the failure
-            NSLog(@"Error loading outgoing friend requests %@ %@", error, [error userInfo]);
+            NSLog(@"Error loading pending, sent friend requests %@ %@", error, [error userInfo]);
         }
         
         // set status and post notifications
@@ -505,7 +506,7 @@
     
     // initialize temp variable
     __block NSArray *addrBookSuggestions = [[NSArray alloc] init];
-    __block NSArray *facebookSuggestions = [[NSArray alloc] init];
+    // __block NSArray *facebookSuggestions = [[NSArray alloc] init];
     
     
     
@@ -534,9 +535,7 @@
     // find LMU users among contacts
     
     // save address book data
-    // returns false if no access granted
-    BOOL savedABContacts = [self saveAddressBookContacts];
-    NSLog(@"Could save contacts %@", savedABContacts ? @"Yes" : @"No");
+    [self saveAddressBookContacts];
     
     // construct list of all phone numbers in contacts
     NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
@@ -732,6 +731,7 @@
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     
     // return false if permission denied or error
+    // note: doesn't really help
     if (!addressBook)
         return false;
     
@@ -791,7 +791,7 @@
         
         CFRelease(ABRemails);
         
-        // NSLog(@"%@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
+        // NSLog(@"Contact %@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
         
         // add to array
         [contacts addObject:@{@"name": [[firstName stringByAppendingString:@" "] stringByAppendingString:lastName], @"phone": phoneNumbers, @"email": emails}];
@@ -995,7 +995,7 @@
                 if ([[currentLink objectForKey:@"lastReceiverUpdate"] integerValue] != kLastUpdateNoUpdate)
                     newSentLinkUpdates++;
                 
-                // set contacts field
+                // set contacts field for inboxVC table view
                 NSMutableArray *receivers = [[NSMutableArray alloc] init];
                 
                 for (NSDictionary *receiverData in currentLink.receiversData)
@@ -1005,7 +1005,7 @@
                     [receivers addObject: receiver];
                 }
             
-                if (![receivers count]) // receiver deleted account, etc.
+                if (![receivers count]) // receiver account deleted, or some other error
                     receivers = [NSMutableArray arrayWithObject:@{@"name": @"unknown user"}];
                 
                 newSentLinkData[i][@"contacts"] = receivers;

@@ -12,6 +12,7 @@
 
 @implementation Link
 
+@dynamic isText;
 @dynamic isSong;
 
 //@dynamic songData, videoData;

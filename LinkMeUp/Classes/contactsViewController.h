@@ -23,7 +23,8 @@
 
 // VC state
 @property (nonatomic) BOOL isForwarding;
-@property (nonatomic, strong) NSIndexPath *lastSelected;
+@property (nonatomic) BOOL nonUsersDisabled;
+@property (nonatomic, strong) NSMutableDictionary *nonUserSelected;
 
 // UI elements
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
