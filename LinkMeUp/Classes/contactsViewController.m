@@ -199,15 +199,6 @@ Example
     // initialize table content
     self.tableContent = [[NSMutableArray alloc] init];
     
-    // recents section
-    NSString *recentsIndexTitle = @"\u23F0";
-    NSMutableArray *recentsContent = [[NSMutableArray alloc] init];
-    
-    for (NSDictionary *recent in self.sharedData.recentRecipients)
-        [recentsContent addObject:[@{@"contact":recent[@"contact"], @"selected": @NO, @"isUser": recent[@"isUser"]} mutableCopy]];
-    
-    [self.tableContent addObject:@[recentsIndexTitle, recentsContent]];
-    
     // alphabetical section
     for (char c = 'A'; c <= 'Z'; c++)
     {
@@ -232,6 +223,66 @@ Example
         
         [self.tableContent addObject:@[sectionTitle, sectionContent]];
     }
+    
+    
+    // recents section
+    NSString *recentsIndexTitle = UNICODE_CLOCK;
+    NSMutableArray *recentsContent = [[NSMutableArray alloc] init];
+    
+    // show most recent first
+    NSEnumerator *reversedRecents = [self.sharedData.recentRecipients reverseObjectEnumerator];
+    
+    // populate recents section of tableContent
+    for (NSDictionary *recent in reversedRecents)
+    {
+        // if LMU user...
+        if ([recent[@"isUser"] boolValue] == YES)
+        {
+            PFUser *userPointer = recent[@"contact"];
+            
+            // traverse through table content to find same PFUser
+            for (NSArray *section in self.tableContent)
+            {
+                for (NSDictionary *userAndState in section[1])
+                {
+                    if ([userAndState[@"isUser"] boolValue] == YES)
+                    {
+                        PFUser *user = userAndState[@"contact"];
+                        
+                        // found same PFUser
+                        if ([userPointer.objectId isEqualToString:user.objectId])
+                        {
+                            [recentsContent addObject:userAndState];
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            NSDictionary *nonUserPointer = recent[@"contact"];
+            
+            // traverse through table content to find same non-user
+            for (NSArray *section in self.tableContent)
+            {
+                for (NSDictionary *userAndState in section[1])
+                {
+                    if ([userAndState[@"isUser"] boolValue] == NO)
+                    {
+                        NSDictionary *nonUser = userAndState[@"contact"];
+                        
+                        // found same non-user
+                        if ([nonUserPointer isEqual:nonUser])
+                        {
+                            [recentsContent addObject:userAndState];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    [self.tableContent insertObject:@[recentsIndexTitle, recentsContent] atIndex:0];
 }
 
 - (BOOL)anyContactsSelected:(bool (*)(NSDictionary *contactAndState))condition
@@ -404,6 +455,9 @@ static bool isNonUser(NSDictionary *contactAndState)
             // do nothing
         }
     }
+    
+    // reload data to highlight paired cells on screen
+    [self.tableView reloadData];
 }
 
 - (void)showMessageComposeInterfaceForContact:(NSDictionary *)contact
@@ -497,6 +551,10 @@ static bool isNonUser(NSDictionary *contactAndState)
     
     for (NSArray *sectionData in self.tableContent)
     {
+        // skip recents section, if present
+        if ([sectionData[0] isEqualToString:UNICODE_CLOCK])
+            continue;
+        
         for (NSDictionary *contactAndState in sectionData[1])
         {
             if ([contactAndState[@"selected"] boolValue] == YES)
@@ -741,6 +799,7 @@ static bool isNonUser(NSDictionary *contactAndState)
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
 {
+    NSLog(@"%@ %lu", title, (long)index);
     return index;
 }
 

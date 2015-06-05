@@ -23,8 +23,9 @@
     NSMutableArray *newPendingRequests;
     
      // load suggestions
-    NSArray *addrBookSuggestions
-    NSArray *facebookSuggestions
+    NSArray *addrBookSuggestions;
+    NSArray *facebookSuggestions;
+    NSMutableArray *newNonUserContacts;
      
      // load links
     int newReceivedLinkUpdates;
@@ -332,7 +333,7 @@
     loadedReceivedRequests = NO;
     loadedCurrentFriends = NO;
     loadedPendingRequests = NO;
-    
+
     
     
     // initialize temp variables
@@ -622,9 +623,9 @@
         
         // update data model properties
         self.nonUserContacts = newNonUserContacts;
-        self.recentRecipients = self.me[@"recentRecipients"];
         self.suggestedFriends = [addrBookSuggestions mutableCopy];
-        
+        self.recentRecipients = self.me[@"recentRecipients"];
+  
         loadedSuggestions = YES;
         [self postConnectionsNotification];
         
