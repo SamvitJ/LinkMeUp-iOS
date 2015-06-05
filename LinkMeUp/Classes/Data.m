@@ -39,8 +39,8 @@
     // connections status booleans
     BOOL loadedReceivedRequests;
     BOOL loadedCurrentFriends;
-    
     BOOL loadedPendingRequests;
+    
     BOOL loadedSuggestions;
 }
 
@@ -504,10 +504,10 @@
     // initialize status boolean
     loadedSuggestions = NO;
     
-    // initialize temp variable
+    // initialize temp variables
     __block NSArray *addrBookSuggestions = [[NSArray alloc] init];
-    // __block NSArray *facebookSuggestions = [[NSArray alloc] init];
-    
+    __block NSArray *facebookSuggestions = [[NSArray alloc] init];
+    NSMutableArray *newNonUserContacts = [[NSMutableArray alloc] init];
     
     
     // contacts to exclude
@@ -575,21 +575,15 @@
             NSLog(@"Error querying for LMU users among mobile contacts %@ %@", error, [error localizedDescription]);
         }
         
-        
-        
         // populate list of non-user contacts
-        
-        // initialize temp variable
-        NSMutableArray *newNonUserContacts = [[NSMutableArray alloc] init];
-        
-        NSArray *allUsers = [[self.myFriends arrayByAddingObjectsFromArray:self.requestSenders]
-                             arrayByAddingObjectsFromArray:addrBookSuggestions];
+        NSArray *allUsers = [[self.myFriends arrayByAddingObjectsFromArray:self.requestSenders] arrayByAddingObjectsFromArray:addrBookSuggestions];
         
         for (NSDictionary *contact in self.addressBookData)
         {
             // default: not LinkMeUp user
             BOOL isUser = false;
             
+            // determine if contact is a LMU user based on mobile number
             NSArray *phoneArray = contact[@"phone"];
             for (__strong NSString *phone in phoneArray)
             {
@@ -620,24 +614,15 @@
             {
                 // add if phone number (mobile or iPhone) known
                 if ([contact[@"phone"] count])
-                {
                     [newNonUserContacts addObject:contact];
-                    
-                    /* Code for single (merged) contacts array
-                    NSMutableDictionary *nonUserContact = [[NSMutableDictionary alloc] initWithDictionary:contact];
-                    [nonUserContact setObject:[NSNumber numberWithBool:@YES] forKey:@"nonUserContact"];
-                
-                    [newNonUserContacts addObject: nonUserContact];*/
-                }
             }
         }
         
         // NSLog(@"Non user contacts: %@", newNonUserContacts);
         
-        
-        
         // update data model properties
         self.nonUserContacts = newNonUserContacts;
+        self.recentRecipients = self.me[@"recentRecipients"];
         self.suggestedFriends = [addrBookSuggestions mutableCopy];
         
         loadedSuggestions = YES;
@@ -1004,8 +989,9 @@
                                                @"identity": [receiverData objectForKey:@"identity"]};
                     [receivers addObject: receiver];
                 }
-            
-                if (![receivers count]) // receiver account deleted, or some other error
+                
+                // if receiver account deleted, or some other error
+                if (![receivers count])
                     receivers = [NSMutableArray arrayWithObject:@{@"name": @"unknown user"}];
                 
                 newSentLinkData[i][@"contacts"] = receivers;

@@ -86,6 +86,9 @@
 @property (nonatomic, strong) NSMutableArray *addressBookData;  // NSDictionary
 @property (nonatomic, strong) NSMutableArray *nonUserContacts;  // NSDictionary
 
+// recent link recipients
+@property (nonatomic, strong) NSMutableArray *recentRecipients;     // NSDictionary
+
 // links
 @property (nonatomic, strong) NSMutableArray *receivedLinkData;
 @property (nonatomic, strong) NSMutableArray *sentLinkData;
