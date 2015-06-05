@@ -33,30 +33,30 @@ tableContent: [ [sectionTitle, sectionContent], [sectionTitle, sectionContent], 
     sectionTitle
     (NSString *)
  
-    sectionContent: [ userAndState, userAndState, ...]
+    sectionContent: [ contactAndState, contactAndState, ...]
     (NSMutableArray *)
  
-        userAndState: { "user": (PFUser *)user, "selected": (NSNumber)selected, @"isUser": (NSNumber)isUser }
+        contactAndState: { "contact": (PFUser *)contact, "selected": (NSNumber)selected, @"isUser": (NSNumber)isUser }
         (NSMutableDictionary *)
 
 Alternatively...
  tableContent[indexPath.section][0] -> (NSString *)sectionTitle
- tableContent[indexPath.section][1][indexPath.row][@"user"] -> (PFUser *)user
+ tableContent[indexPath.section][1][indexPath.row][@"contact"] -> (PFUser *)contact
  tableContent[indexPath.section][1][indexPath.row][@"selected"] -> (NSNumber)selected
  tableContent[indexPath.section][1][indexPath.row][@"isUser"] -> (NSNumber)isUser
  
 Example
- ["A", [{"user": Aaron, "selected": no, "isUser": yes}, ...] ]
- ["B", [{"user": Becky, "selected": no, "isUser": no}, {"user": Bob, "selected": yes, "isUser": yes}, ...] ]
+ ["A", [{"contact": Aaron, "selected": no, "isUser": yes}, ...] ]
+ ["B", [{"contact": Becky, "selected": no, "isUser": no}, {"contact": Bob, "selected": yes, "isUser": yes}, ...] ]
  ["C", [] ]
  ...
- ["Z", [{"user":Zayn, "selected": yes, "isUser": yes}, ...] ]
+ ["Z", [{"contact":Zayn, "selected": yes, "isUser": yes}, ...] ]
 
  tableContent[2][0] -> "C"
- tableContent[1][1][2][@"user"] -> Bob
+ tableContent[1][1][2][@"contact"] -> Bob
  tableContent[1][1][2][@"selected"] -> @YES
  tableContent[1][1][2][@"isUser"] -> @YES
- tableContent[25][1] -> [{"user":Zayn, "selected": yes, "isUser": yes}, ...]
+ tableContent[25][1] -> [{"contact": Zayn, "selected": yes, "isUser": yes}, ...]
 **************************************** */
 
 @property (nonatomic, strong) NSString *predicateFormat;
@@ -217,10 +217,10 @@ Example
         NSArray *sortedNonUsers = [filteredNonUsers sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]];
         
         for (NSDictionary *friend in sortedFriends)
-            [sectionContent addObject:[@{@"user":friend, @"selected": @NO, @"isUser": @YES} mutableCopy]];
+            [sectionContent addObject:[@{@"contact":friend, @"selected": @NO, @"isUser": @YES} mutableCopy]];
         
         for (NSDictionary *nonUser in sortedNonUsers)
-            [sectionContent addObject:[@{@"user":nonUser, @"selected": @NO, @"isUser": @NO} mutableCopy]];
+            [sectionContent addObject:[@{@"contact":nonUser, @"selected": @NO, @"isUser": @NO} mutableCopy]];
         
         /* Single (merged) contacts array
          
@@ -242,13 +242,13 @@ Example
     }
 }
 
-- (BOOL)anyContactsSelected:(bool (*)(NSDictionary *userAndState))condition
+- (BOOL)anyContactsSelected:(bool (*)(NSDictionary *contactAndState))condition
 {
     for (NSArray *sectionData in self.tableContent)
     {
-        for (NSDictionary *userAndState in sectionData[1])
+        for (NSDictionary *contactAndState in sectionData[1])
         {
-            if (([userAndState[@"selected"] boolValue] == YES) && condition(userAndState))
+            if (([contactAndState[@"selected"] boolValue] == YES) && condition(contactAndState))
             {
                 return YES;
             }
@@ -258,19 +258,19 @@ Example
     return NO;
 }
 
-static bool noCondition(NSDictionary *userAndState)
+static bool noCondition(NSDictionary *contactAndState)
 {
     return true;
 }
 
-static bool isUser(NSDictionary *userAndState)
+static bool isUser(NSDictionary *contactAndState)
 {
-    return ([userAndState[@"isUser"] boolValue] == YES);
+    return ([contactAndState[@"isUser"] boolValue] == YES);
 }
 
-static bool isNonUser(NSDictionary *userAndState)
+static bool isNonUser(NSDictionary *contactAndState)
 {
-    return ([userAndState[@"isUser"] boolValue] == NO);
+    return ([contactAndState[@"isUser"] boolValue] == NO);
 }
 
 #pragma mark - MFMessageComposeViewControllerDelegate delegate
@@ -350,9 +350,9 @@ static bool isNonUser(NSDictionary *userAndState)
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     UIButton *checkbox = (UIButton *)[cell viewWithTag:[self encodeIndexPath:indexPath]];
     
-    NSMutableDictionary *userAndState = self.tableContent[indexPath.section][1][indexPath.row];
+    NSMutableDictionary *contactAndState = self.tableContent[indexPath.section][1][indexPath.row];
     
-    if ([userAndState[@"selected"] boolValue] == NO)
+    if ([contactAndState[@"selected"] boolValue] == NO)
     {
         // select checkbox
         checkbox.selected = YES;
@@ -363,13 +363,13 @@ static bool isNonUser(NSDictionary *userAndState)
         cell.layer.borderWidth = 2.0f;
         
         // cases
-        if ([userAndState[@"isUser"] boolValue] == NO)
+        if ([contactAndState[@"isUser"] boolValue] == NO)
         {
             // present text message UI
-            self.nonUserSelected = userAndState;
-            [self showMessageComposeInterfaceForUser:userAndState[@"user"]];
+            self.nonUserSelected = contactAndState;
+            [self showMessageComposeInterfaceForContact:contactAndState[@"contact"]];
         }
-        else if ([userAndState[@"isUser"] boolValue] == YES && ![self anyContactsSelected: &noCondition])
+        else if ([contactAndState[@"isUser"] boolValue] == YES && ![self anyContactsSelected: &noCondition])
         {
             // show "Send Link!" button and disable non users
             [self animateSendButtonInDirection:kDirectionUp];
@@ -377,19 +377,19 @@ static bool isNonUser(NSDictionary *userAndState)
             self.nonUsersDisabled = YES;
             [self.tableView reloadData];
         }
-        else if ([userAndState[@"isUser"] boolValue] == YES && [self anyContactsSelected: &isUser])
+        else if ([contactAndState[@"isUser"] boolValue] == YES && [self anyContactsSelected: &isUser])
         {
             // do nothing
         }
         
         // update state
-        userAndState[@"selected"] = @YES;
+        contactAndState[@"selected"] = @YES;
     }
     
-    else // ([userAndState[@"selected"] boolValue] == YES)
+    else // ([contactAndState[@"selected"] boolValue] == YES)
     {
         // update state
-        userAndState[@"selected"] = @NO;
+        contactAndState[@"selected"] = @NO;
         
         // deselect checkbox
         checkbox.selected = NO;
@@ -414,7 +414,7 @@ static bool isNonUser(NSDictionary *userAndState)
     }
 }
 
-- (void)showMessageComposeInterfaceForUser:(NSDictionary *)user
+- (void)showMessageComposeInterfaceForContact:(NSDictionary *)contact
 {
     // send text message
     MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
@@ -459,7 +459,7 @@ static bool isNonUser(NSDictionary *userAndState)
         
         controller.body = message;
         
-        controller.recipients = [NSArray arrayWithObjects:[user[@"phone"] firstObject], nil];
+        controller.recipients = [NSArray arrayWithObjects:[contact[@"phone"] firstObject], nil];
         controller.messageComposeDelegate = self;
         
         [self presentViewController:controller animated:YES completion:nil];
@@ -508,13 +508,13 @@ static bool isNonUser(NSDictionary *userAndState)
             
             for (NSArray *sectionData in self.tableContent)
             {
-                for (NSDictionary *userAndState in sectionData[1])
+                for (NSDictionary *contactAndState in sectionData[1])
                 {
-                    if ([userAndState[@"selected"] boolValue] == YES)
+                    if ([contactAndState[@"selected"] boolValue] == YES)
                     {
-                        if ([userAndState[@"isUser"] boolValue] == YES)
+                        if ([contactAndState[@"isUser"] boolValue] == YES)
                         {
-                            PFUser *myFriend = userAndState[@"user"];
+                            PFUser *myFriend = contactAndState[@"contact"];
                             [receivers addObject:myFriend];
                             
                             // update read/write permissions
@@ -562,7 +562,7 @@ static bool isNonUser(NSDictionary *userAndState)
                             
                             // name and identity
                             friendData[@"identity"] = @"mobile contact";
-                            friendData[@"name"] = [NSString stringWithFormat:@"Text sent to %@", userAndState[@"user"][@"name"]];
+                            friendData[@"name"] = [NSString stringWithFormat:@"Text sent to %@", contactAndState[@"contact"][@"name"]];
                             
                             NSMutableDictionary *firstMessage = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:myId, myName, now, self.sharedData.annotation, nil]
                                                                                                      forKeys:[NSArray arrayWithObjects:@"identity", @"name", @"time", @"message", nil]];
@@ -724,13 +724,13 @@ static bool isNonUser(NSDictionary *userAndState)
     cell.textLabel.font = GILL_20;
     
     // cell data
-    NSMutableDictionary *userAndState = self.tableContent[indexPath.section][1][indexPath.row];
+    NSMutableDictionary *contactAndState = self.tableContent[indexPath.section][1][indexPath.row];
     
     // cell text label
-    cell.textLabel.text = [Constants nameElseUsername:(PFUser *)userAndState[@"user"]];
+    cell.textLabel.text = [Constants nameElseUsername:(PFUser *)contactAndState[@"contact"]];
 
     // if LMU user, add icon to cell
-    if ([userAndState[@"isUser"] boolValue] == YES)
+    if ([contactAndState[@"isUser"] boolValue] == YES)
     {
         cell.detailTextLabel.text = @"LinkMeUp";
         //cell.imageView.image = [UIImage imageNamed:@"icon_app_58.png"];
@@ -742,8 +742,8 @@ static bool isNonUser(NSDictionary *userAndState)
     
     [cell addSubview:checkbox];
     
-    // set cell state
-    if (self.nonUsersDisabled && ([userAndState[@"isUser"] boolValue] == NO))
+    // set cell state - enabled/disabled
+    if (self.nonUsersDisabled && ([contactAndState[@"isUser"] boolValue] == NO))
     {
         cell.contentView.alpha = ALPHA_DISABLED;
         cell.userInteractionEnabled = NO;
@@ -760,7 +760,8 @@ static bool isNonUser(NSDictionary *userAndState)
         checkbox.userInteractionEnabled = YES;
     }
     
-    if ([userAndState[@"selected"] boolValue] == YES)
+    // set cell state - selected/unselected
+    if ([contactAndState[@"selected"] boolValue] == YES)
     {
         cell.layer.borderColor = [UIColor greenColor].CGColor;
         cell.layer.borderWidth = 2.0f;
