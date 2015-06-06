@@ -356,8 +356,8 @@
                 break;
         }
         
-        // labels
-        cell.contactLabel.text = [Constants stringForArray:[self.sharedData.sentLinkData[indexPath.row] objectForKey:@"contacts"] withKey:@"name"];
+        // labels        
+        cell.contactLabel.text = [Constants stringForArray:self.sharedData.sentLinkData[indexPath.row][@"contacts"] withKey:@"name"];
         cell.dateLabel.text = [Constants dateToString:link.lastReceiverUpdateTime];
         
         if (link.isSong)

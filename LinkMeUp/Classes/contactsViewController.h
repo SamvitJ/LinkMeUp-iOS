@@ -23,8 +23,9 @@
 
 // VC state
 @property (nonatomic) BOOL isForwarding;
+
 @property (nonatomic) BOOL nonUsersDisabled;
-@property (nonatomic, strong) NSMutableDictionary *nonUserSelected;
+@property (nonatomic, strong) NSMutableArray *selectedRecipients;
 
 // UI elements
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
