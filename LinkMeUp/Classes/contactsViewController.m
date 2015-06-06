@@ -346,37 +346,6 @@ Example
     // ...
 }
 
-- (BOOL)anyContactsSelected:(bool (*)(NSDictionary *contactAndState))condition
-{
-    for (NSArray *sectionData in self.tableContent)
-    {
-        for (NSDictionary *contactAndState in sectionData[1])
-        {
-            if (([contactAndState[@"selected"] boolValue] == YES) && condition(contactAndState))
-            {
-                return YES;
-            }
-        }
-    }
-    
-    return NO;
-}
-
-static bool noCondition(NSDictionary *contactAndState)
-{
-    return true;
-}
-
-static bool isUser(NSDictionary *contactAndState)
-{
-    return ([contactAndState[@"isUser"] boolValue] == YES);
-}
-
-static bool isNonUser(NSDictionary *contactAndState)
-{
-    return ([contactAndState[@"isUser"] boolValue] == NO);
-}
-
 #pragma mark - MFMessageComposeViewControllerDelegate delegate
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
@@ -585,7 +554,7 @@ static bool isNonUser(NSDictionary *contactAndState)
 - (IBAction)sendSongPressed:(id)sender
 {
     // check if user has selected any recipients
-    if (![self anyContactsSelected: &noCondition])
+    if (![self.selectedRecipients count])
         return;
     
     [self postLinkAndSendPush];
