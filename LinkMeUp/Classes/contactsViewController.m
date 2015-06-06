@@ -13,6 +13,7 @@
 #import "Constants.h"
 #import "FriendRequest.h"
 #import "Link.h"
+#import "contactsTableViewCell.h"
 
 #import "inboxViewController.h"
 
@@ -226,7 +227,7 @@ Example
     
     
     // recents section
-    NSString *recentsIndexTitle = UNICODE_CLOCK;
+    NSString *recentsIndexTitle = UNICODE_WATCH;
     NSMutableArray *recentsContent = [[NSMutableArray alloc] init];
     
     // show most recent first
@@ -552,7 +553,7 @@ static bool isNonUser(NSDictionary *contactAndState)
     for (NSArray *sectionData in self.tableContent)
     {
         // skip recents section, if present
-        if ([sectionData[0] isEqualToString:UNICODE_CLOCK])
+        if ([sectionData[0] isEqualToString:UNICODE_WATCH])
             continue;
         
         for (NSDictionary *contactAndState in sectionData[1])
@@ -817,24 +818,26 @@ static bool isNonUser(NSDictionary *contactAndState)
 {
     static NSString *CellIdentifier = @"Friends";
     
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    contactsTableViewCell *cell = [[contactsTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
    
     // cell appearance
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor whiteColor];
-    cell.textLabel.font = GILL_20;
     
     // cell data
     NSMutableDictionary *contactAndState = self.tableContent[indexPath.section][1][indexPath.row];
     
     // cell text label
-    cell.textLabel.text = [Constants nameElseUsername:(PFUser *)contactAndState[@"contact"]];
+    cell.contactLabel.text = [Constants nameElseUsername:(PFUser *)contactAndState[@"contact"]];
 
     // if LMU user, add icon to cell
     if ([contactAndState[@"isUser"] boolValue] == YES)
     {
-        cell.detailTextLabel.text = @"LinkMeUp";
-        //cell.imageView.image = [UIImage imageNamed:@"icon_app_58.png"];
+        cell.icon.image = [UIImage imageNamed:@"icon_app_58.png"];
+    }
+    else
+    {
+        cell.icon.image = [UIImage imageNamed:@"iPhoneMessages.png"];
     }
     
     // add checkbox
@@ -847,6 +850,8 @@ static bool isNonUser(NSDictionary *contactAndState)
     if (self.nonUsersDisabled && ([contactAndState[@"isUser"] boolValue] == NO))
     {
         cell.contentView.alpha = ALPHA_DISABLED;
+        cell.contactLabel.alpha = ALPHA_DISABLED;
+        cell.icon.alpha = ALPHA_DISABLED;
         cell.userInteractionEnabled = NO;
         
         checkbox.alpha = ALPHA_DISABLED;
@@ -855,6 +860,8 @@ static bool isNonUser(NSDictionary *contactAndState)
     else
     {
         cell.contentView.alpha = 1;
+        cell.contactLabel.alpha = 1;
+        cell.icon.alpha = 1;
         cell.userInteractionEnabled = YES;
         
         checkbox.alpha = 1;
@@ -916,6 +923,17 @@ static bool isNonUser(NSDictionary *contactAndState)
         return 0;
     
     return FRIENDS_HEADER_HEIGHT;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    // create footer for last table view section if send button visible
+    if (section == ([self.tableContent count] - 1) && self.nonUsersDisabled)
+    {
+        return self.sendSong.frame.size.height;
+    }
+    
+    else return 0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

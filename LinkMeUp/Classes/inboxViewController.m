@@ -12,7 +12,7 @@
 
 #import "Constants.h"
 #import "Link.h"
-#import "LinkTableViewCell.h"
+#import "linkTableViewCell.h"
 
 #import "sentLinkViewController.h"
 #import "receivedLinkViewController.h"
@@ -305,11 +305,11 @@
         CellIdentifier = @"Starred Tracks";
     }*/
     
-    LinkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    linkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
     {
-        cell = [[LinkTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[linkTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -477,7 +477,7 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LinkTableViewCell *cell = (LinkTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    linkTableViewCell *cell = (linkTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     
     switch (self.segControl.selectedSegmentIndex)
     {

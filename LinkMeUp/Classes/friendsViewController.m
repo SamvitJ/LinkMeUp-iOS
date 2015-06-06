@@ -641,8 +641,8 @@
             
             // if request pending, show selected state
             for (PFUser *pending in self.sharedData.pendingRequests)
-            {
-                if ([pending.objectId isEqualToString:displayPerson.objectId])
+            {                    
+                if (((id)pending != [NSNull null]) && [pending.objectId isEqualToString:displayPerson.objectId])
                 {
                     button.selected = YES;
                 }
