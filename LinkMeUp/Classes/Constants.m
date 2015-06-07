@@ -152,12 +152,12 @@
     [allPhoneNumbers addObject:phone];
     
     // add other variant if applicable
-    if ([phone length] > phoneLengthSansUSCC)
+    if ([phone length] > kPhoneLengthSansUSCC)
     {
-        NSString *phoneSansCC = [phone substringFromIndex:[phone length] - phoneLengthSansUSCC];
+        NSString *phoneSansCC = [phone substringFromIndex:[phone length] - kPhoneLengthSansUSCC];
         [allPhoneNumbers addObject:phoneSansCC];
     }
-    else if ([phone length] == phoneLengthSansUSCC)
+    else if ([phone length] == kPhoneLengthSansUSCC)
     {
         NSString *phoneWithCC = [@"1" stringByAppendingString:phone];
         [allPhoneNumbers addObject:phoneWithCC];

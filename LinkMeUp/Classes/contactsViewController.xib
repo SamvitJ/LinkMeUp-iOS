@@ -52,7 +52,7 @@
                         <constraint firstAttribute="height" constant="50" id="dn4-3k-hQD"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="ChalkboardSE-Light" family="Chalkboard SE" pointSize="19"/>
-                    <state key="normal" title="Send link!                         &gt;">
+                    <state key="normal" title="                                      &gt;">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>

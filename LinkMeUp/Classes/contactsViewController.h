@@ -32,6 +32,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *sendSong;
 @property (weak, nonatomic) IBOutlet UIView *header;
 
+@property (nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, strong) UIScrollView *scrollView;
+
 // link
 @property (nonatomic, strong) Link *myLink;
 

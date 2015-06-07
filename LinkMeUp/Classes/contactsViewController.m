@@ -149,6 +149,9 @@ Example
     if (self.isForwarding)
         self.header.backgroundColor = PURPLE;
     
+    // add recipient list text view
+    [self createSendButtonLabel];
+    
     // update Link information
     self.myLink.sender = self.sharedData.me;
 
@@ -339,11 +342,36 @@ Example
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
     
     for (NSDictionary *contactAndState in self.selectedRecipients)
-        [namesArray addObject:[Constants nameElseUsername:(PFUser *)contactAndState[@"contact"]]];
+    {
+        NSString *firstName = contactAndState[@"contact"][@"first_name"];
+        
+        if (!firstName)
+            firstName = [[contactAndState[@"contact"][@"name"] componentsSeparatedByString:@" "] firstObject];
+        
+        if (!firstName)
+            firstName = contactAndState[@"contact"][@"username"];
+        
+        [namesArray addObject: firstName];
+    }
 
     NSString *namesString = [Constants stringForArray:namesArray withKey:nil];
+    NSLog(@"Names string %@", namesString);
     
-    // ...
+    self.textLabel.text = namesString;
+
+    // adjust text label
+    CGSize newSize = [self.textLabel.text sizeWithAttributes: @{NSFontAttributeName: CHALK_18}];
+    NSLog(@"String size %@", NSStringFromCGSize(newSize));
+    
+    self.textLabel.frame = CGRectMake(self.textLabel.frame.origin.x, self.textLabel.frame.origin.y, newSize.width, self.textLabel.frame.size.height);
+    self.scrollView.contentSize = CGSizeMake(newSize.width, self.scrollView.contentSize.height);
+    
+    NSLog(@"Content size %@", NSStringFromCGSize(self.scrollView.contentSize));
+    NSLog(@"Bounds size %@", NSStringFromCGSize(self.scrollView.bounds.size));
+    
+    CGFloat newOffsetX = MAX(0, self.scrollView.contentSize.width - self.scrollView.bounds.size.width);
+    
+    [self.scrollView setContentOffset:CGPointMake(newOffsetX, self.scrollView.contentOffset.y)];
 }
 
 #pragma mark - MFMessageComposeViewControllerDelegate delegate
@@ -495,8 +523,7 @@ Example
     [self.tableView reloadData];
     
     // update send button
-    NSLog(@"Selected: %@", self.selectedRecipients);
-    // [self updateSendButtonText];
+    [self updateSendButtonText];
 }
 
 - (void)showMessageComposeInterfaceForContact:(NSDictionary *)contact
@@ -1005,6 +1032,32 @@ Example
     [checkbox addTarget:self action:@selector(toggleChecked:) forControlEvents:UIControlEventTouchUpInside];
     
     return checkbox;
+}
+
+- (void)createSendButtonLabel
+{
+    // parameters
+    const CGFloat labelLeftBound = 15.0;
+    const CGFloat labelRightBound = 45.0;
+    
+    // embedded label
+    self.textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.sendSong.frame.size.width - (labelLeftBound + labelRightBound), self.sendSong.frame.size.height)];
+    
+    self.textLabel.font = CHALK_18;
+    self.textLabel.textColor = [UIColor whiteColor];
+    
+    self.textLabel.numberOfLines = 0;
+    self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    
+    // scroll view
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(labelLeftBound, 0, self.sendSong.frame.size.width - (labelLeftBound + labelRightBound), self.sendSong.frame.size.height)];
+    
+    self.scrollView.showsVerticalScrollIndicator = NO;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    
+    // add to subviews
+    [self.scrollView addSubview: self.textLabel];
+    [self.sendSong addSubview: self.scrollView];
 }
 
 #pragma mark - UIButton animation

@@ -541,15 +541,12 @@
     // construct list of all phone numbers in contacts
     NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
     
-    for (id idContact in self.addressBookData)
+    for (NSDictionary *contact in self.addressBookData)
     {
-        NSDictionary *contact = (NSDictionary *)idContact;
         NSArray *phones = contact[@"phone"];
         
-        for (id idPhone in phones)
+        for (__strong NSString *phone in phones)
         {
-            NSString *phone = (NSString *)idPhone;
-            
             // remove all non-numeric characters
             phone = [Constants removeNonNumericFromPhoneNumber:phone];
             
@@ -780,7 +777,10 @@
         // NSLog(@"Contact %@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
         
         // add to array
-        [contacts addObject:@{@"name": [[firstName stringByAppendingString:@" "] stringByAppendingString:lastName], @"phone": phoneNumbers, @"email": emails}];
+        [contacts addObject:@{@"first_name": firstName,
+                              @"name": [[firstName stringByAppendingString:@" "] stringByAppendingString:lastName],
+                              @"phone": phoneNumbers,
+                              @"email": emails}];
     }
     
     // save locally
