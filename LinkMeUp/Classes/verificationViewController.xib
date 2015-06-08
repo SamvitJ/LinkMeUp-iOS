@@ -119,6 +119,7 @@
                 <constraint firstItem="vLB-Ut-Mtn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bUr-b4-8L7"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="102" y="259"/>
         </view>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

@@ -130,6 +130,14 @@ Example
     
     // initialize variables
     self.selectedRecipients = [[NSMutableArray alloc] init];
+    
+    // add recipient list text view
+    [self createSendButtonLabel];
+    
+    // set label state based on button state
+    [self.sendSong addTarget:self action:@selector(sendSongStateChanged:) forControlEvents:(UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected)];
+    [self.sendSong addTarget:self action:@selector(sendSongDragExit:) forControlEvents:UIControlEventTouchDragExit];
+    [self.sendSong addTarget:self action:@selector(sendSongDragEnter:) forControlEvents:UIControlEventTouchDragEnter];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -148,9 +156,6 @@ Example
     // if forwarding, change header color
     if (self.isForwarding)
         self.header.backgroundColor = PURPLE;
-    
-    // add recipient list text view
-    [self createSendButtonLabel];
     
     // update Link information
     self.myLink.sender = self.sharedData.me;
@@ -358,20 +363,7 @@ Example
     NSLog(@"Names string %@", namesString);
     
     self.textLabel.text = namesString;
-
-    // adjust text label
-    CGSize newSize = [self.textLabel.text sizeWithAttributes: @{NSFontAttributeName: CHALK_18}];
-    NSLog(@"String size %@", NSStringFromCGSize(newSize));
-    
-    self.textLabel.frame = CGRectMake(self.textLabel.frame.origin.x, self.textLabel.frame.origin.y, newSize.width, self.textLabel.frame.size.height);
-    self.scrollView.contentSize = CGSizeMake(newSize.width, self.scrollView.contentSize.height);
-    
-    NSLog(@"Content size %@", NSStringFromCGSize(self.scrollView.contentSize));
-    NSLog(@"Bounds size %@", NSStringFromCGSize(self.scrollView.bounds.size));
-    
-    CGFloat newOffsetX = MAX(0, self.scrollView.contentSize.width - self.scrollView.bounds.size.width);
-    
-    [self.scrollView setContentOffset:CGPointMake(newOffsetX, self.scrollView.contentOffset.y)];
+    [self updateSendButtonLabel];
 }
 
 #pragma mark - MFMessageComposeViewControllerDelegate delegate
@@ -433,6 +425,36 @@ Example
         default:
             break;
     }
+}
+
+#pragma mark - UIButton target methods
+
+- (void)sendSongDragEnter:(id)sender
+{
+    NSLog(@"Dragged enter");
+    
+    [UIView beginAnimations:@"fade out" context:NULL];
+    [UIView setAnimationDuration: 0.4];
+    self.textLabel.alpha = 0.3;
+    [UIView commitAnimations];
+}
+
+- (void)sendSongDragExit:(id)sender
+{
+    NSLog(@"Dragged exit");
+    
+    [UIView beginAnimations:@"fade in" context:NULL];
+    [UIView setAnimationDuration: 0.4];
+    self.textLabel.alpha = 1.0;
+    [UIView commitAnimations];
+}
+
+- (void)sendSongStateChanged:(id)sender
+{
+    if (self.sendSong.state == UIControlStateHighlighted || self.sendSong.state == UIControlStateSelected)
+        self.textLabel.alpha = 0.3;
+    
+    else self.textLabel.alpha = 1.0;
 }
 
 #pragma mark - UI action methods
@@ -577,6 +599,26 @@ Example
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
+
+/*- (void)handleTap:(UITapGestureRecognizer *)sender
+{
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        NSLog(@"Ended");
+        
+        [self sendSongPressed:nil];
+    }
+    else if (sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed)
+    {
+        NSLog(@"Cancelled/failed");
+        return;
+    }
+    else
+    {
+        NSLog(@"Other");
+        return;
+    }
+}*/
 
 - (IBAction)sendSongPressed:(id)sender
 {
@@ -1037,27 +1079,57 @@ Example
 - (void)createSendButtonLabel
 {
     // parameters
-    const CGFloat labelLeftBound = 15.0;
-    const CGFloat labelRightBound = 45.0;
+    const CGFloat labelLeftOffset = kSendLinkLabelLeftOffset;
+    const CGFloat labelRightOffset = kSendLinkLabelRightOffset;
     
     // embedded label
-    self.textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.sendSong.frame.size.width - (labelLeftBound + labelRightBound), self.sendSong.frame.size.height)];
+    self.textLabel = [[UILabel alloc] initWithFrame:CGRectMake(labelLeftOffset, 0, self.sendSong.frame.size.width - (labelLeftOffset + labelRightOffset), self.sendSong.frame.size.height)];
     
     self.textLabel.font = CHALK_18;
     self.textLabel.textColor = [UIColor whiteColor];
+    // self.textLabel.highlightedTextColor = [UIColor colorWithHue:0.00 saturation:0.01 brightness:1.00 alpha: 0.3];
     
     self.textLabel.numberOfLines = 0;
     self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
     // scroll view
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(labelLeftBound, 0, self.sendSong.frame.size.width - (labelLeftBound + labelRightBound), self.sendSong.frame.size.height)];
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.sendSong.frame.size.width - labelRightOffset, self.sendSong.frame.size.height)];
     
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     
+    /*UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    singleTap.delegate = self;
+    [self.scrollView addGestureRecognizer: singleTap];*/
+    
     // add to subviews
     [self.scrollView addSubview: self.textLabel];
     [self.sendSong addSubview: self.scrollView];
+}
+
+- (void)updateSendButtonLabel
+{
+    // parameters
+    const CGFloat labelLeftOffset = kSendLinkLabelLeftOffset;
+    const CGFloat labelRightOffset = kSendLinkLabelRightOffset;
+    const CGFloat scrollViewRightBuffer = 10.0;
+    
+    // size of current label text
+    CGSize newSize = [self.textLabel.text sizeWithAttributes: @{NSFontAttributeName: CHALK_18}];
+    
+    CGFloat scrollViewWidth = MIN(self.sendSong.frame.size.width - labelRightOffset, labelLeftOffset + newSize.width + scrollViewRightBuffer);
+    
+    self.textLabel.frame = CGRectMake(self.textLabel.frame.origin.x, self.textLabel.frame.origin.y, newSize.width, self.textLabel.frame.size.height);
+    
+    self.scrollView.frame = CGRectMake(self.scrollView.frame.origin.x, self.scrollView.frame.origin.y, scrollViewWidth, self.scrollView.frame.size.height);
+    self.scrollView.contentSize = CGSizeMake(labelLeftOffset + newSize.width + scrollViewRightBuffer, self.scrollView.contentSize.height);
+    
+    //NSLog(@"String size %@", NSStringFromCGSize(newSize));
+    //NSLog(@"Content size %@", NSStringFromCGSize(self.scrollView.contentSize));
+    //NSLog(@"Bounds size %@", NSStringFromCGSize(self.scrollView.bounds.size));
+    
+    CGFloat newContentOffsetX = MAX(0, self.scrollView.contentSize.width - self.scrollView.bounds.size.width);
+    [self.scrollView setContentOffset:CGPointMake(newContentOffsetX, self.scrollView.contentOffset.y)];
 }
 
 #pragma mark - UIButton animation

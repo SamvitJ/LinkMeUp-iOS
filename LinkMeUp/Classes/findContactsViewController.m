@@ -50,12 +50,47 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
+                if (granted)
+                   NSLog(@"Address book access permission granted");
+                
+                else NSLog(@"Address book access permission denied");
+                    
                 [self returnAndLaunch];
                 
             });
         });
     }
-    else // kABAuthorizationStatusAuthorized || kABAuthorizationStatusDenied
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied)
+    {
+        NSString *alertTitle = @"Enable Contacts Access";
+        NSString *alertMessage = @"Please go to Settings -> Privacy -> Contacts and toggle permissions for LinkMeUp to \"On\" (green).";
+        
+        if (IS_IOS8)
+        {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:alertTitle
+                                                                           message:alertMessage
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                    style: UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction *action) {
+                [self returnAndLaunch];
+            }];
+            
+            [alert addAction: defaultAction];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else
+        {
+            [[[UIAlertView alloc] initWithTitle:alertTitle
+                                        message:alertMessage
+                                       delegate:self
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil] show];
+        }
+        
+    }
+    else // kABAuthorizationStatusAuthorized
     {
         [self returnAndLaunch];
     }
@@ -138,7 +173,7 @@
         [defaultSettings dismissViewControllerAnimated:YES completion:nil];
     }
     
-    else // not created via Facebook
+    else if (user.isNew) // new user, but not created via Facebook
     {
         verificationViewController *verify = (verificationViewController *) self.presentingViewController;
         mySignUpViewController *signUp = (mySignUpViewController *) verify.presentingViewController;
@@ -146,6 +181,32 @@
         DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
         
         [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+    else // exisiting user
+    {
+        UIViewController *presenting = self.presentingViewController;
+        if ([presenting isKindOfClass:[verificationViewController class]])
+        {
+            verificationViewController *verify = (verificationViewController *) presenting;
+            UIViewController *presentingPresenting = verify.presentingViewController;
+            
+            [presentingPresenting dismissViewControllerAnimated:YES completion:nil];
+        }
+        else
+        {
+            [presenting dismissViewControllerAnimated:YES completion:nil];
+        }
+    }
+}
+
+#pragma mark - Alert view delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.title isEqualToString:@"Enable Contacts Access"] && buttonIndex == 0)
+    {
+        [self returnAndLaunch];
     }
 }
 
