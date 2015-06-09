@@ -11,6 +11,9 @@
 #import "songInfoViewController.h"
 #import "searchResultsViewController.h"
 
+// test
+#import "pushNotifViewController.h"
+
 @interface searchViewController ()
 
 @end
@@ -376,16 +379,6 @@
     tap.numberOfTouchesRequired = 1;
     tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
-    
-    // send text message
-    /*MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
-    if ([MFMessageComposeViewController canSendText])
-    {
-        controller.body = @"https://www.youtube.com/watch?v=ZDR433b0HJY";
-        controller.recipients = [NSArray arrayWithObjects:@"4256987871", @"4256154655", nil];
-        controller.messageComposeDelegate = self;
-        [self presentViewController:controller animated:YES completion:nil];
-    }*/
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -395,49 +388,16 @@
     
     if (self.sharedData.newSong)
         [self clearAndInitialize];
+    
+    // test
+    // pushNotifViewController *pnvc = [[pushNotifViewController alloc] init];
+    // [self presentViewController:pnvc animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - MFMessageComposeViewControllerDelegate delegate
-
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
-{
-    switch (result)
-    {
-        case MessageComposeResultCancelled:
-        {
-            NSLog(@"Cancelled");
-            break;
-        }
-        case MessageComposeResultFailed:
-        {
-            NSLog(@"Failed to send");
-            
-            [[[UIAlertView alloc] initWithTitle:@"Unknown Error"
-                                        message:@"Failed to Send SMS"
-                                       delegate:self
-                              cancelButtonTitle:@"OK"
-                              otherButtonTitles: nil] show];
-            
-            break;
-        }
-            
-        case MessageComposeResultSent:
-        {
-            NSLog(@"Message sent");
-            break;
-        }
-            
-        default:
-            break;
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UI helper methods

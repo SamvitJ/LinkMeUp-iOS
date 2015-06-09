@@ -78,7 +78,7 @@
      */
     
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
-    
+        
     // reload data if no push notifiations
     UIUserNotificationType remoteNotification;
     
@@ -311,18 +311,28 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    NSLog(@"Did fail to register %@", error);
+    NSLog(@"Did fail to register for remote notifications %@", error);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"didFailToRegisterForPush" object:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
+    NSLog(@"Did register for remote notifications");
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterForPush" object:nil];
+    
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error)
         {
-            NSLog(@"Error registering for push notifs %@ %@", error, [error userInfo]);
+            NSLog(@"Error saving current installation in Parse %@ %@", error, [error userInfo]);
+        }
+        else
+        {
+            NSLog(@"Saved current installation in Parse");
         }
     }];
 }

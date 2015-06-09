@@ -14,6 +14,8 @@
 #import "Link.h"
 #import "linkTableViewCell.h"
 
+#import "pushNotifViewController.h"
+
 #import "sentLinkViewController.h"
 #import "receivedLinkViewController.h"
 
@@ -179,6 +181,19 @@
         if ([self.sharedData.sentLinkData count] == 0 || [self.sharedData.receivedLinkData count] == 0)
             [self startLoadingIndicator];
     }
+    
+    // present push notif screen, if haven't before
+    if (self.sentNewLink)
+    {
+        if (self.sharedData.me[@"didAskPush"] == nil || [self.sharedData.me[@"didAskPush"] boolValue] == false)
+        {
+            [NSTimer scheduledTimerWithTimeInterval:2.0f
+                                             target:self
+                                           selector:@selector(presentPushScreen)
+                                           userInfo:nil
+                                            repeats:NO];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -198,6 +213,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedReceivedLinks" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedAllLinks" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"applicationDidBecomeActive" object:nil];
+}
+
+#pragma mark - Present push notification view controller
+
+- (void)presentPushScreen
+{
+    pushNotifViewController *pnvc = [[pushNotifViewController alloc] init];
+    [self presentViewController:pnvc animated:YES completion: nil];
 }
 
 #pragma mark - Table view refresh

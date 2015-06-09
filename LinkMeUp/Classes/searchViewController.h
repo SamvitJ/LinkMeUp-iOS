@@ -11,10 +11,7 @@
 #import "Data.h"
 #import "Constants.h"
 
-#import <MessageUI/MessageUI.h>
-#import <MessageUI/MFMailComposeViewController.h>
-
-@interface searchViewController : UIViewController <UITextFieldDelegate, UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate>
+@interface searchViewController : UIViewController <UITextFieldDelegate, UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDataSource, UITableViewDelegate>
 
 // the shared application data model
 @property (nonatomic, weak) Data *sharedData;

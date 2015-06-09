@@ -17,6 +17,7 @@
 
 #import "myLogInViewController.h"
 #import "mySignUpViewController.h"
+#import "pushNotifViewController.h"
 
 #import "inboxViewController.h"
 #import "friendsViewController.h"
@@ -40,21 +41,6 @@
 {
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    // register for push notifications
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
-    {
-        // iOS 8 Notifications
-        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-        
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    else
-    {
-        // iOS <8 Notifications
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-         (UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
-    }
-    
     // add user channel to current installation (if not already added)
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", [PFUser currentUser].objectId] forKey:@"channels"];
@@ -72,7 +58,7 @@
         [NSTimer scheduledTimerWithTimeInterval:5.0f target:self selector:@selector(launchNew) userInfo:nil repeats:NO];
     }
     
-    else //if (launchType == kApplicationLaunchReturning)
+    else // if (launchType == kApplicationLaunchReturning)
     {
         // set up application for launch
         [appDelegate initializeData];
@@ -80,7 +66,17 @@
         
         [appDelegate loadData];
         
-        [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(launchReturning) userInfo:nil repeats:NO];
+        // register for push notifications
+        PFUser *me = [PFUser currentUser];
+        if ([me[@"didAskPush"] boolValue] == false || me[@"didAskPush"] == nil)
+        {
+            pushNotifViewController *pnvc = [[pushNotifViewController alloc] init];
+            [self presentViewController:pnvc animated:YES completion: nil];
+        }
+        else
+        {
+            [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(launchReturning) userInfo:nil repeats:NO];
+        }
     }
 }
 

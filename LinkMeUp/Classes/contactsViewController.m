@@ -18,7 +18,6 @@
 #import "inboxViewController.h"
 
 
-
 @interface contactsViewController ()
 
 // PRIVATE PROPERTIES **********************************************
@@ -561,7 +560,7 @@ Example
         {
             if (!self.myLink.isSong)
             {
-                link = [NSString stringWithFormat:@"Check out %@ at www.youtube.com/watch?v=%@.", self.myLink.title, self.myLink.videoId];
+                link = [NSString stringWithFormat:@"%@ - www.youtube.com/watch?v=%@.", self.myLink.title, self.myLink.videoId];
             }
             else
             {
@@ -587,9 +586,9 @@ Example
         }
     
         [message appendString:@"\n\n"];
-        [message appendString:@"Sent via LinkMeUp."];
-        // NSString *htmlLink = @"<a href=\"https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8\"> LinkMeUp.</a>";
-        // NSString *availableAt = @"available at https://itunes.apple.com/us/app/linkmeup!/id916400771?mt=8";
+        [message appendString:@"Sent via LinkMeUp - download the iPhone app at https://appsto.re/i6Lr6JT"];
+        
+        // [NSString stringWithFormat:@"Sent via <a href=\"sms:%@&body=%@\">LinkMeUp</a>", [contact[@"phone"] firstObject], @"https://appsto.re/i6Lr6JT"];
         
         controller.body = message;
         
