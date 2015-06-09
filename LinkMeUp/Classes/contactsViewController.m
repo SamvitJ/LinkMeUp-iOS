@@ -18,6 +18,10 @@
 #import "inboxViewController.h"
 
 
+// used by Send Link button textLabel//scrollView
+static const CGFloat kSendLinkLabelLeftOffset = 15.0;
+static const CGFloat kSendLinkLabelRightOffset = 45.0;
+
 @interface contactsViewController ()
 
 // PRIVATE PROPERTIES **********************************************

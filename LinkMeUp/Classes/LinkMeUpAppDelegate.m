@@ -313,14 +313,14 @@
 {
     NSLog(@"Did fail to register for remote notifications %@", error);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didFailToRegisterForPush" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidFailToRegisterForPush object:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
     NSLog(@"Did register for remote notifications");
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterForPush" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidRegisterForPush object:nil];
     
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];

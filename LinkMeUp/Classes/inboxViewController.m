@@ -86,7 +86,15 @@
     NSLog(@"Did finish loading links");
     
     if (self.sentNewLink)
+    {
         self.sentNewLink = NO;
+        
+        // present push notif screen, if haven't before
+        if (self.sharedData.me[@"didAskPush"] == nil || [self.sharedData.me[@"didAskPush"] boolValue] == false)
+        {
+            [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(presentPushScreen) userInfo:nil repeats:NO];
+        }
+    }
     
     if (self.receivedPush)
         self.receivedPush = NO;
@@ -180,19 +188,6 @@
         // if first time loading data, showing loading status
         if ([self.sharedData.sentLinkData count] == 0 || [self.sharedData.receivedLinkData count] == 0)
             [self startLoadingIndicator];
-    }
-    
-    // present push notif screen, if haven't before
-    if (self.sentNewLink)
-    {
-        if (self.sharedData.me[@"didAskPush"] == nil || [self.sharedData.me[@"didAskPush"] boolValue] == false)
-        {
-            [NSTimer scheduledTimerWithTimeInterval:2.0f
-                                             target:self
-                                           selector:@selector(presentPushScreen)
-                                           userInfo:nil
-                                            repeats:NO];
-        }
     }
 }
 

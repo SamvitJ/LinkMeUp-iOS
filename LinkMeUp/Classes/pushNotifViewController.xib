@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="continueButton" destination="XOQ-jC-HTD" id="Jcw-Vw-Piq"/>
                 <outlet property="header" destination="eCB-f2-Ykd" id="VI1-g1-Jf4"/>
+                <outlet property="lastTextLine" destination="GjE-mO-omx" id="Xo2-Og-lBw"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

@@ -8,6 +8,53 @@
 
 #import "Constants.h"
 
+
+
+
+
+#pragma mark - Numeric constants
+
+
+// MATH CONSTS ---------------------------------------------------------------
+
+const CGFloat k90DegreesClockwiseAngle = (CGFloat) (90 * M_PI / 180.0);
+const CGFloat k90DegreesCounterClockwiseAngle = (CGFloat) -(90 * M_PI / 180.0);
+
+//----------------------------------------------------------------------------
+
+
+// PHONE NUMBERS -------------------------------------------------------------
+
+const NSInteger kPhoneLengthSansUSCC = 10; // phone # length w/o U.S. country code
+
+//----------------------------------------------------------------------------
+
+
+
+
+
+#pragma mark - String constants
+
+
+// NOTIFICATION NAMES --------------------------------------------------------
+
+NSString *const kDidRegisterForPush = @"didRegisterForPush";
+NSString *const kDidFailToRegisterForPush = @"didFailToRegisterForPush";
+
+//----------------------------------------------------------------------------
+
+
+// DICTIONARY KEYS -----------------------------------------------------------
+
+NSString *const kContact = @"contact";
+NSString *const kIsUser = @"isUser";
+NSString *const kSelected = @"selected";
+
+//----------------------------------------------------------------------------
+
+
+
+
 @implementation Constants
 
 

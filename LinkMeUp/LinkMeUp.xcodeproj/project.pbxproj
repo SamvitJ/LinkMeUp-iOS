@@ -391,6 +391,7 @@
 				F1584764194F924C005EAB1B /* GTL.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				F187D59C1B27968E008370D7 /* Supporting Files */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -412,8 +413,6 @@
 				F1B9D35419A6692100AAC8C4 /* Playback Icons */,
 				F11DE415198ED2E600CD814E /* Toolbar Icons */,
 				F1D7B276198316EC00A920A7 /* Tabbar Icons */,
-				32CA4F630368D1EE00C91783 /* LinkMeUp_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -426,7 +425,6 @@
 				F11CFB1D196F44E20030B212 /* Profile */,
 				F11CFB1C196F44DC0030B212 /* Inbox */,
 				F11CFB1B196F44D60030B212 /* Messenger */,
-				8D1107310486CEB800E47090 /* LinkMeUp-Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -731,6 +729,16 @@
 				F187D5931B26759C008370D7 /* PushNotifShort.jpg */,
 			);
 			name = Screenshots;
+			sourceTree = "<group>";
+		};
+		F187D59C1B27968E008370D7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107310486CEB800E47090 /* LinkMeUp-Info.plist */,
+				32CA4F630368D1EE00C91783 /* LinkMeUp_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		F195293B19B80A1C00398D2A /* Reachability */ = {
