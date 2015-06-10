@@ -63,7 +63,7 @@
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied)
     {
         NSString *alertTitle = @"Enable Contacts Access";
-        NSString *alertMessage = @"Please go to Settings -> Privacy -> Contacts and toggle permissions for LinkMeUp to \"On\" (green).";
+        NSString *alertMessage = @"Please go to Settings -> Privacy -> Contacts and toggle permissions for LinkMeUp to On.";
         
         if (IS_IOS8)
         {
@@ -204,10 +204,8 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.title isEqualToString:@"Enable Contacts Access"] && buttonIndex == 0)
-    {
-        [self returnAndLaunch];
-    }
+    // only one option
+    [self returnAndLaunch];
 }
 
 #pragma mark - UI helper methods

@@ -38,7 +38,8 @@
 - (void)loadData;
 - (void)setUpApplicationViewControllers;
 
-// update application badge count
+// push notifications
+- (UIUserNotificationType)getEnabledNotificationTypes;
 - (void)updateApplicationBadge;
 
 // internet connectivity

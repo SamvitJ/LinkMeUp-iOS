@@ -8,12 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@interface pushNotifViewController : UIViewController
+#import "Data.h"
 
-@property (nonatomic, strong) UIImageView *imageView;
+@interface pushNotifViewController : UIViewController <UIAlertViewDelegate>
 
+// the shared application data model
+@property (nonatomic, weak) Data *sharedData;
+
+// UI elements
 @property (weak, nonatomic) IBOutlet UIView *header;
 @property (weak, nonatomic) IBOutlet UILabel *lastTextLine;
 @property (weak, nonatomic) IBOutlet UIButton *continueButton;
+
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end

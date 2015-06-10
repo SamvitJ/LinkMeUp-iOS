@@ -80,20 +80,7 @@
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
         
     // reload data if no push notifiations
-    UIUserNotificationType remoteNotification;
-    
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(currentUserNotificationSettings)])
-    {
-        // iOS 8 Notifications
-        UIUserNotificationSettings *settings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-        remoteNotification = settings.types;
-    }
-    
-    else
-    {
-        // iOS <8 Notifications
-        remoteNotification = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
-    }
+    UIUserNotificationType remoteNotification = [self getEnabledNotificationTypes];
     
     if (remoteNotification == UIRemoteNotificationTypeNone)
     {
@@ -119,8 +106,24 @@
                 [self.updateTimer invalidate];
                 self.updateTimer = nil;
             }
+            
+            // in case of new links/requests/messages
+            [self reloadData];
         }
-        
+        else if (remoteNotification & UIRemoteNotificationTypeBadge)
+        {
+            NSLog(@"Notifications - Badge");
+            
+            // if push notifications now on (and were previously off)
+            if (self.updateTimer)
+            {
+                [self.updateTimer invalidate];
+                self.updateTimer = nil;
+            }
+         
+            // in case of new links/requests/messages
+            [self reloadData];
+        }
         else
         {
             // Load data from server periodically
@@ -130,10 +133,10 @@
                 self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
             }
             
-            if (remoteNotification & UIRemoteNotificationTypeBadge)
+            /*if (remoteNotification & UIRemoteNotificationTypeBadge)
             {
                 NSLog(@"Notifications - Badge");
-            }
+            }*/
             
             if (remoteNotification & UIRemoteNotificationTypeSound)
             {
@@ -300,6 +303,29 @@
 }
 
 #pragma mark - Push notifications
+
+- (UIUserNotificationType)getEnabledNotificationTypes
+{
+    UIRemoteNotificationType enabledRemoteNotificationTypes;
+    
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(currentUserNotificationSettings)])
+    {
+        // iOS 8+
+        UIUserNotificationSettings *userNotificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+        
+        enabledRemoteNotificationTypes = userNotificationSettings.types;
+    }
+    else
+    {
+        // iOS 7 and below
+        enabledRemoteNotificationTypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+    }
+    
+    // other tests
+    // if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)])
+    
+    return enabledRemoteNotificationTypes;
+}
 
 - (void)updateApplicationBadge
 {

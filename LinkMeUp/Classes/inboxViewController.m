@@ -89,8 +89,15 @@
     {
         self.sentNewLink = NO;
         
-        // present push notif screen, if haven't before
-        if (self.sharedData.me[@"didAskPush"] == nil || [self.sharedData.me[@"didAskPush"] boolValue] == false)
+        // present push notif screen, if applicable
+        LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+        UIUserNotificationType remoteNotification = [appDelegate getEnabledNotificationTypes];
+        
+        BOOL didAskPushThisSession = [[NSUserDefaults standardUserDefaults] boolForKey:kDidAskPushThisSession];
+        
+        if (remoteNotification == UIRemoteNotificationTypeNone
+            && [self.sharedData.me[kNumberPushRequests] integerValue] < PUSH_REQUESTS_LIMIT
+            && !didAskPushThisSession)
         {
             [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(presentPushScreen) userInfo:nil repeats:NO];
         }

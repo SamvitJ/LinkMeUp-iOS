@@ -1067,7 +1067,7 @@
     // if other requests are in the queue and I am low priority...
     if ([self.recLinkUpdateQueue count] > 1 && [self.recLinkUpdateQueue[index][@"priority"] integerValue] == kPriorityLow)
     {
-        //NSLog(@"Rec: low priority %u", index);
+        // NSLog(@"Rec: low priority %u", index);
         // set my state as "completed"
         self.recLinkUpdateQueue[index][@"state"] = [NSNumber numberWithInt: kStateCompleted];
     }
@@ -1075,7 +1075,7 @@
     // if a later request completed earlier...
     else if ([self.recLinkUpdateQueue[index][@"state"] integerValue] == kStateCancelled)
     {
-        //NSLog(@"Rec: cancelled %u", index);
+        // NSLog(@"Rec: cancelled %u", index);
         // set my state as "completed"
         self.recLinkUpdateQueue[index][@"state"] = [NSNumber numberWithInt: kStateCompleted];
     }

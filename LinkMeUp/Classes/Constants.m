@@ -44,11 +44,25 @@ NSString *const kDidFailToRegisterForPush = @"didFailToRegisterForPush";
 //----------------------------------------------------------------------------
 
 
+// STANDARD USER DEFAULTS ----------------------------------------------------
+
+NSString *const kDidAskPushThisSession = @"didAskPush";
+
+//----------------------------------------------------------------------------
+
+
 // DICTIONARY KEYS -----------------------------------------------------------
 
-NSString *const kContact = @"contact";
-NSString *const kIsUser = @"isUser";
-NSString *const kSelected = @"selected";
+// *** PFUser ***
+NSString *const kNumberPushRequests = @"numberPushRequests";
+
+NSString *const kRecentRecipients = @"recentRecipients"; // unused
+NSString *const kAddressBook = @"address_book";          // unused
+
+// *** contactAndState (contactsVC) ***
+NSString *const kContact = @"contact";                   // unused
+NSString *const kIsUser = @"isUser";                     // unused
+NSString *const kSelected = @"selected";                 // unused
 
 //----------------------------------------------------------------------------
 
