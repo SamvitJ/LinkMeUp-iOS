@@ -214,31 +214,56 @@ Example
     // initialize table content
     self.tableContent = [[NSMutableArray alloc] init];
     
+    // friends + suggestions + request senders
+    NSArray *allUsers = [[self.sharedData.myFriends arrayByAddingObjectsFromArray:self.sharedData.suggestedFriends] arrayByAddingObjectsFromArray: self.sharedData.requestSenders];
+    bool manyLMUContacts = ([allUsers count] >= MANY_LMU_CONTACTS ? true : false);
+    
     // alphabetical section
     for (char c = 'A'; c <= 'Z'; c++)
     {
         NSString *sectionTitle = [NSString stringWithFormat:@"%c", c];
         NSMutableArray *sectionContent = [[NSMutableArray alloc] init];
         
-        // this isn't exactly what we want, but it works for now
+        // sort descriptors
         NSSortDescriptor *sortByName = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
         NSSortDescriptor *sortByUsername = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES];
         
-        NSArray *filteredFriends = [self.sharedData.myFriends filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
-        NSArray *sortedFriends = [filteredFriends sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortByName, sortByUsername, nil]];
+        // if many LMU contacts, include with all others in alphabetical sections
+        if (manyLMUContacts)
+        {
+            NSArray *filteredUsers = [allUsers filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
+            
+            // this isn't exactly what we want, but it works for now
+            NSArray *sortedUsers = [filteredUsers sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortByName, sortByUsername, nil]];
         
+            for (NSDictionary *user in sortedUsers)
+                [sectionContent addObject:[@{@"contact":user, @"selected": @NO, @"isUser": @YES} mutableCopy]];
+        }
+            
         NSArray *filteredNonUsers = [self.sharedData.nonUserContacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:self.predicateFormat, sectionTitle, sectionTitle]];
         NSArray *sortedNonUsers = [filteredNonUsers sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]];
-        
-        for (NSDictionary *friend in sortedFriends)
-            [sectionContent addObject:[@{@"contact":friend, @"selected": @NO, @"isUser": @YES} mutableCopy]];
-        
+
         for (NSDictionary *nonUser in sortedNonUsers)
             [sectionContent addObject:[@{@"contact":nonUser, @"selected": @NO, @"isUser": @NO} mutableCopy]];
         
         [self.tableContent addObject:@[sectionTitle, sectionContent]];
     }
     
+    // if not many LMU contacts, add LMU-only section near top
+    if (!manyLMUContacts)
+    {
+        NSString *usersIndexTitle = UNICODE_LINK;
+        NSMutableArray *usersContent = [[NSMutableArray alloc] init];
+        
+        NSSortDescriptor *sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:NO];
+        NSArray *sortedUsers = [allUsers sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortByDate, nil]];
+        
+        for (NSDictionary *user in sortedUsers)
+            [usersContent addObject:[@{@"contact":user, @"selected": @NO, @"isUser": @YES} mutableCopy]];
+     
+        // add to top
+        [self.tableContent insertObject:@[usersIndexTitle, usersContent] atIndex:0];
+    }
     
     // recents section
     NSString *recentsIndexTitle = UNICODE_WATCH;
@@ -1005,8 +1030,22 @@ Example
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 5.0f, tableView.frame.size.width, 20.0f)];
     [label setFont:[UIFont boldSystemFontOfSize:16]];
     
-    // set section title (same as index title, except for Recents section)
-    NSString *sectionTitle = (section ? self.tableContent[section][0] : @"Recents");
+    // set section title (same as index title, except for Recents and LMU Users sections)
+    NSString *sectionTitle;
+    
+    if (section == 0)
+    {
+        sectionTitle = @"Recents";
+    }
+    else if (section == 1 && [self.tableContent[section][0] isEqualToString: UNICODE_LINK])
+    {
+        sectionTitle = @"LinkMeUp Users";
+    }
+    else
+    {
+        sectionTitle = self.tableContent[section][0];
+    }
+    
     [label setText: sectionTitle];
     
     [view addSubview:label];
