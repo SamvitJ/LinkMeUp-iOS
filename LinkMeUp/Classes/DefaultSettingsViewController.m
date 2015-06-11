@@ -70,16 +70,11 @@
         UIUserNotificationType remoteNotification = [appDelegate getEnabledNotificationTypes];
         PFUser *me = [PFUser currentUser];
        
-        BOOL didAskPushThisSession = [[NSUserDefaults standardUserDefaults] boolForKey:kDidAskPushThisSession];
-        NSLog(@"%@ launch returning", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
-        NSLog(@"%u", didAskPushThisSession);
-        
-        // temporary
-        didAskPushThisSession = YES;
+        BOOL didShowPushVC = [[[NSUserDefaults standardUserDefaults] objectForKey:kDidShowPushVCThisSession] boolValue];
         
         if (remoteNotification == UIRemoteNotificationTypeNone
             && [me[kNumberPushRequests] integerValue] < PUSH_REQUESTS_LIMIT
-            && !didAskPushThisSession)
+            && !didShowPushVC)
         {
             pushNotifViewController *pnvc = [[pushNotifViewController alloc] init];
             [self presentViewController:pnvc animated:YES completion: nil];
@@ -313,12 +308,6 @@
     else // user logged in
     {        
         NSLog(@"User logged in");
-        
-        // set did ask push to NO
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey: kDidAskPushThisSession];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        NSLog(@"%@ user logged in", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
-        
         [self launchApplication: kApplicationLaunchReturning];
     }
 }

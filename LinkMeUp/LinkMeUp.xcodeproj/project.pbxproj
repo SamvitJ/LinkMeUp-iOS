@@ -81,7 +81,7 @@
 		F1874CB21A3CA17100E4CF43 /* findContactsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */; };
 		F187D58C1B26605C008370D7 /* pushNotifViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F187D58A1B26605C008370D7 /* pushNotifViewController.m */; };
 		F187D58D1B26605C008370D7 /* pushNotifViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F187D58B1B26605C008370D7 /* pushNotifViewController.xib */; };
-		F187D5941B26759C008370D7 /* PushNotifShort.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F187D5931B26759C008370D7 /* PushNotifShort.jpg */; };
+		F187D5A41B292B09008370D7 /* PushNotifNewLink.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F187D5A31B292B09008370D7 /* PushNotifNewLink.jpg */; };
 		F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */; };
 		F1A17D75195E8C790095BB7E /* FriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A17D74195E8C790095BB7E /* FriendRequest.m */; };
 		F1A17D8B196107030095BB7E /* contactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A17D89196107030095BB7E /* contactsViewController.m */; };
@@ -270,7 +270,7 @@
 		F187D5891B26605C008370D7 /* pushNotifViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pushNotifViewController.h; sourceTree = "<group>"; };
 		F187D58A1B26605C008370D7 /* pushNotifViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pushNotifViewController.m; sourceTree = "<group>"; };
 		F187D58B1B26605C008370D7 /* pushNotifViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = pushNotifViewController.xib; path = Classes/pushNotifViewController.xib; sourceTree = "<group>"; };
-		F187D5931B26759C008370D7 /* PushNotifShort.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = PushNotifShort.jpg; path = Images/Screenshots/PushNotifShort.jpg; sourceTree = "<group>"; };
+		F187D5A31B292B09008370D7 /* PushNotifNewLink.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = PushNotifNewLink.jpg; path = Images/Screenshots/PushNotifNewLink.jpg; sourceTree = "<group>"; };
 		F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = glyphicons_343_thumbs_up_selected.png; path = "Images/Toolbar Icons/glyphicons_343_thumbs_up_selected.png"; sourceTree = "<group>"; };
 		F1A17D73195E8C790095BB7E /* FriendRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequest.h; sourceTree = "<group>"; };
 		F1A17D74195E8C790095BB7E /* FriendRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendRequest.m; sourceTree = "<group>"; };
@@ -726,7 +726,7 @@
 		F187D58E1B266AAB008370D7 /* Screenshots */ = {
 			isa = PBXGroup;
 			children = (
-				F187D5931B26759C008370D7 /* PushNotifShort.jpg */,
+				F187D5A31B292B09008370D7 /* PushNotifNewLink.jpg */,
 			);
 			name = Screenshots;
 			sourceTree = "<group>";
@@ -1021,6 +1021,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11DE4751990094000CD814E /* searchViewController.xib in Resources */,
+				F187D5A41B292B09008370D7 /* PushNotifNewLink.jpg in Resources */,
 				E577724219B003C20057910F /* login-button-small.png in Resources */,
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				E577723019B0038C0057910F /* glyphicons_136_cogwheel.png in Resources */,
@@ -1064,7 +1065,6 @@
 				E577724019B003C20057910F /* login-button-small-pressed.png in Resources */,
 				E577727819B004AE0057910F /* glyphicons_012_heart.png in Resources */,
 				F1C349541A01A8320049DDA3 /* glyphicons_043_group.png in Resources */,
-				F187D5941B26759C008370D7 /* PushNotifShort.jpg in Resources */,
 				E577727A19B004AE0057910F /* glyphicons_019_heart_empty.png in Resources */,
 				F1D7B20619749BF000A920A7 /* verificationViewController.xib in Resources */,
 				F1A17DF11964C21F0095BB7E /* inboxViewController.xib in Resources */,

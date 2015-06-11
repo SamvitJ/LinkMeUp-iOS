@@ -15,6 +15,9 @@
 // the shared application data model
 @property (nonatomic, weak) Data *sharedData;
 
+// screen presentation timer
+@property (nonatomic, strong) NSTimer *didPresentTimer;
+
 // UI elements
 @property (weak, nonatomic) IBOutlet UIView *header;
 @property (weak, nonatomic) IBOutlet UILabel *lastTextLine;

@@ -41,12 +41,17 @@ const NSInteger kPhoneLengthSansUSCC = 10; // phone # length w/o U.S. country co
 NSString *const kDidRegisterForPush = @"didRegisterForPush";
 NSString *const kDidFailToRegisterForPush = @"didFailToRegisterForPush";
 
+NSString *const kUserRespondedToPushNotifAlertView = @"userRespondedToPushNotifAlertView";
+
 //----------------------------------------------------------------------------
 
 
 // STANDARD USER DEFAULTS ----------------------------------------------------
 
-NSString *const kDidAskPushThisSession = @"didAskPush";
+NSString *const kDidShowPushVCThisSession = @"didShowPushVCThisSession";
+
+NSString *const kDidAttemptToRegisterForPushNotif = @"didAttemptToRegisterForPushNotif";
+NSString *const kDidPresentPushNotifAlertView = @"didPresentPushNotifAlertView";
 
 //----------------------------------------------------------------------------
 

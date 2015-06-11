@@ -93,11 +93,11 @@
         LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
         UIUserNotificationType remoteNotification = [appDelegate getEnabledNotificationTypes];
         
-        BOOL didAskPushThisSession = [[NSUserDefaults standardUserDefaults] boolForKey:kDidAskPushThisSession];
+        BOOL didShowPushVC = [[[NSUserDefaults standardUserDefaults] objectForKey:kDidShowPushVCThisSession] boolValue];
         
         if (remoteNotification == UIRemoteNotificationTypeNone
             && [self.sharedData.me[kNumberPushRequests] integerValue] < PUSH_REQUESTS_LIMIT
-            && !didAskPushThisSession)
+            && !didShowPushVC)
         {
             [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(presentPushScreen) userInfo:nil repeats:NO];
         }

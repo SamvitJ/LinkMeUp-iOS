@@ -55,6 +55,10 @@
     [self.window setRootViewController:self.ds];
     [self.window makeKeyAndVisible];
     
+    // set didShowPushVCThisSession to NO
+    [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidShowPushVCThisSession];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     // Determine if app was launched from push notification
     NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     self.notificationPayload = notificationPayload;
@@ -77,9 +81,19 @@
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
+    NSLog(@"Did become active");
+    
+    // FB
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
-        
-    // reload data if no push notifiations
+    
+    // special case code
+    // if push notif alert view was presented, notify pushNotifVC that user responded
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidPresentPushNotifAlertView] boolValue])
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUserRespondedToPushNotifAlertView object:nil];
+    }
+    
+    // if push notifications are off, configure timer to reload data regularly
     UIUserNotificationType remoteNotification = [self getEnabledNotificationTypes];
     
     if (remoteNotification == UIRemoteNotificationTypeNone)
@@ -156,6 +170,16 @@
      Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
      Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
      */
+    
+    NSLog(@"Will resign active");
+    
+    // special case code
+    // if attempted to register for push notif, and now leaving the app, push notif alert view was presented
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidAttemptToRegisterForPushNotif] boolValue])
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey: kDidPresentPushNotifAlertView];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -521,6 +545,10 @@
     // unregister for push notifications
     [currentInstallation removeObject:[NSString stringWithFormat:@"user_%@", self.myData.me.objectId] forKey:@"channels"];
     [currentInstallation saveInBackground];
+    
+    // set didShowPushVCThisSession to NO
+    [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidShowPushVCThisSession];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     // pop all tabs to root view controller
     for (UINavigationController *vc in self.tbc.viewControllers)
