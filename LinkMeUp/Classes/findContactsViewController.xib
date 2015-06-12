@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="findContactsViewController">
             <connections>
                 <outlet property="continueButton" destination="4n2-LL-E6a" id="OiS-4r-yYR"/>
+                <outlet property="lastLine" destination="B8D-hf-Xi3" id="VK8-AM-oab"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -70,31 +71,31 @@
                     </constraints>
                 </view>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp works best when you're " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKU-N3-d35">
-                    <rect key="frame" x="20" y="121" width="292" height="21"/>
+                    <rect key="frame" x="20" y="104" width="292" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="connected with your friends." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BvW-5B-ZyR">
-                    <rect key="frame" x="20" y="151" width="292" height="21"/>
+                    <rect key="frame" x="20" y="133" width="292" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp uses your address book" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PHY-8c-ymV">
-                    <rect key="frame" x="20" y="202" width="267" height="21"/>
+                    <rect key="frame" x="20" y="178" width="267" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="to help you find and add your friends," lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="noh-mX-hhe">
-                    <rect key="frame" x="20" y="231" width="292" height="21"/>
+                    <rect key="frame" x="20" y="207" width="292" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="so you can start sharing right away." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B8D-hf-Xi3">
-                    <rect key="frame" x="20" y="260" width="272" height="21"/>
+                    <rect key="frame" x="20" y="236" width="272" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>

@@ -19,6 +19,20 @@
 @implementation findContactsViewController
 
 
+#pragma mark - Data initialization
+
+- (Data *)sharedData
+{
+    if (!_sharedData)
+    {
+        LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+        _sharedData = appDelegate.myData;
+        return _sharedData;
+    }
+    
+    else return _sharedData;
+}
+
 #pragma mark - View controller lifecycle
 
 - (void)viewDidLoad
@@ -31,6 +45,43 @@
     
     // add link with Facebook button
     // [self.view addSubview:[self createFacebookButton]];
+    
+    // add screenshot
+    UIImage *image;
+    CGFloat aspectRatio;
+    CGFloat imageWidth;
+    
+    if (IS_IPHONE_5)
+    {
+        NSLog(@"iPhone >= 5");
+        image = [UIImage imageNamed:@"AddressBook5.jpg"];
+        
+        aspectRatio = image.size.height / image.size.width;
+        imageWidth = self.view.frame.size.width / 1.55;
+    }
+    else
+    {
+        NSLog(@"iPhone 4");
+        image = [UIImage imageNamed:@"AddressBook4.jpg"];
+        
+        aspectRatio = image.size.height / image.size.width;
+        imageWidth = self.view.frame.size.width / 1.90;
+    }
+    
+    // image position
+    CGFloat textEnd = self.lastLine.frame.origin.y + self.lastLine.frame.size.height;
+    CGFloat buffer = 25;
+    
+    // image container
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - imageWidth)/2,  textEnd + buffer, imageWidth, imageWidth * aspectRatio)];
+    [self.imageView setImage:image];
+    
+    [self.imageView.layer setBorderColor: [[UIColor lightGrayColor] CGColor]];
+    [self.imageView.layer setBorderWidth: 1.0];
+    
+    // add image
+    [self.view addSubview: self.imageView];
+    [self.view sendSubviewToBack: self.imageView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,6 +94,49 @@
 
 - (IBAction)continuePressed:(id)sender
 {
+    // update numberABRequests field
+    UIViewController *presenting = self.presentingViewController;
+    if ([presenting isKindOfClass:[verificationViewController class]]) // presented in sign up flow
+    {
+        NSLog(@"Continue pressed - verification");
+        
+        // presented in sign up flow
+        PFUser *me = [PFUser currentUser];
+        me[kNumberABRequests] = [NSNumber numberWithInt: 1];
+        [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (error)
+            {
+                NSLog(@"Error saving numberABRequests state to Parse %@ %@", error, [error userInfo]);
+            }
+        }];
+    }
+    else // presented by friendsVC on contactsVC, after connections have loaded (and shared data has been initialized)
+    {
+        NSLog(@"Continue pressed - friends/contacts VC");
+        
+        if ([self.sharedData.me[kNumberABRequests] integerValue] > 0)
+        {
+            NSInteger oldValue = [self.sharedData.me[kNumberABRequests] integerValue];
+            self.sharedData.me[kNumberABRequests] = [NSNumber numberWithInteger:(oldValue + 1)];
+            [self.sharedData.me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (error)
+                {
+                    NSLog(@"Error saving numberABRequests state to Parse %@ %@", error, [error userInfo]);
+                }
+            }];
+        }
+        else
+        {
+            self.sharedData.me[kNumberABRequests] = [NSNumber numberWithInt: 1];
+            [self.sharedData.me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (error)
+                {
+                    NSLog(@"Error saving numberABRequests state to Parse %@ %@", error, [error userInfo]);
+                }
+            }];
+        }
+    }
+    
     // ask for address book permission
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
     {
@@ -51,9 +145,14 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (granted)
+                {
                    NSLog(@"Address book access permission granted");
+                }
                 
-                else NSLog(@"Address book access permission denied");
+                else
+                {
+                   NSLog(@"Address book access permission denied");
+                }
                     
                 [self returnAndLaunch];
                 
@@ -63,7 +162,7 @@
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied)
     {
         NSString *alertTitle = @"Enable Contacts Access";
-        NSString *alertMessage = @"Please go to Settings -> Privacy -> Contacts and toggle permissions for LinkMeUp to On.";
+        NSString *alertMessage = [NSString stringWithFormat: @"\nPlease go to Setting \u2192 Privacy \u2192 Contacts.\n\n Toggle slider for LinkMeUp to On, and then restart LinkMeUp."];
         
         if (IS_IOS8)
         {
@@ -90,7 +189,7 @@
         }
         
     }
-    else // kABAuthorizationStatusAuthorized
+    else // kABAuthorizationStatusAuthorized - shouldn't happen
     {
         [self returnAndLaunch];
     }
@@ -164,39 +263,44 @@
     // climb up through presenting view controller hierarchy...
     PFUser *user = [PFUser currentUser];
     
-    if ([PFFacebookUtils isLinkedWithUser:(PFUser *)user] && (user.email == NULL))
+    UIViewController *presenting = self.presentingViewController;
+    if ([presenting isKindOfClass:[verificationViewController class]])
     {
-        verificationViewController *verify = (verificationViewController *) self.presentingViewController;
-        myLogInViewController *logIn = (myLogInViewController *) verify.presentingViewController;
-        DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+        NSLog(@"Return and launch - verification");
         
-        [defaultSettings dismissViewControllerAnimated:YES completion:nil];
-    }
-    
-    else if (user.isNew) // new user, but not created via Facebook
-    {
-        verificationViewController *verify = (verificationViewController *) self.presentingViewController;
-        mySignUpViewController *signUp = (mySignUpViewController *) verify.presentingViewController;
-        myLogInViewController *logIn = (myLogInViewController *) signUp.presentingViewController;
-        DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+        if ([PFFacebookUtils isLinkedWithUser:(PFUser *)user] && (user.email == NULL)) // new user, created via FB login
+        {
+            verificationViewController *verify = (verificationViewController *) presenting;
+            myLogInViewController *logIn = (myLogInViewController *) verify.presentingViewController;
+            DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+            
+            [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+        }
         
-        [defaultSettings dismissViewControllerAnimated:YES completion:nil];
-    }
-    
-    else // exisiting user
-    {
-        UIViewController *presenting = self.presentingViewController;
-        if ([presenting isKindOfClass:[verificationViewController class]])
+        else if (user.isNew) // new user, but not created via Facebook
+        {
+            verificationViewController *verify = (verificationViewController *) presenting;
+            mySignUpViewController *signUp = (mySignUpViewController *) verify.presentingViewController;
+            myLogInViewController *logIn = (myLogInViewController *) signUp.presentingViewController;
+            DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+            
+            [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+        }
+        
+        else // V1 user who previously denied address book permissions
         {
             verificationViewController *verify = (verificationViewController *) presenting;
             UIViewController *presentingPresenting = verify.presentingViewController;
             
             [presentingPresenting dismissViewControllerAnimated:YES completion:nil];
         }
-        else
-        {
-            [presenting dismissViewControllerAnimated:YES completion:nil];
-        }
+    }
+    else // exisiting user
+    {
+        NSLog(@"Return and launch - other");
+        
+        UIViewController *presenting = self.presentingViewController;
+        [presenting dismissViewControllerAnimated:YES completion:nil];
     }
 }
 

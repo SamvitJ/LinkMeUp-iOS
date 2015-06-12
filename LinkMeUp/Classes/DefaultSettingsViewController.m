@@ -216,6 +216,10 @@
         // create status label
         [self createStatusLabel];
         
+        // used to determine whether to present findContactsVC
+        [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidEnterFriendsVC];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         PFUser *user = [PFUser currentUser];
         
         // new account is a facebook account (created through "login with facebook" option)

@@ -69,6 +69,8 @@
 		F15849C51953E8D6005EAB1B /* DefaultSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F15849C31953E8D6005EAB1B /* DefaultSettingsViewController.m */; };
 		F15849C81954A6BD005EAB1B /* DefaultSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F15849C71954A6BD005EAB1B /* DefaultSettingsViewController.xib */; };
 		F15849CB1954D7A4005EAB1B /* myLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F15849CA1954D7A4005EAB1B /* myLogInViewController.m */; };
+		F15FD5D21B2A63730031CEC5 /* AddressBook4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */; };
+		F15FD5D31B2A63730031CEC5 /* AddressBook5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */; };
 		F1697B551A02CCBF00E0F9FD /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1697B541A02CCBF00E0F9FD /* FacebookSDK.framework */; };
 		F17AC6A819B69BDA00BF95CE /* legalInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F17AC6A619B69BDA00BF95CE /* legalInfoViewController.m */; };
 		F17AC6A919B69BDA00BF95CE /* legalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6A719B69BDA00BF95CE /* legalInfoViewController.xib */; };
@@ -232,6 +234,8 @@
 		F15849C71954A6BD005EAB1B /* DefaultSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DefaultSettingsViewController.xib; path = Classes/DefaultSettingsViewController.xib; sourceTree = "<group>"; };
 		F15849C91954D7A4005EAB1B /* myLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myLogInViewController.h; sourceTree = "<group>"; };
 		F15849CA1954D7A4005EAB1B /* myLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myLogInViewController.m; sourceTree = "<group>"; };
+		F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = AddressBook4.jpg; path = Images/Screenshots/AddressBook4.jpg; sourceTree = "<group>"; };
+		F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = AddressBook5.jpg; path = Images/Screenshots/AddressBook5.jpg; sourceTree = "<group>"; };
 		F1697B541A02CCBF00E0F9FD /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = Frameworks/FacebookSDK.framework; sourceTree = "<group>"; };
 		F17AC6A519B69BDA00BF95CE /* legalInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = legalInfoViewController.h; sourceTree = "<group>"; };
 		F17AC6A619B69BDA00BF95CE /* legalInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = legalInfoViewController.m; sourceTree = "<group>"; };
@@ -726,6 +730,8 @@
 		F187D58E1B266AAB008370D7 /* Screenshots */ = {
 			isa = PBXGroup;
 			children = (
+				F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */,
+				F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */,
 				F187D5A31B292B09008370D7 /* PushNotifNewLink.jpg */,
 			);
 			name = Screenshots;
@@ -1038,6 +1044,7 @@
 				F1D7B24A197ED69000A920A7 /* linkViewController.xib in Resources */,
 				F17AC6A919B69BDA00BF95CE /* legalInfoViewController.xib in Resources */,
 				F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */,
+				F15FD5D21B2A63730031CEC5 /* AddressBook4.jpg in Resources */,
 				F101DCA919A273E300D0D057 /* likeloveStatusViewController.xib in Resources */,
 				E577727C19B004AE0057910F /* glyphicons_048_dislikes.png in Resources */,
 				F1FF125319BA8A0800FBAD8C /* Default-568h@2x.png in Resources */,
@@ -1058,6 +1065,7 @@
 				F11DE3F2198C1C9400CD814E /* searchResultsViewController.xib in Resources */,
 				F1FF125119BA885C00FBAD8C /* Images.xcassets in Resources */,
 				E577725919B003DE0057910F /* buttonRequest.png in Resources */,
+				F15FD5D31B2A63730031CEC5 /* AddressBook5.jpg in Resources */,
 				E577728019B004AE0057910F /* glyphicons_211_right_arrow.png in Resources */,
 				E577728519B004AE0057910F /* glyphicons_343_thumbs_up.png in Resources */,
 				F15849C81954A6BD005EAB1B /* DefaultSettingsViewController.xib in Resources */,

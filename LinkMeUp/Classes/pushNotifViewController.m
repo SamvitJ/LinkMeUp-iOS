@@ -169,7 +169,7 @@
 {
     if ([self.sharedData.me[kNumberPushRequests] integerValue] > 0)
     {
-        NSLog(@"Case 1");
+        NSLog(@"Push Requests Case 1 - Custom Alert View");
         
         // update numberPushRequests field
         NSInteger oldValue = [self.sharedData.me[kNumberPushRequests] integerValue];
@@ -185,9 +185,9 @@
     }
     else
     {
-        NSLog(@"Case 2");
+        NSLog(@"Push Requests Case 2 - Requesting System Permissions");
         
-        // update state
+        // update numberPushRequests field
         self.sharedData.me[kNumberPushRequests] = [NSNumber numberWithInt: 1];
         [self.sharedData.me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (error)
@@ -227,7 +227,7 @@
 - (void)presentCustomAlertView
 {
     NSString *alertTitle = @"Enable Push Notifications";
-    NSString *alertMessage = [NSString stringWithFormat: @"Please go to Settings -> Notification Center -> LinkMeUp.\n\n Then select Banners and toggle \"Badge App Icon\" to On."];
+    NSString *alertMessage = [NSString stringWithFormat: @"\nPlease go to Settings \u2192 Notification Center \u2192 LinkMeUp.\n\n Then select Banners and toggle \"Badge App Icon\" to On."];
     
     if (IS_IOS8)
     {

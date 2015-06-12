@@ -15,6 +15,8 @@
 #import "Link.h"
 #import "contactsTableViewCell.h"
 
+#import "findContactsViewController.h"
+
 #import "inboxViewController.h"
 
 
@@ -90,7 +92,7 @@ Example
 
 - (void)didFinishLoadingConnections
 {
-    if (![self.tableContent count]) // empty or nil array
+    if (![self haveContacts]) // empty or nil array
     {
         [self populateTableContent];
         [self.tableView reloadData];
@@ -141,6 +143,12 @@ Example
     [self.sendSong addTarget:self action:@selector(sendSongStateChanged:) forControlEvents:(UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected)];
     [self.sendSong addTarget:self action:@selector(sendSongDragExit:) forControlEvents:UIControlEventTouchDragExit];
     [self.sendSong addTarget:self action:@selector(sendSongDragEnter:) forControlEvents:UIControlEventTouchDragEnter];
+    
+    // display findContactsViewController, if appropriate
+    if (self.sharedData.loadedConnections)
+    {
+        [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(presentFindContacts) userInfo:nil repeats:NO];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -207,7 +215,32 @@ Example
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedConnections" object:nil];
 }
 
+#pragma mark - Address book permissions
+
+- (void)presentFindContacts
+{
+    bool ABNotDetermined = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined);
+    bool ABDenied = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied);
+    
+    bool fewRequests = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
+    bool haveContacts = [self haveContacts];
+    
+    NSLog(@"%u %u %u %u", ABNotDetermined, ABDenied, fewRequests, haveContacts);
+    
+    if ((ABNotDetermined || ABDenied) && fewRequests && !haveContacts)
+    {
+        findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
+        [self presentViewController:cwfvc animated:YES completion:nil];
+    }
+}
+
 #pragma mark - Local data/state methods
+
+- (BOOL)haveContacts
+{
+    return ([self.sharedData.myFriends count] > 0) || ([self.sharedData.suggestedFriends count] > 0) ||
+    ([self.sharedData.requestSenders count] > 0) | ([self.sharedData.nonUserContacts count] > 0);
+}
 
 - (void)populateTableContent
 {
@@ -614,10 +647,15 @@ Example
             [message appendString:self.myLink.annotation];
         }
     
-        [message appendString:@"\n\n"];
-        [message appendString:@"Sent via LinkMeUp - download the iPhone app at https://appsto.re/i6Lr6JT"];
-        
-        // [NSString stringWithFormat:@"Sent via <a href=\"sms:%@&body=%@\">LinkMeUp</a>", [contact[@"phone"] firstObject], @"https://appsto.re/i6Lr6JT"];
+        // if sent to at least SEVERAL_RECENTS, then add App Store link to message
+        if ([self.sharedData.recentRecipients count] >= SEVERAL_RECENTS)
+        {
+            [message appendString:@"\n\n"];
+            [message appendString:@"Sent via LinkMeUp (https://appsto.re/i6Lr6JT)"];
+            
+            /* HTML link
+            [NSString stringWithFormat:@"Sent via <a href=\"sms:%@&body=%@\">LinkMeUp</a>", [contact[@"phone"] firstObject], @"https://appsto.re/i6Lr6JT"]; */
+        }
         
         controller.body = message;
         

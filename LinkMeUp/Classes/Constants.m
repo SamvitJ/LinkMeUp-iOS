@@ -53,6 +53,8 @@ NSString *const kDidShowPushVCThisSession = @"didShowPushVCThisSession";
 NSString *const kDidAttemptToRegisterForPushNotif = @"didAttemptToRegisterForPushNotif";
 NSString *const kDidPresentPushNotifAlertView = @"didPresentPushNotifAlertView";
 
+NSString *const kDidEnterFriendsVC = @"didEnterFriendsVC";
+
 //----------------------------------------------------------------------------
 
 
@@ -60,6 +62,7 @@ NSString *const kDidPresentPushNotifAlertView = @"didPresentPushNotifAlertView";
 
 // *** PFUser ***
 NSString *const kNumberPushRequests = @"numberPushRequests";
+NSString *const kNumberABRequests = @"numberABRequests";
 
 NSString *const kRecentRecipients = @"recentRecipients"; // unused
 NSString *const kAddressBook = @"address_book";          // unused

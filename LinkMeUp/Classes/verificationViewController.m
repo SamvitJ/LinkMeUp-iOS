@@ -54,7 +54,7 @@
             }];
             
             // user completed verification process
-            [[NSUserDefaults standardUserDefaults] setObject:@NO forKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             // remove code fields and display activity indicator
@@ -66,7 +66,7 @@
             // pause
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 
-                // display connectWithFriendsViewController
+                // display findContactsViewController
                 if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied ||
                     ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
                 {
