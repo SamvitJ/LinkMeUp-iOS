@@ -11,6 +11,9 @@
 #import "songInfoViewController.h"
 #import "searchResultsViewController.h"
 
+// test
+#import "pushNotifViewController.h"
+
 @interface searchViewController ()
 
 @end
@@ -385,6 +388,10 @@
     
     if (self.sharedData.newSong)
         [self clearAndInitialize];
+    
+    // test
+    // pushNotifViewController *pnvc = [[pushNotifViewController alloc] init];
+    // [self presentViewController:pnvc animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning

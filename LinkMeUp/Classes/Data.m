@@ -23,8 +23,9 @@
     NSMutableArray *newPendingRequests;
     
      // load suggestions
-    NSArray *addrBookSuggestions
-    NSArray *facebookSuggestions
+    NSArray *addrBookSuggestions;
+    NSArray *facebookSuggestions;
+    NSMutableArray *newNonUserContacts;
      
      // load links
     int newReceivedLinkUpdates;
@@ -39,8 +40,8 @@
     // connections status booleans
     BOOL loadedReceivedRequests;
     BOOL loadedCurrentFriends;
-    
     BOOL loadedPendingRequests;
+    
     BOOL loadedSuggestions;
 }
 
@@ -103,6 +104,10 @@
         // friend suggestions
         self.facebookFriends = [[NSMutableArray alloc] init];   // NSDictionary<FBGraphUser>
         self.suggestedFriends = [[NSMutableArray alloc] init];  // PFUser
+        
+        // address book
+        self.addressBookData = [[NSMutableArray alloc] init];   // NSDictionary
+        self.nonUserContacts = [[NSMutableArray alloc] init];   // NSDictionary
         
         // links
         self.receivedLinkData = [[NSMutableArray alloc] init];  // NSDictionary
@@ -328,7 +333,7 @@
     loadedReceivedRequests = NO;
     loadedCurrentFriends = NO;
     loadedPendingRequests = NO;
-    
+
     
     
     // initialize temp variables
@@ -342,11 +347,12 @@
     [newRequestsQuery whereKey:@"accepted" equalTo:@NO];
     [newRequestsQuery orderByDescending:@"createdAt"];
     [newRequestsQuery includeKey:@"sender"];
+    [newRequestsQuery setLimit: 1000];
     [newRequestsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %lu friend requests.", (unsigned long)[objects count]);
+            NSLog(@"Successfully retrieved %lu received friend requests.", (unsigned long)[objects count]);
             newFriendRequests = (NSMutableArray *)objects;
             
             // friend request information
@@ -393,6 +399,7 @@
     [newFriendsQuery whereKey:@"accepted" equalTo:@YES];
     [newFriendsQuery orderByDescending:@"createdAt"];
     [newFriendsQuery includeKey:@"receiver"];
+    [newFriendsQuery setLimit: 1000];
     [newFriendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
@@ -420,10 +427,11 @@
             
             PFRelation *myFriends = [self.me relationForKey:@"friends"];
             PFQuery *friendsQuery = [myFriends query];
+            [friendsQuery setLimit: 1000];
             [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error)
                 {
-                    NSLog(@"Successfully retrieved %lu friends", (unsigned long)[objects count]);
+                    NSLog(@"Successfully retrieved %lu friends.", (unsigned long)[objects count]);
                     newMyFriends = (NSMutableArray *)objects;
                     
                     // update data model
@@ -458,24 +466,26 @@
     [pendingRequestsQuery whereKey:@"accepted" equalTo:@NO];
     [pendingRequestsQuery orderByDescending:@"createdAt"];
     [pendingRequestsQuery includeKey:@"receiver"];
+    [pendingRequestsQuery setLimit: 1000];
     [pendingRequestsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
+            NSLog(@"Successfully retrieved %lu pending, sent friend requests.", (unsigned long)[objects count]);
+            
             // recipients of friend requests
             for (int i = 0; i < [objects count]; i++)
             {
                 FriendRequest *pending = objects[i];
-                newPendingRequests[i] = pending.receiver;
+                newPendingRequests[i] = (pending.receiver ? pending.receiver : [NSNull null]);
             }
             
             // update data model
             self.pendingRequests = newPendingRequests;
         }
-        
         else
         {
             // Log details of the failure
-            NSLog(@"Error loading outgoing friend requests %@ %@", error, [error userInfo]);
+            NSLog(@"Error loading pending, sent friend requests %@ %@", error, [error userInfo]);
         }
         
         // set status and post notifications
@@ -495,10 +505,10 @@
     // initialize status boolean
     loadedSuggestions = NO;
     
-    // initialize temp variable
+    // initialize temp variables
     __block NSArray *addrBookSuggestions = [[NSArray alloc] init];
     __block NSArray *facebookSuggestions = [[NSArray alloc] init];
-    
+    NSMutableArray *newNonUserContacts = [[NSMutableArray alloc] init];
     
     
     // contacts to exclude
@@ -525,77 +535,98 @@
     
     // find LMU users among contacts
     
+    // save address book data
+    [self saveAddressBookContacts];
+    
     // construct list of all phone numbers in contacts
-    NSArray *allContacts = self.me[@"address_book"];
     NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
     
-    for (id idContact in allContacts)
+    for (NSDictionary *contact in self.addressBookData)
     {
-        NSDictionary *contact = (NSDictionary *)idContact;
         NSArray *phones = contact[@"phone"];
         
-        for (id idPhone in phones)
+        for (__strong NSString *phone in phones)
         {
-            NSString *phone = (NSString *)idPhone;
-            
             // remove all non-numeric characters
-            NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-            phone = [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
+            phone = [Constants removeNonNumericFromPhoneNumber:phone];
             
-            // add phone
-            [allPhoneNumbers addObject:phone];
-            
-            // add truncated phone variants (no area code, no extension)
-            const NSInteger sansAC = 7;
-            const NSInteger sansExt = 10;
-            
-            NSString *phoneSansAC = nil;
-            NSString *phoneSansExt = nil;
-            
-            if ([phone length] > sansAC)
-            {
-                phoneSansAC = [phone substringFromIndex:[phone length] - sansAC];
-                [allPhoneNumbers addObject:phoneSansAC];
-                
-                if ([phone length] > sansExt)
-                {
-                    phoneSansExt = [phone substringFromIndex:[phone length] - sansExt];
-                    [allPhoneNumbers addObject:phoneSansExt];
-                }
-            }
-            
-            //NSLog(@"%@ %@ %@ %@", contact[@"name"], phone, phoneSansAC, phoneSansExt);
+            // add both variants of phone number (with and without country code)
+            [allPhoneNumbers addObjectsFromArray:[Constants allVariantsOfPhoneNumber:phone]];
         }
     }
-    
-    //NSLog(@"%@", allPhoneNumbers);
-    
+        
     // query for LMU users with included phone numbers
     PFQuery *query = [PFUser query];
     [query whereKey:@"mobile_number" containedIn: allPhoneNumbers];
     [query whereKey:@"objectId" notContainedIn:excludedIDs]; // slow operation
     [query whereKey:@"objectId" notEqualTo:self.me.objectId];
+    [query setLimit: 1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
             // The find succeeded
             NSLog(@"Successfully retrieved %lu friend suggestions (address book).", (unsigned long)[objects count]);
             addrBookSuggestions = objects;
-
-            // print address book suggestions
-            /* for (id object in addrBookSuggestions)
-            {
-                PFUser *contact = (PFUser *)object;
-                NSLog(@"%@", [Constants nameElseUsername:contact]);
-            }*/
         }
         else
         {
-            NSLog(@"Error querying for mobile contacts %@ %@", error, [error localizedDescription]);
+            NSLog(@"Error querying for LMU users among mobile contacts %@ %@", error, [error localizedDescription]);
         }
         
+        // populate list of non-user contacts
+        NSArray *allUsers = [[self.myFriends arrayByAddingObjectsFromArray:self.requestSenders] arrayByAddingObjectsFromArray:addrBookSuggestions];
         
+        for (NSDictionary *contact in self.addressBookData)
+        {
+            // default: not LinkMeUp user
+            BOOL isUser = false;
+            
+            // determine if contact is a LMU user based on mobile number
+            NSArray *phoneArray = contact[@"phone"];
+            for (__strong NSString *phone in phoneArray)
+            {
+                for (PFUser *user in allUsers)
+                {
+                    // remove all non-numeric characters
+                    phone = [Constants removeNonNumericFromPhoneNumber:phone];
+                    
+                    NSString *userNumber = user[@"mobile_number"];
+                    
+                    // if (user phone number not in Parse)...
+                    if (!userNumber)
+                        continue;
+
+                    // else... check for equality
+                    if ([Constants comparePhone1:userNumber withPhone2:phone])
+                    {
+                        isUser = true;
+                        break;
+                    }
+                }
+                
+                if (isUser)
+                    break;
+            }
+            
+            if (!isUser)
+            {
+                // add if phone number (mobile or iPhone) known
+                if ([contact[@"phone"] count])
+                    [newNonUserContacts addObject:contact];
+            }
+        }
         
+        // NSLog(@"Non user contacts: %@", newNonUserContacts);
+        
+        // update data model properties
+        self.nonUserContacts = newNonUserContacts;
+        self.suggestedFriends = [addrBookSuggestions mutableCopy];
+        self.recentRecipients = self.me[@"recentRecipients"];
+  
+        loadedSuggestions = YES;
+        [self postConnectionsNotification];
+        
+        /*
         // if not linked with FB, we're done
         if (!self.isLinkedWithFB)
         {
@@ -609,11 +640,12 @@
             
             return;
         }
-        
+    
         // otherwise...
         
         // load facebook friends
         FBRequest* myFacebookFriends = [FBRequest requestForMyFriends];
+        //[FBSession setActiveSession: [PFFacebookUtils session]];
         //[FBSession setActiveSession: [myFacebookFriends session]];
         [myFacebookFriends startWithCompletionHandler: ^(FBRequestConnection *connection, NSDictionary* result, NSError *error) {
             if (!error)
@@ -667,6 +699,7 @@
                 [self postConnectionsNotification];
             }
         }];
+         */
     }];
 }
 
@@ -674,6 +707,102 @@
 {
     self.loadedConnections = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedConnections" object:nil userInfo:nil];
+}
+
+- (BOOL)saveAddressBookContacts
+{
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
+    
+    // return false if permission denied or error
+    // note: doesn't really help
+    if (!addressBook)
+        return false;
+    
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    NSArray *ABRcontacts = [(__bridge NSArray *) allPeople copy];
+    
+    NSMutableArray *contacts = [[NSMutableArray alloc] init];
+    
+    for (id person in ABRcontacts)
+    {
+        // name
+        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonFirstNameProperty);
+        
+        if (!firstName)
+            firstName = @"";
+        
+        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonLastNameProperty);
+        
+        if (!lastName)
+            lastName = @"";
+        
+        // phone number
+        ABMultiValueRef ABRphoneNumbers = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonPhoneProperty);
+        NSMutableArray *phoneNumbers = [[NSMutableArray alloc] init];
+        
+        if (ABMultiValueGetCount(ABRphoneNumbers) > 0)
+        {
+            long indexCount = ABMultiValueGetCount(ABRphoneNumbers);
+            for (long index = 0; index < indexCount; index++)
+            {
+                CFStringRef CFSRtype = ABMultiValueCopyLabelAtIndex(ABRphoneNumbers, index);
+                NSString *type = (__bridge_transfer NSString *)ABAddressBookCopyLocalizedLabel(CFSRtype);
+                
+                if ([type isEqualToString:@"iPhone"] || [type isEqualToString:@"mobile"])
+                {
+                    NSString *phone = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(ABRphoneNumbers, index);
+                    
+                    // remove all non-numeric characters
+                    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+                    phone = [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
+                    
+                    [phoneNumbers addObject:phone];
+                }
+                
+                CFRelease(CFSRtype);
+            }
+        }
+        
+        CFRelease(ABRphoneNumbers);
+        
+        // email
+        ABMultiValueRef ABRemails = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonEmailProperty);
+        NSMutableArray *emails = [[NSMutableArray alloc] init];
+        
+        if (ABMultiValueGetCount(ABRemails) > 0)
+            emails = (__bridge_transfer NSMutableArray *)ABMultiValueCopyArrayOfAllValues(ABRemails);
+        
+        CFRelease(ABRemails);
+        
+        // NSLog(@"Contact %@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
+        
+        // add to array
+        [contacts addObject:@{@"first_name": firstName,
+                              @"name": [[firstName stringByAppendingString:@" "] stringByAppendingString:lastName],
+                              @"phone": phoneNumbers,
+                              @"email": emails}];
+    }
+    
+    // save locally
+    self.addressBookData = contacts;
+    
+    // save to Parse
+    PFUser *me = self.me;
+    me[@"address_book"] = contacts;
+    
+    [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving address book to Parse %@ %@", error, [error userInfo]);
+        }
+        else
+        {
+            // NSLog(@"Address book saved to Parse");
+        }
+    }];
+    
+    // return success
+    return true;
 }
 
 
@@ -703,6 +832,7 @@
     [receivedLinksQuery whereKey:@"receivers" equalTo:self.me];
     [receivedLinksQuery includeKey:@"sender"];
     [receivedLinksQuery orderByDescending:@"updatedAt"];
+    [receivedLinksQuery setLimit: 1000];
     [receivedLinksQuery findObjectsInBackgroundWithBlock:^(NSArray *parseRecLinks, NSError *error) {
         if (!error)
         {
@@ -827,6 +957,7 @@
     PFQuery *sentLinksQuery = [Link query];
     [sentLinksQuery whereKey:@"sender" equalTo:self.me];
     [sentLinksQuery orderByDescending:@"lastReceiverUpdateTime"];
+    [sentLinksQuery setLimit: 1000];
     [sentLinksQuery findObjectsInBackgroundWithBlock:^(NSArray *parseSentLinks, NSError *error) {
         if (!error)
         {
@@ -850,7 +981,7 @@
                 if ([[currentLink objectForKey:@"lastReceiverUpdate"] integerValue] != kLastUpdateNoUpdate)
                     newSentLinkUpdates++;
                 
-                // set contacts field
+                // set contacts field for inboxVC table view
                 NSMutableArray *receivers = [[NSMutableArray alloc] init];
                 
                 for (NSDictionary *receiverData in currentLink.receiversData)
@@ -859,8 +990,9 @@
                                                @"identity": [receiverData objectForKey:@"identity"]};
                     [receivers addObject: receiver];
                 }
-            
-                if (![receivers count]) // receiver deleted account, etc.
+                
+                // if receiver account deleted, or some other error
+                if (![receivers count])
                     receivers = [NSMutableArray arrayWithObject:@{@"name": @"unknown user"}];
                 
                 newSentLinkData[i][@"contacts"] = receivers;
@@ -935,7 +1067,7 @@
     // if other requests are in the queue and I am low priority...
     if ([self.recLinkUpdateQueue count] > 1 && [self.recLinkUpdateQueue[index][@"priority"] integerValue] == kPriorityLow)
     {
-        //NSLog(@"Rec: low priority %u", index);
+        // NSLog(@"Rec: low priority %u", index);
         // set my state as "completed"
         self.recLinkUpdateQueue[index][@"state"] = [NSNumber numberWithInt: kStateCompleted];
     }
@@ -943,7 +1075,7 @@
     // if a later request completed earlier...
     else if ([self.recLinkUpdateQueue[index][@"state"] integerValue] == kStateCancelled)
     {
-        //NSLog(@"Rec: cancelled %u", index);
+        // NSLog(@"Rec: cancelled %u", index);
         // set my state as "completed"
         self.recLinkUpdateQueue[index][@"state"] = [NSNumber numberWithInt: kStateCompleted];
     }

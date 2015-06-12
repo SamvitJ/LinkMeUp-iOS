@@ -139,8 +139,8 @@
     NSRange termsRange = NSMakeRange(41, @"Terms of Use".length);       // Terms
     NSRange privacyRange = NSMakeRange(97, @"Privacy Policy".length);   // Privacy
     
-    [termsText addAttribute:NSForegroundColorAttributeName value:BLUE_200 range:termsRange];
-    [termsText addAttribute:NSForegroundColorAttributeName value:BLUE_200 range:privacyRange];
+    [termsText addAttribute:NSForegroundColorAttributeName value:BLUE_200_LIGHT range:termsRange];
+    [termsText addAttribute:NSForegroundColorAttributeName value:BLUE_200_LIGHT range:privacyRange];
     
     [self.legalLabel setAttributedText:termsText];
     

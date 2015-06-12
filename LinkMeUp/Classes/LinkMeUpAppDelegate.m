@@ -22,9 +22,6 @@
 #import "searchViewController.h"
 #import "friendsViewController.h"
 
-#import <AddressBook/AddressBook.h>
-#import <AVFoundation/AVFoundation.h>
-
 @interface LinkMeUpAppDelegate ()
 @end
 
@@ -58,6 +55,10 @@
     [self.window setRootViewController:self.ds];
     [self.window makeKeyAndVisible];
     
+    // set didShowPushVCThisSession to NO
+    [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidShowPushVCThisSession];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     // Determine if app was launched from push notification
     NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     self.notificationPayload = notificationPayload;
@@ -80,23 +81,20 @@
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
+    NSLog(@"Did become active");
+    
+    // FB
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
     
-    // reload data if no push notifiations
-    UIUserNotificationType remoteNotification;
-    
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(currentUserNotificationSettings)])
+    // special case code
+    // if push notif alert view was presented, notify pushNotifVC that user responded
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidPresentPushNotifAlertView] boolValue])
     {
-        // iOS 8 Notifications
-        UIUserNotificationSettings *settings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-        remoteNotification = settings.types;
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUserRespondedToPushNotifAlertView object:nil];
     }
     
-    else
-    {
-        // iOS <8 Notifications
-        remoteNotification = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
-    }
+    // if push notifications are off, configure timer to reload data regularly
+    UIUserNotificationType remoteNotification = [self getEnabledNotificationTypes];
     
     if (remoteNotification == UIRemoteNotificationTypeNone)
     {
@@ -122,8 +120,24 @@
                 [self.updateTimer invalidate];
                 self.updateTimer = nil;
             }
+            
+            // in case of new links/requests/messages
+            [self reloadData];
         }
-        
+        else if (remoteNotification & UIRemoteNotificationTypeBadge)
+        {
+            NSLog(@"Notifications - Badge");
+            
+            // if push notifications now on (and were previously off)
+            if (self.updateTimer)
+            {
+                [self.updateTimer invalidate];
+                self.updateTimer = nil;
+            }
+         
+            // in case of new links/requests/messages
+            [self reloadData];
+        }
         else
         {
             // Load data from server periodically
@@ -133,10 +147,10 @@
                 self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
             }
             
-            if (remoteNotification & UIRemoteNotificationTypeBadge)
+            /*if (remoteNotification & UIRemoteNotificationTypeBadge)
             {
                 NSLog(@"Notifications - Badge");
-            }
+            }*/
             
             if (remoteNotification & UIRemoteNotificationTypeSound)
             {
@@ -156,6 +170,16 @@
      Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
      Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
      */
+    
+    NSLog(@"Will resign active");
+    
+    // special case code
+    // if attempted to register for push notif, and now leaving the app, push notif alert view was presented
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidAttemptToRegisterForPushNotif] boolValue])
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey: kDidPresentPushNotifAlertView];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -302,89 +326,30 @@
     rightNav.tabBarItem = friends;
 }
 
-#pragma mark - Address book
+#pragma mark - Push notifications
 
-- (void)saveContacts
+- (UIUserNotificationType)getEnabledNotificationTypes
 {
-    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
+    UIRemoteNotificationType enabledRemoteNotificationTypes;
     
-    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
-    NSArray *ABRcontacts = [(__bridge NSArray *) allPeople copy];
-    
-    NSMutableArray *contacts = [[NSMutableArray alloc] init];
-    
-    for (id person in ABRcontacts)
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(currentUserNotificationSettings)])
     {
-        // name
-        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonFirstNameProperty);
+        // iOS 8+
+        UIUserNotificationSettings *userNotificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
         
-        if (!firstName)
-            firstName = @"";
-        
-        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonLastNameProperty);
-        
-        if (!lastName)
-            lastName = @"";
-        
-        // phone number
-        ABMultiValueRef ABRphoneNumbers = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonPhoneProperty);
-        NSMutableArray *phoneNumbers = [[NSMutableArray alloc] init];
-        
-        if (ABMultiValueGetCount(ABRphoneNumbers) > 0)
-        {
-            long indexCount = ABMultiValueGetCount(ABRphoneNumbers);
-            for (long index = 0; index < indexCount; index++)
-            {
-                CFStringRef CFSRtype = ABMultiValueCopyLabelAtIndex(ABRphoneNumbers, index);
-                NSString *type = (__bridge_transfer NSString *)ABAddressBookCopyLocalizedLabel(CFSRtype);
-                
-                if ([type isEqualToString:@"iPhone"] || [type isEqualToString:@"mobile"])
-                {
-                    NSString *phone = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(ABRphoneNumbers, index);
-                    
-                    // remove all non-numeric characters
-                    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-                    phone = [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
-                    
-                    [phoneNumbers addObject:phone];
-                }
-                
-                CFRelease(CFSRtype);
-            }
-        }
-        
-        CFRelease(ABRphoneNumbers);
-        
-        // email
-        ABMultiValueRef ABRemails = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonEmailProperty);
-        NSMutableArray *emails = [[NSMutableArray alloc] init];
-        
-        if (ABMultiValueGetCount(ABRemails) > 0)
-            emails = (__bridge_transfer NSMutableArray *)ABMultiValueCopyArrayOfAllValues(ABRemails);
-        
-        CFRelease(ABRemails);
-        
-        // print
-        NSLog(@"%@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
-        [contacts addObject:@{@"name": [[firstName stringByAppendingString:@" "] stringByAppendingString:lastName], @"phone": phoneNumbers, @"email": emails}];
+        enabledRemoteNotificationTypes = userNotificationSettings.types;
+    }
+    else
+    {
+        // iOS 7 and below
+        enabledRemoteNotificationTypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
     }
     
-    PFUser *me = [PFUser currentUser];
-    me[@"address_book"] = contacts;
+    // other tests
+    // if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)])
     
-    [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error)
-        {
-            NSLog(@"Error saving my address book %@ %@", error, [error userInfo]);
-        }
-        else
-        {
-            NSLog(@"Address book saved");
-        }
-    }];
+    return enabledRemoteNotificationTypes;
 }
-
-#pragma mark - Push notifications
 
 - (void)updateApplicationBadge
 {
@@ -396,18 +361,28 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    NSLog(@"Did fail to register %@", error);
+    NSLog(@"Did fail to register for remote notifications %@", error);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidFailToRegisterForPush object:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
+    NSLog(@"Did register for remote notifications");
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidRegisterForPush object:nil];
+    
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error)
         {
-            NSLog(@"Error registering for push notifs %@ %@", error, [error userInfo]);
+            NSLog(@"Error saving current installation in Parse %@ %@", error, [error userInfo]);
+        }
+        else
+        {
+            NSLog(@"Saved current installation in Parse");
         }
     }];
 }
@@ -570,6 +545,10 @@
     // unregister for push notifications
     [currentInstallation removeObject:[NSString stringWithFormat:@"user_%@", self.myData.me.objectId] forKey:@"channels"];
     [currentInstallation saveInBackground];
+    
+    // set didShowPushVCThisSession to NO
+    [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidShowPushVCThisSession];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     // pop all tabs to root view controller
     for (UINavigationController *vc in self.tbc.viewControllers)

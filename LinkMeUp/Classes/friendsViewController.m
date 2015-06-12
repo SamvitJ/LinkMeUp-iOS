@@ -14,6 +14,8 @@
 #import "Constants.h"
 #import "FriendRequest.h"
 
+#import "findContactsViewController.h"
+
 #import "settingsViewController.h"
 
 @interface friendsViewController ()
@@ -273,6 +275,12 @@
     searchRC.tag = @"Search Refresh Control";
     searchRC.attributedTitle = [[NSAttributedString alloc] initWithString:@"Searching..."];
     [self.searchDisplayController.searchResultsTableView addSubview:searchRC];
+    
+    // display findContactsViewController, if not new user
+    if (self.sharedData.loadedConnections && !self.sharedData.me.isNew)
+    {
+        [self presentFindContacts];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -308,6 +316,29 @@
     {
         [self resetFriendsBadge];
     }
+    
+    // display findContactsViewController, if new user and second entry
+    if (self.sharedData.loadedConnections && self.sharedData.me.isNew)
+    {
+        NSNumber *didEnter = [[NSUserDefaults standardUserDefaults] objectForKey: kDidEnterFriendsVC];
+        
+        if (didEnter != nil && ![didEnter boolValue]) // first entry
+        {
+            [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kDidEnterFriendsVC];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        else if (didEnter != nil && [didEnter boolValue]) // second entry
+        {
+            // remove setting
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey: kDidEnterFriendsVC];
+            
+            [self presentFindContacts];
+        }
+        else // third+ entry
+        {
+
+        }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -335,6 +366,25 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Address book permissions
+
+- (void)presentFindContacts
+{
+    bool ABNotDetermined = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined);
+    bool ABDenied = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied);
+    
+    bool fewRequests = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
+    bool fewConnections = ([[[self.sharedData.myFriends arrayByAddingObjectsFromArray:self.sharedData.suggestedFriends] arrayByAddingObjectsFromArray:self.sharedData.requestSenders] count] < MANY_CONNECTIONS);
+    
+    NSLog(@"%u %u %u %u", ABNotDetermined, ABDenied, fewRequests, fewConnections);
+    
+    if ((ABNotDetermined || ABDenied) && fewRequests && fewConnections)
+    {
+        findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
+        [self presentViewController:cwfvc animated:YES completion:nil];
+    }
 }
 
 #pragma mark - Table view refresh
@@ -641,8 +691,8 @@
             
             // if request pending, show selected state
             for (PFUser *pending in self.sharedData.pendingRequests)
-            {
-                if ([pending.objectId isEqualToString:displayPerson.objectId])
+            {                    
+                if (((id)pending != [NSNull null]) && [pending.objectId isEqualToString:displayPerson.objectId])
                 {
                     button.selected = YES;
                 }

@@ -5,10 +5,11 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="findContactsViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="pushNotifViewController">
             <connections>
-                <outlet property="continueButton" destination="4n2-LL-E6a" id="OiS-4r-yYR"/>
-                <outlet property="lastLine" destination="B8D-hf-Xi3" id="VK8-AM-oab"/>
+                <outlet property="continueButton" destination="XOQ-jC-HTD" id="Jcw-Vw-Piq"/>
+                <outlet property="header" destination="eCB-f2-Ykd" id="VI1-g1-Jf4"/>
+                <outlet property="lastTextLine" destination="GjE-mO-omx" id="Xo2-Og-lBw"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -17,10 +18,10 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RJK-5z-l9H">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eCB-f2-Ykd">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XzE-nB-ivD">
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFh-rD-9ue">
                             <rect key="frame" x="6" y="32" width="146" height="35"/>
                             <attributedString key="attributedText">
                                 <fragment content="Link">
@@ -50,10 +51,10 @@
                             </attributedString>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bEl-pb-sp3">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6K4-Mp-CEB">
                             <rect key="frame" x="178" y="36" width="128" height="29"/>
                             <attributedString key="attributedText">
-                                <fragment content="Find Friends">
+                                <fragment content="Notifications">
                                     <attributes>
                                         <color key="NSColor" red="0.95543424349999995" green="1" blue="0.91188581889999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <font key="NSFont" size="20" name="GillSans"/>
@@ -67,50 +68,39 @@
                     <color key="backgroundColor" red="0.20679859819999999" green="0.28263619540000001" blue="0.36999782920000002" alpha="1" colorSpace="calibratedRGB"/>
                     <gestureRecognizers/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="77" id="D9v-5z-V3m"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="77" id="Xq7-oW-kXZ"/>
+                        <constraint firstAttribute="height" constant="77" id="x3H-8N-FCh"/>
                     </constraints>
                 </view>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp works best when you're " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKU-N3-d35">
-                    <rect key="frame" x="20" y="104" width="292" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp works best when you can" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GOQ-ci-egS">
+                    <rect key="frame" x="22" y="103" width="292" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="connected with your friends." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BvW-5B-ZyR">
-                    <rect key="frame" x="20" y="133" width="292" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="see links from your friends right away." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a6i-u8-Foy">
+                    <rect key="frame" x="22" y="132" width="292" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LinkMeUp uses your address book" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PHY-8c-ymV">
-                    <rect key="frame" x="20" y="178" width="267" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The app only sends you notifications" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e9o-gB-nGF">
+                    <rect key="frame" x="22" y="182" width="281" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="to help you find and add your friends," lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="noh-mX-hhe">
-                    <rect key="frame" x="20" y="207" width="292" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="when a friend sends you a new link" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fY5-DP-hfU">
+                    <rect key="frame" x="22" y="211" width="292" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="so you can start sharing right away." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B8D-hf-Xi3">
-                    <rect key="frame" x="20" y="236" width="272" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tco-yj-Azj">
-                    <rect key="frame" x="20" y="289" width="0.0" height="0.0"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4n2-LL-E6a">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XOQ-jC-HTD">
                     <rect key="frame" x="0.0" y="420" width="320" height="60"/>
                     <color key="backgroundColor" red="0.13766507980000001" green="0.41731639970000001" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="60" id="YFm-gh-C2w"/>
+                        <constraint firstAttribute="height" constant="60" id="SXG-zt-9LE"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="ChalkboardSE-Light" family="Chalkboard SE" pointSize="19"/>
                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -118,21 +108,27 @@
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="continuePressed:" destination="-1" eventType="touchUpInside" id="LKf-Ll-IN0"/>
+                        <action selector="continuePressed:" destination="-1" eventType="touchUpInside" id="TTh-2b-lgi"/>
                     </connections>
                 </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="or responds to your messages." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GjE-mO-omx">
+                    <rect key="frame" x="22" y="240" width="292" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.20105014739999999" green="0.22571164369999999" blue="0.25778004529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="RJK-5z-l9H" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="FHU-1f-uei"/>
-                <constraint firstAttribute="bottom" secondItem="4n2-LL-E6a" secondAttribute="bottom" id="VYb-um-FhI"/>
-                <constraint firstAttribute="trailing" secondItem="4n2-LL-E6a" secondAttribute="trailing" id="XVK-QP-Hex"/>
-                <constraint firstItem="4n2-LL-E6a" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lWT-Nb-e6i"/>
-                <constraint firstItem="RJK-5z-l9H" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="rFV-fJ-1rt"/>
-                <constraint firstAttribute="trailing" secondItem="RJK-5z-l9H" secondAttribute="trailing" id="rpA-5G-gV5"/>
+                <constraint firstAttribute="bottom" secondItem="XOQ-jC-HTD" secondAttribute="bottom" id="0YM-rL-ibq"/>
+                <constraint firstAttribute="trailing" secondItem="eCB-f2-Ykd" secondAttribute="trailing" id="DaF-Xo-W5J"/>
+                <constraint firstItem="XOQ-jC-HTD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="JXg-fj-mi9"/>
+                <constraint firstAttribute="trailing" secondItem="XOQ-jC-HTD" secondAttribute="trailing" id="Vzy-JR-5N8"/>
+                <constraint firstItem="eCB-f2-Ykd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="g5K-ZP-sgZ"/>
+                <constraint firstItem="eCB-f2-Ykd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="yNh-Iq-iLF"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-214" y="139"/>
+            <point key="canvasLocation" x="199" y="316"/>
         </view>
     </objects>
 </document>

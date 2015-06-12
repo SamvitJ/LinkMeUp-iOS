@@ -6,11 +6,11 @@
 //
 //
 
-#import "LinkTableViewCell.h"
+#import "linkTableViewCell.h"
 
 #import "Constants.h"
 
-@implementation LinkTableViewCell
+@implementation linkTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

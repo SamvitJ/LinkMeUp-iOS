@@ -12,7 +12,9 @@
 
 #import "Constants.h"
 #import "Link.h"
-#import "LinkTableViewCell.h"
+#import "linkTableViewCell.h"
+
+#import "pushNotifViewController.h"
 
 #import "sentLinkViewController.h"
 #import "receivedLinkViewController.h"
@@ -84,7 +86,22 @@
     NSLog(@"Did finish loading links");
     
     if (self.sentNewLink)
+    {
         self.sentNewLink = NO;
+        
+        // present push notif screen, if applicable
+        LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+        UIUserNotificationType remoteNotification = [appDelegate getEnabledNotificationTypes];
+        
+        // BOOL didShowPushVC = [[[NSUserDefaults standardUserDefaults] objectForKey:kDidShowPushVCThisSession] boolValue];
+        
+        if (remoteNotification == UIRemoteNotificationTypeNone
+            && [self.sharedData.me[kNumberPushRequests] integerValue] < PUSH_REQUESTS_LIMIT
+            /*&& !didShowPushVC*/)
+        {
+            [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(presentPushScreen) userInfo:nil repeats:NO];
+        }
+    }
     
     if (self.receivedPush)
         self.receivedPush = NO;
@@ -200,6 +217,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"applicationDidBecomeActive" object:nil];
 }
 
+#pragma mark - Present push notification view controller
+
+- (void)presentPushScreen
+{
+    pushNotifViewController *pnvc = [[pushNotifViewController alloc] init];
+    [self presentViewController:pnvc animated:YES completion: nil];
+}
+
 #pragma mark - Table view refresh
 
 - (void)refresh:(UIRefreshControl *)refreshControl
@@ -305,11 +330,11 @@
         CellIdentifier = @"Starred Tracks";
     }*/
     
-    LinkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    linkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
     {
-        cell = [[LinkTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[linkTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -356,8 +381,8 @@
                 break;
         }
         
-        // labels
-        cell.contactLabel.text = [Constants stringForArray:[self.sharedData.sentLinkData[indexPath.row] objectForKey:@"contacts"] withKey:@"name"];
+        // labels        
+        cell.contactLabel.text = [Constants stringForArray:self.sharedData.sentLinkData[indexPath.row][@"contacts"] withKey:@"name"];
         cell.dateLabel.text = [Constants dateToString:link.lastReceiverUpdateTime];
         
         if (link.isSong)
@@ -477,7 +502,7 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LinkTableViewCell *cell = (LinkTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    linkTableViewCell *cell = (linkTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     
     switch (self.segControl.selectedSegmentIndex)
     {

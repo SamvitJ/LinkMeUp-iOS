@@ -8,6 +8,75 @@
 
 #import "Constants.h"
 
+
+
+
+
+#pragma mark - Numeric constants
+
+
+// MATH CONSTS ---------------------------------------------------------------
+
+const CGFloat k90DegreesClockwiseAngle = (CGFloat) (90 * M_PI / 180.0);
+const CGFloat k90DegreesCounterClockwiseAngle = (CGFloat) -(90 * M_PI / 180.0);
+
+//----------------------------------------------------------------------------
+
+
+// PHONE NUMBERS -------------------------------------------------------------
+
+const NSInteger kPhoneLengthSansUSCC = 10; // phone # length w/o U.S. country code
+
+//----------------------------------------------------------------------------
+
+
+
+
+
+#pragma mark - String constants
+
+
+// NOTIFICATION NAMES --------------------------------------------------------
+
+NSString *const kDidRegisterForPush = @"didRegisterForPush";
+NSString *const kDidFailToRegisterForPush = @"didFailToRegisterForPush";
+
+NSString *const kUserRespondedToPushNotifAlertView = @"userRespondedToPushNotifAlertView";
+
+//----------------------------------------------------------------------------
+
+
+// STANDARD USER DEFAULTS ----------------------------------------------------
+
+NSString *const kDidShowPushVCThisSession = @"didShowPushVCThisSession";
+
+NSString *const kDidAttemptToRegisterForPushNotif = @"didAttemptToRegisterForPushNotif";
+NSString *const kDidPresentPushNotifAlertView = @"didPresentPushNotifAlertView";
+
+NSString *const kDidEnterFriendsVC = @"didEnterFriendsVC";
+
+//----------------------------------------------------------------------------
+
+
+// DICTIONARY KEYS -----------------------------------------------------------
+
+// *** PFUser ***
+NSString *const kNumberPushRequests = @"numberPushRequests";
+NSString *const kNumberABRequests = @"numberABRequests";
+
+NSString *const kRecentRecipients = @"recentRecipients"; // unused
+NSString *const kAddressBook = @"address_book";          // unused
+
+// *** contactAndState (contactsVC) ***
+NSString *const kContact = @"contact";                   // unused
+NSString *const kIsUser = @"isUser";                     // unused
+NSString *const kSelected = @"selected";                 // unused
+
+//----------------------------------------------------------------------------
+
+
+
+
 @implementation Constants
 
 
@@ -79,12 +148,6 @@
     return [NSNumber numberWithFloat:((hours * 3600.0) + (minutes * 60.0) + (seconds * 1.0))];
 }
 
-// returns name of user if not null; else returns username
-+ (NSString *)nameElseUsername:(PFUser *)user
-{
-    return ([user objectForKey:@"name"] ? [user objectForKey:@"name"] : user.username);
-}
-
 // returns comma-separated string representation of array objects
 + (NSString *)stringForArray:(NSArray *)array withKey:(NSString *)key
 {
@@ -126,6 +189,74 @@
     }
     
     return stringRepresentation;
+}
+
+
+
+#pragma mark - PFUser name
+
+// returns name of user if not null; else returns username
++ (NSString *)nameElseUsername:(PFUser *)user
+{
+    return ([user objectForKey:@"name"] ? [user objectForKey:@"name"] : user.username);
+}
+
+
+
+#pragma mark - Phone numbers
+
+// remove all non-numeric characters (i.e. (, ), -) from phone number
++ (NSString *)removeNonNumericFromPhoneNumber:(NSString *)phone
+{
+    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    return [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
+}
+
+// return array containing both variants of phone number (w/ and w/o country code), if applicable
++ (NSArray *)allVariantsOfPhoneNumber:(NSString *)phone
+{
+    NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
+    
+    // add original
+    [allPhoneNumbers addObject:phone];
+    
+    // add other variant if applicable
+    if ([phone length] > kPhoneLengthSansUSCC)
+    {
+        NSString *phoneSansCC = [phone substringFromIndex:[phone length] - kPhoneLengthSansUSCC];
+        [allPhoneNumbers addObject:phoneSansCC];
+    }
+    else if ([phone length] == kPhoneLengthSansUSCC)
+    {
+        NSString *phoneWithCC = [@"1" stringByAppendingString:phone];
+        [allPhoneNumbers addObject:phoneWithCC];
+    }
+    else // non standard (i.e. international)
+    {
+        // do nothing
+    }
+
+    return [allPhoneNumbers copy];
+}
+
+// returns true if phone numbers are equal, else return false
++ (BOOL)comparePhone1:(NSString *)phone1 withPhone2:(NSString *)phone2
+{
+    NSArray *allVariantsPhone1 = [Constants allVariantsOfPhoneNumber:phone1];
+    NSArray *allVariantsPhone2 = [Constants allVariantsOfPhoneNumber:phone2];
+    
+    for (NSString *phone1Variant in allVariantsPhone1)
+    {
+        for (NSString *phone2Variant in allVariantsPhone2)
+        {
+            if ([phone1Variant isEqualToString:phone2Variant])
+            {
+                return true;
+            }
+        }
+    }
+    
+    return false;
 }
 
 

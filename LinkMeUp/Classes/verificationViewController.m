@@ -54,7 +54,7 @@
             }];
             
             // user completed verification process
-            [[NSUserDefaults standardUserDefaults] setObject:@NO forKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             // remove code fields and display activity indicator
@@ -66,11 +66,41 @@
             // pause
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 
-                // display connectWithFriendsViewController
-                if (ABAddressBookGetAuthorizationStatus() != kABAuthorizationStatusDenied)
+                // display findContactsViewController
+                if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied ||
+                    ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
                 {
                     findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
                     [self presentViewController:cwfvc animated:YES completion:nil];
+                }
+                else
+                {
+                    // climb up through presenting view controller hierarchy...
+                    PFUser *user = [PFUser currentUser];
+                    
+                    if ([PFFacebookUtils isLinkedWithUser:(PFUser *)user] && (user.email == NULL))
+                    {
+                        myLogInViewController *logIn = (myLogInViewController *) self.presentingViewController;
+                        DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+                        
+                        [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+                    }
+                    
+                    else if (user.isNew) // new user, but not created via Facebook
+                    {
+                        mySignUpViewController *signUp = (mySignUpViewController *) self.presentingViewController;
+                        myLogInViewController *logIn = (myLogInViewController *) signUp.presentingViewController;
+                        DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+                        
+                        [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+                    }
+                    
+                    else // existing user
+                    {
+                        UIViewController *presenting = self.presentingViewController;
+                        
+                        [presenting dismissViewControllerAnimated:YES completion:nil];
+                    }
                 }
             });
         }

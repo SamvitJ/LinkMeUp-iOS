@@ -35,6 +35,8 @@
 
 @property (strong, nonatomic) UITextView *annotationView;
 
+@property (strong, nonatomic) UIActivityIndicatorView *mainActivityIndicator;
+
 // UI element states
 @property (nonatomic) int selectedCell;
 //@property (nonatomic, strong) UIColor *backgroundColor;

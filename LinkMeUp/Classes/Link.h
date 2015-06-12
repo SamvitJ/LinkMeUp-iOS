@@ -11,6 +11,9 @@
 
 @interface Link : PFObject <PFSubclassing>
 
+// sent to LMU user or as text?
+@property (nonatomic) BOOL isText;
+
 // song or video?
 @property (nonatomic) BOOL isSong;
 

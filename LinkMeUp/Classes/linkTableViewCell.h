@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LinkTableViewCell : UITableViewCell
+@interface linkTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) UILabel *contactLabel;
 @property (nonatomic, strong) UILabel *songInfoLabel;

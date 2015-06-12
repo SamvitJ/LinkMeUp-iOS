@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+
 #import "LinkMeUpAppDelegate.h"
 
 #import "Link.h"
 #import "Data.h"
 
-@interface contactsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface contactsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate>
 
 // the shared application data model
 @property (nonatomic, weak) Data *sharedData;
@@ -21,20 +24,18 @@
 // VC state
 @property (nonatomic) BOOL isForwarding;
 
+@property (nonatomic) BOOL nonUsersDisabled;
+@property (nonatomic, strong) NSMutableArray *selectedRecipients;
+
 // UI elements
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *sendSong;
 @property (weak, nonatomic) IBOutlet UIView *header;
-@property (nonatomic, strong) NSMutableArray *buttons;
 
-// UI state
-@property (nonatomic) BOOL allFriendsSelected;
+@property (nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
 // link
 @property (nonatomic, strong) Link *myLink;
-
-// friends
-@property (nonatomic, strong) NSMutableArray *myFriends;       // PFUser
-@property (nonatomic, strong) NSMutableArray *selectedFriends; // BOOL
 
 @end

@@ -38,10 +38,8 @@
 - (void)loadData;
 - (void)setUpApplicationViewControllers;
 
-// address book
-- (void)saveContacts;
-
-// update application badge count
+// push notifications
+- (UIUserNotificationType)getEnabledNotificationTypes;
 - (void)updateApplicationBadge;
 
 // internet connectivity
