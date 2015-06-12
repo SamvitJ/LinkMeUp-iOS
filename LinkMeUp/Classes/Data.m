@@ -23,9 +23,8 @@
     NSMutableArray *newPendingRequests;
     
      // load suggestions
-    NSArray *addrBookSuggestions;
-    NSArray *facebookSuggestions;
     NSMutableArray *newNonUserContacts;
+    NSMutableArray *newSuggestedFriends;
      
      // load links
     int newReceivedLinkUpdates;
@@ -42,7 +41,10 @@
     BOOL loadedCurrentFriends;
     BOOL loadedPendingRequests;
     
-    BOOL loadedSuggestions;
+    // BOOL loadedSuggestions;
+    
+    BOOL loadedAddrBookSuggestions;
+    BOOL loadedFacebookSuggestions;
 }
 
 // PRIVATE PROPERTIES **********************************************
@@ -53,6 +55,9 @@
 
 // friend suggestions
 @property (nonatomic, strong) NSMutableArray *facebookFriends;  // NSDictionary<FBGraphUser>
+
+@property (nonatomic, strong) NSArray *addrBookSuggestions;
+@property (nonatomic, strong) NSArray *facebookSuggestions;
 
 // update queues
 @property (nonatomic, strong) NSMutableArray *recLinkUpdateQueue;
@@ -92,26 +97,30 @@
     if (self)
     {
         // received friend requests
-        self.friendRequests = [[NSMutableArray alloc] init];    // FriendRequest
-        self.requestSenders = [[NSMutableArray alloc] init];    // PFUser
+        self.friendRequests = [[NSMutableArray alloc] init];       // FriendRequest
+        self.requestSenders = [[NSMutableArray alloc] init];       // PFUser
         
         // friends
-        self.myFriends = [[NSMutableArray alloc] init];         // PFUser
+        self.myFriends = [[NSMutableArray alloc] init];            // PFUser
         
         // sent friend requests (pending)
-        self.pendingRequests = [[NSMutableArray alloc] init];   // PFUser
+        self.pendingRequests = [[NSMutableArray alloc] init];      // PFUser
         
         // friend suggestions
-        self.facebookFriends = [[NSMutableArray alloc] init];   // NSDictionary<FBGraphUser>
-        self.suggestedFriends = [[NSMutableArray alloc] init];  // PFUser
+        self.facebookFriends = [[NSMutableArray alloc] init];      // NSDictionary<FBGraphUser>
+        
+        self.addrBookSuggestions = [[NSArray alloc] init];         // PFUser
+        self.facebookSuggestions = [[NSArray alloc] init];         // PFUser
+        
+        self.suggestedFriends = [[NSMutableArray alloc] init];     // PFUser
         
         // address book
-        self.addressBookData = [[NSMutableArray alloc] init];   // NSDictionary
-        self.nonUserContacts = [[NSMutableArray alloc] init];   // NSDictionary
+        self.addressBookData = [[NSMutableArray alloc] init];      // NSDictionary
+        self.nonUserContacts = [[NSMutableArray alloc] init];      // NSDictionary
         
         // links
-        self.receivedLinkData = [[NSMutableArray alloc] init];  // NSDictionary
-        self.sentLinkData = [[NSMutableArray alloc] init];      // NSDictionary
+        self.receivedLinkData = [[NSMutableArray alloc] init];     // NSDictionary
+        self.sentLinkData = [[NSMutableArray alloc] init];         // NSDictionary
         
         // set all public status booleans
         self.loadedMasterLinks = YES;
@@ -303,6 +312,7 @@
     NSLog(@"Now loading data");
     
     [self updateLinkWithFacebookStatus];
+    [self updateAddressBookStatus];
     [self loadConnections];
     
     [self loadReceivedLinks: kPriorityLow];
@@ -315,6 +325,14 @@
 - (void)updateLinkWithFacebookStatus
 {
     self.isLinkedWithFB = [PFFacebookUtils isLinkedWithUser:self.me];
+}
+
+
+#pragma mark - Update address book status
+
+- (void)updateAddressBookStatus
+{
+    self.hasAddressBookAccess = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized);
 }
 
 
@@ -502,13 +520,13 @@
     
     // otherwise...
     
-    // initialize status boolean
-    loadedSuggestions = NO;
+    // initialize status booleans
+    loadedAddrBookSuggestions = NO;
+    loadedFacebookSuggestions = NO;
     
     // initialize temp variables
-    __block NSArray *addrBookSuggestions = [[NSArray alloc] init];
-    __block NSArray *facebookSuggestions = [[NSArray alloc] init];
     NSMutableArray *newNonUserContacts = [[NSMutableArray alloc] init];
+    
     
     
     // contacts to exclude
@@ -534,116 +552,120 @@
     
     
     // find LMU users among contacts
+    bool couldGetAB = [self saveAddressBookContacts];
     
-    // save address book data
-    [self saveAddressBookContacts];
-    
-    // construct list of all phone numbers in contacts
-    NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
-    
-    for (NSDictionary *contact in self.addressBookData)
+    if (!couldGetAB)
     {
-        NSArray *phones = contact[@"phone"];
+        NSLog(@"Could not save AB - done loading AB suggestions");
         
-        for (__strong NSString *phone in phones)
-        {
-            // remove all non-numeric characters
-            phone = [Constants removeNonNumericFromPhoneNumber:phone];
-            
-            // add both variants of phone number (with and without country code)
-            [allPhoneNumbers addObjectsFromArray:[Constants allVariantsOfPhoneNumber:phone]];
-        }
+        loadedAddrBookSuggestions = YES;
+        [self postConnectionsNotification];
     }
-        
-    // query for LMU users with included phone numbers
-    PFQuery *query = [PFUser query];
-    [query whereKey:@"mobile_number" containedIn: allPhoneNumbers];
-    [query whereKey:@"objectId" notContainedIn:excludedIDs]; // slow operation
-    [query whereKey:@"objectId" notEqualTo:self.me.objectId];
-    [query setLimit: 1000];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error)
-        {
-            // The find succeeded
-            NSLog(@"Successfully retrieved %lu friend suggestions (address book).", (unsigned long)[objects count]);
-            addrBookSuggestions = objects;
-        }
-        else
-        {
-            NSLog(@"Error querying for LMU users among mobile contacts %@ %@", error, [error localizedDescription]);
-        }
-        
-        // populate list of non-user contacts
-        NSArray *allUsers = [[self.myFriends arrayByAddingObjectsFromArray:self.requestSenders] arrayByAddingObjectsFromArray:addrBookSuggestions];
+    else
+    {
+        // construct list of all phone numbers in contacts
+        NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
         
         for (NSDictionary *contact in self.addressBookData)
         {
-            // default: not LinkMeUp user
-            BOOL isUser = false;
+            NSArray *phones = contact[@"phone"];
             
-            // determine if contact is a LMU user based on mobile number
-            NSArray *phoneArray = contact[@"phone"];
-            for (__strong NSString *phone in phoneArray)
+            for (__strong NSString *phone in phones)
             {
-                for (PFUser *user in allUsers)
+                // remove all non-numeric characters
+                phone = [Constants removeNonNumericFromPhoneNumber:phone];
+                
+                // add both variants of phone number (with and without country code)
+                [allPhoneNumbers addObjectsFromArray:[Constants allVariantsOfPhoneNumber:phone]];
+            }
+        }
+        
+        // query for LMU users with included phone numbers
+        PFQuery *query = [PFUser query];
+        [query whereKey:@"mobile_number" containedIn: allPhoneNumbers];
+        [query whereKey:@"objectId" notContainedIn:excludedIDs]; // slow operation
+        [query whereKey:@"objectId" notEqualTo:self.me.objectId];
+        [query setLimit: 1000];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error)
+            {
+                // The find succeeded
+                NSLog(@"Successfully retrieved %lu friend suggestions (address book).", (unsigned long)[objects count]);
+                self.addrBookSuggestions = objects;
+            }
+            else
+            {
+                NSLog(@"Error querying for LMU users among mobile contacts %@ %@", error, [error localizedDescription]);
+            }
+            
+            // populate list of non-user contacts
+            NSArray *allUsers = [[self.myFriends arrayByAddingObjectsFromArray:self.requestSenders] arrayByAddingObjectsFromArray:self.addrBookSuggestions];
+            
+            for (NSDictionary *contact in self.addressBookData)
+            {
+                // default: not LinkMeUp user
+                BOOL isUser = false;
+                
+                // determine if contact is a LMU user based on mobile number
+                NSArray *phoneArray = contact[@"phone"];
+                for (__strong NSString *phone in phoneArray)
                 {
-                    // remove all non-numeric characters
-                    phone = [Constants removeNonNumericFromPhoneNumber:phone];
-                    
-                    NSString *userNumber = user[@"mobile_number"];
-                    
-                    // if (user phone number not in Parse)...
-                    if (!userNumber)
-                        continue;
-
-                    // else... check for equality
-                    if ([Constants comparePhone1:userNumber withPhone2:phone])
+                    for (PFUser *user in allUsers)
                     {
-                        isUser = true;
-                        break;
+                        // remove all non-numeric characters
+                        phone = [Constants removeNonNumericFromPhoneNumber:phone];
+                        
+                        NSString *userNumber = user[@"mobile_number"];
+                        
+                        // if (user phone number not in Parse)...
+                        if (!userNumber)
+                            continue;
+                        
+                        // else... check for equality
+                        if ([Constants comparePhone1:userNumber withPhone2:phone])
+                        {
+                            isUser = true;
+                            break;
+                        }
                     }
+                    
+                    if (isUser)
+                        break;
                 }
                 
-                if (isUser)
-                    break;
+                if (!isUser)
+                {
+                    // add if phone number (mobile or iPhone) known
+                    if ([contact[@"phone"] count])
+                        [newNonUserContacts addObject:contact];
+                }
             }
             
-            if (!isUser)
-            {
-                // add if phone number (mobile or iPhone) known
-                if ([contact[@"phone"] count])
-                    [newNonUserContacts addObject:contact];
-            }
-        }
-        
-        // NSLog(@"Non user contacts: %@", newNonUserContacts);
-        
-        // update data model properties
-        self.nonUserContacts = newNonUserContacts;
-        self.suggestedFriends = [addrBookSuggestions mutableCopy];
-        self.recentRecipients = self.me[@"recentRecipients"];
-  
-        loadedSuggestions = YES;
-        [self postConnectionsNotification];
-        
-        /*
-        // if not linked with FB, we're done
-        if (!self.isLinkedWithFB)
-        {
-            NSLog(@"Not linked with FB - done loading suggestions");
+            // NSLog(@"Non user contacts: %@", newNonUserContacts);
             
-            // update data model property
-            self.suggestedFriends = [addrBookSuggestions mutableCopy];
+            // update data model properties
+            self.nonUserContacts = newNonUserContacts;
+            self.recentRecipients = self.me[@"recentRecipients"];
             
-            loadedSuggestions = YES;
+            loadedAddrBookSuggestions = YES;
             [self postConnectionsNotification];
-            
-            return;
-        }
+        }];
+    }
+
     
-        // otherwise...
+    
+    // FB friend suggestions
+    if (!self.isLinkedWithFB)
+    {
+        NSLog(@"Not linked with FB - done loading FB suggestions");
         
-        // load facebook friends
+        loadedFacebookSuggestions = YES;
+        [self postConnectionsNotification];
+    }
+    else
+    {
+        NSLog(@"Loading FB friends");
+
         FBRequest* myFacebookFriends = [FBRequest requestForMyFriends];
         //[FBSession setActiveSession: [PFFacebookUtils session]];
         //[FBSession setActiveSession: [myFacebookFriends session]];
@@ -663,29 +685,23 @@
                 
                 PFQuery *query = [PFUser query];
                 [query whereKey:@"facebook_id" containedIn:fbIDs];
-                [query whereKey:@"objectId" notContainedIn:[excludedIDs arrayByAddingObjectsFromArray:addrBookSuggestions]];
+                [query whereKey:@"objectId" notContainedIn:excludedIDs];
                 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                     if (!error)
                     {
                         // The find succeeded.
-                        NSLog(@"Successfully retrieved %lu more suggestions (facebook).", (unsigned long)[objects count]);
-                        facebookSuggestions = objects;
-                        
-                        // update data model property
-                        self.suggestedFriends = [[addrBookSuggestions arrayByAddingObjectsFromArray:facebookSuggestions] mutableCopy];
+                        NSLog(@"Successfully retrieved %lu friend suggestions (facebook).", (unsigned long)[objects count]);
+                        self.facebookSuggestions = objects;
                     }
                     
                     else
                     {
                         // Log details of the failure
                         NSLog(@"Error loading friend suggestions %@ %@", error, [error userInfo]);
-                        
-                        // update data model property
-                        self.suggestedFriends = [addrBookSuggestions mutableCopy];
                     }
                     
                     // set status and post notifications
-                    loadedSuggestions = YES;
+                    loadedFacebookSuggestions = YES;
                     [self postConnectionsNotification];
                 }];
             }
@@ -695,27 +711,62 @@
                 NSLog(@"Error loading facebook friends %@ %@", error, [error localizedDescription]);
                 
                 // set status and post notifications
-                loadedSuggestions = YES;
+                loadedFacebookSuggestions = YES;
                 [self postConnectionsNotification];
             }
         }];
-         */
-    }];
+    }
 }
 
 - (void)postConnectionsNotification
 {
-    self.loadedConnections = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedConnections" object:nil userInfo:nil];
+    if (loadedAddrBookSuggestions && loadedFacebookSuggestions)
+    {
+        self.loadedConnections = YES;
+        
+        // update data model property
+        NSMutableArray *newSuggestedFriends = [[NSMutableArray alloc] initWithArray:self.addrBookSuggestions];
+        
+        if ([newSuggestedFriends count])
+        {
+            // add non-duplicate suggestions
+            for (PFUser *facebookSuggestion in self.facebookSuggestions)
+            {
+                bool isContained = false;
+                
+                for (PFUser *addrBookSuggestion in self.addrBookSuggestions)
+                {
+                    if ([facebookSuggestion.objectId isEqualToString:addrBookSuggestion.objectId])
+                    {
+                        NSLog(@"Duplicate %@", addrBookSuggestion);
+                        isContained = true;
+                        break;
+                    }
+                }
+                
+                if (!isContained)
+                {
+                    [newSuggestedFriends addObject:facebookSuggestion];
+                }
+            }
+        }
+        else
+        {
+            [newSuggestedFriends addObjectsFromArray:self.facebookSuggestions];
+        }
+
+        self.suggestedFriends = newSuggestedFriends;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedConnections" object:nil userInfo:nil];
+    }
 }
 
-- (BOOL)saveAddressBookContacts
+- (bool)saveAddressBookContacts
 {
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     
-    // return false if permission denied or error
-    // note: doesn't really help
-    if (!addressBook)
+    // return false if no permission or error
+    if (!self.hasAddressBookAccess || addressBook == nil)
         return false;
     
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);

@@ -219,15 +219,12 @@ Example
 
 - (void)presentFindContacts
 {
-    bool ABNotDetermined = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined);
-    bool ABDenied = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied);
-    
     bool fewRequests = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
     bool haveContacts = [self haveContacts];
     
-    NSLog(@"%u %u %u %u", ABNotDetermined, ABDenied, fewRequests, haveContacts);
+    NSLog(@"AB conditions contactsVC - %u %u %u", self.sharedData.hasAddressBookAccess, fewRequests, haveContacts);
     
-    if ((ABNotDetermined || ABDenied) && fewRequests && !haveContacts)
+    if (!self.sharedData.hasAddressBookAccess && fewRequests && !haveContacts)
     {
         findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
         [self presentViewController:cwfvc animated:YES completion:nil];

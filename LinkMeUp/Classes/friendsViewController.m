@@ -372,15 +372,12 @@
 
 - (void)presentFindContacts
 {
-    bool ABNotDetermined = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined);
-    bool ABDenied = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied);
-    
     bool fewRequests = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
     bool fewConnections = ([[[self.sharedData.myFriends arrayByAddingObjectsFromArray:self.sharedData.suggestedFriends] arrayByAddingObjectsFromArray:self.sharedData.requestSenders] count] < MANY_CONNECTIONS);
     
-    NSLog(@"%u %u %u %u", ABNotDetermined, ABDenied, fewRequests, fewConnections);
+    NSLog(@"AB conditions friendsVC - %u %u %u", self.sharedData.hasAddressBookAccess, fewRequests, fewConnections);
     
-    if ((ABNotDetermined || ABDenied) && fewRequests && fewConnections)
+    if (!self.sharedData.hasAddressBookAccess && fewRequests && fewConnections)
     {
         findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
         [self presentViewController:cwfvc animated:YES completion:nil];

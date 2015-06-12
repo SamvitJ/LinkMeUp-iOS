@@ -289,6 +289,9 @@
         
         else // V1 user who previously denied address book permissions
         {
+            // update authorization status
+            [self.sharedData updateAddressBookStatus];
+            
             verificationViewController *verify = (verificationViewController *) presenting;
             UIViewController *presentingPresenting = verify.presentingViewController;
             
@@ -298,6 +301,9 @@
     else // exisiting user
     {
         NSLog(@"Return and launch - other");
+        
+        // update authorization status
+        [self.sharedData updateAddressBookStatus];
         
         UIViewController *presenting = self.presentingViewController;
         [presenting dismissViewControllerAnimated:YES completion:nil];

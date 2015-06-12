@@ -78,6 +78,7 @@
 @property (nonatomic, strong) NSMutableArray *myFriends; // PFUser
 
 // friend suggestions
+@property (nonatomic) BOOL hasAddressBookAccess;
 @property (nonatomic) BOOL isLinkedWithFB;
 @property (nonatomic, strong) NSMutableArray *pendingRequests;  // PFUser (sent by me)
 @property (nonatomic, strong) NSMutableArray *suggestedFriends; // PFUser
@@ -123,6 +124,7 @@
 // data loading methods
 - (void)loadAllData;
 
+- (void)updateAddressBookStatus;
 - (void)updateLinkWithFacebookStatus;
 - (void)loadConnections;
 
