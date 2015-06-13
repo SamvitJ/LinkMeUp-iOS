@@ -372,12 +372,11 @@
 
 - (void)presentFindContacts
 {
-    bool fewRequests = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
-    bool fewConnections = ([[[self.sharedData.myFriends arrayByAddingObjectsFromArray:self.sharedData.suggestedFriends] arrayByAddingObjectsFromArray:self.sharedData.requestSenders] count] < MANY_CONNECTIONS);
+    bool requestsRemaining = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
     
-    NSLog(@"AB conditions friendsVC - %u %u %u", self.sharedData.hasAddressBookAccess, fewRequests, fewConnections);
+    NSLog(@"AB conditions friendsVC - %u %u", self.sharedData.hasAddressBookAccess, requestsRemaining);
     
-    if (!self.sharedData.hasAddressBookAccess && fewRequests && fewConnections)
+    if (!self.sharedData.hasAddressBookAccess && requestsRemaining)
     {
         findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
         [self presentViewController:cwfvc animated:YES completion:nil];

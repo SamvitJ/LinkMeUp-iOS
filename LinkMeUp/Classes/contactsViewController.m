@@ -219,12 +219,12 @@ Example
 
 - (void)presentFindContacts
 {
-    bool fewRequests = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
+    bool requestsRemaining = ([self.sharedData.me[kNumberABRequests] integerValue] < AB_REQUESTS_LIMIT);
     bool haveContacts = [self haveContacts];
     
-    NSLog(@"AB conditions contactsVC - %u %u %u", self.sharedData.hasAddressBookAccess, fewRequests, haveContacts);
+    NSLog(@"AB conditions contactsVC - %u %u %u", self.sharedData.hasAddressBookAccess, requestsRemaining, haveContacts);
     
-    if (!self.sharedData.hasAddressBookAccess && fewRequests && !haveContacts)
+    if (!self.sharedData.hasAddressBookAccess && requestsRemaining && !haveContacts)
     {
         findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
         [self presentViewController:cwfvc animated:YES completion:nil];
