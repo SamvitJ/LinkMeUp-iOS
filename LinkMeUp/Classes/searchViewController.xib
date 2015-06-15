@@ -9,7 +9,6 @@
             <connections>
                 <outlet property="searchBar" destination="Hbr-rI-hvN" id="Ihk-uN-b2Q"/>
                 <outlet property="searchDisplayController" destination="dmn-jz-yPE" id="cYG-fA-3TV"/>
-                <outlet property="sendSongButton" destination="fUs-Ml-Y0s" id="5IZ-dk-YX7"/>
                 <outlet property="sendVideoButton" destination="leq-Qr-P9b" id="ZJ2-v6-Zme"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -19,7 +18,28 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J6z-uy-Cc7">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="leq-Qr-P9b">
+                    <rect key="frame" x="0.0" y="381" width="320" height="50"/>
+                    <color key="backgroundColor" red="0.3750458733" green="0.51078131579999997" blue="0.67633876839999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="Bs3-21-EJf"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="19"/>
+                    <state key="normal" title="Search                              &gt;">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="sendVideoPressed:" destination="-1" eventType="touchUpInside" id="WzK-B1-SIJ"/>
+                    </connections>
+                </button>
+                <searchBar contentMode="redraw" fixedFrame="YES" text="" placeholder="Search for music and videos" translatesAutoresizingMaskIntoConstraints="NO" id="Hbr-rI-hvN" customClass="YouTubeSearchBar">
+                    <rect key="frame" x="7" y="123" width="306" height="44"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="Si9-mD-VIp"/>
+                    </connections>
+                </searchBar>
+                <view alpha="0.94999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J6z-uy-Cc7">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
                     <subviews>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SOi-gs-sfC">
@@ -72,55 +92,17 @@
                         <constraint firstAttribute="height" constant="77" id="UmQ-Qc-vnE"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fUs-Ml-Y0s">
-                    <rect key="frame" x="0.0" y="331" width="320" height="50"/>
-                    <color key="backgroundColor" red="0.13766507980000001" green="0.41731639970000001" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="50" id="eun-Sf-8O1"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="19"/>
-                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <state key="normal" title=" Send Song                          &gt; ">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="sendAudioPressed:" destination="-1" eventType="touchUpInside" id="nLf-uu-H24"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="leq-Qr-P9b">
-                    <rect key="frame" x="0.0" y="381" width="320" height="50"/>
-                    <color key="backgroundColor" red="0.13766507980000001" green="0.41731639970000001" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="50" id="Bs3-21-EJf"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="19"/>
-                    <state key="normal" title="Search for Video                   &gt;">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="sendVideoPressed:" destination="-1" eventType="touchUpInside" id="WzK-B1-SIJ"/>
-                    </connections>
-                </button>
-                <searchBar contentMode="redraw" fixedFrame="YES" text="" placeholder="Search for videos" translatesAutoresizingMaskIntoConstraints="NO" id="Hbr-rI-hvN" customClass="YouTubeSearchBar">
-                    <rect key="frame" x="7" y="123" width="306" height="44"/>
-                    <textInputTraits key="textInputTraits"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="Si9-mD-VIp"/>
-                    </connections>
-                </searchBar>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="leq-Qr-P9b" secondAttribute="bottom" constant="49" id="2Xa-nZ-S1T"/>
                 <constraint firstAttribute="trailing" secondItem="leq-Qr-P9b" secondAttribute="trailing" id="GUq-6s-eOh"/>
                 <constraint firstItem="J6z-uy-Cc7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="N5U-cD-zaS"/>
                 <constraint firstAttribute="trailing" secondItem="J6z-uy-Cc7" secondAttribute="trailing" id="NRw-JA-ExL"/>
-                <constraint firstAttribute="trailing" secondItem="fUs-Ml-Y0s" secondAttribute="trailing" id="Px1-0R-2b2"/>
-                <constraint firstItem="fUs-Ml-Y0s" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="SZm-VE-Evt"/>
-                <constraint firstItem="leq-Qr-P9b" firstAttribute="top" secondItem="fUs-Ml-Y0s" secondAttribute="bottom" id="Ucr-z6-7N5"/>
                 <constraint firstItem="leq-Qr-P9b" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="cYr-r9-Cpt"/>
                 <constraint firstItem="J6z-uy-Cc7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="epQ-jv-4lP"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="305" y="330"/>
         </view>
         <searchDisplayController id="dmn-jz-yPE">
             <connections>

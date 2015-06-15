@@ -71,6 +71,8 @@
 		F15849CB1954D7A4005EAB1B /* myLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F15849CA1954D7A4005EAB1B /* myLogInViewController.m */; };
 		F15FD5D21B2A63730031CEC5 /* AddressBook4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */; };
 		F15FD5D31B2A63730031CEC5 /* AddressBook5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */; };
+		F15FD5F11B2E677F0031CEC5 /* LaunchImage-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5EF1B2E677F0031CEC5 /* LaunchImage-568h@2x.png */; };
+		F15FD5F21B2E677F0031CEC5 /* LaunchImage-800-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5F01B2E677F0031CEC5 /* LaunchImage-800-667h@2x.png */; };
 		F1697B551A02CCBF00E0F9FD /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1697B541A02CCBF00E0F9FD /* FacebookSDK.framework */; };
 		F17AC6A819B69BDA00BF95CE /* legalInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F17AC6A619B69BDA00BF95CE /* legalInfoViewController.m */; };
 		F17AC6A919B69BDA00BF95CE /* legalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6A719B69BDA00BF95CE /* legalInfoViewController.xib */; };
@@ -236,6 +238,8 @@
 		F15849CA1954D7A4005EAB1B /* myLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myLogInViewController.m; sourceTree = "<group>"; };
 		F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = AddressBook4.jpg; path = Images/Screenshots/AddressBook4.jpg; sourceTree = "<group>"; };
 		F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = AddressBook5.jpg; path = Images/Screenshots/AddressBook5.jpg; sourceTree = "<group>"; };
+		F15FD5EF1B2E677F0031CEC5 /* LaunchImage-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage-568h@2x.png"; path = "Images/Launch Screen/LaunchImage-568h@2x.png"; sourceTree = "<group>"; };
+		F15FD5F01B2E677F0031CEC5 /* LaunchImage-800-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage-800-667h@2x.png"; path = "Images/Launch Screen/LaunchImage-800-667h@2x.png"; sourceTree = "<group>"; };
 		F1697B541A02CCBF00E0F9FD /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = Frameworks/FacebookSDK.framework; sourceTree = "<group>"; };
 		F17AC6A519B69BDA00BF95CE /* legalInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = legalInfoViewController.h; sourceTree = "<group>"; };
 		F17AC6A619B69BDA00BF95CE /* legalInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = legalInfoViewController.m; sourceTree = "<group>"; };
@@ -669,6 +673,8 @@
 		F1400FD019BA7EEC00D5C60D /* Launch Screen */ = {
 			isa = PBXGroup;
 			children = (
+				F15FD5EF1B2E677F0031CEC5 /* LaunchImage-568h@2x.png */,
+				F15FD5F01B2E677F0031CEC5 /* LaunchImage-800-667h@2x.png */,
 				F1FF125219BA8A0800FBAD8C /* Default-568h@2x.png */,
 			);
 			name = "Launch Screen";
@@ -1028,6 +1034,7 @@
 			files = (
 				F11DE4751990094000CD814E /* searchViewController.xib in Resources */,
 				F187D5A41B292B09008370D7 /* PushNotifNewLink.jpg in Resources */,
+				F15FD5F11B2E677F0031CEC5 /* LaunchImage-568h@2x.png in Resources */,
 				E577724219B003C20057910F /* login-button-small.png in Resources */,
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				E577723019B0038C0057910F /* glyphicons_136_cogwheel.png in Resources */,
@@ -1059,6 +1066,7 @@
 				F1FF124F19BA884200FBAD8C /* icon_app_58.png in Resources */,
 				F1874CB21A3CA17100E4CF43 /* findContactsViewController.xib in Resources */,
 				E577723319B003980057910F /* Back.png in Resources */,
+				F15FD5F21B2E677F0031CEC5 /* LaunchImage-800-667h@2x.png in Resources */,
 				F1A17D941961071E0095BB7E /* contactsViewController.xib in Resources */,
 				E577725B19B003DE0057910F /* buttonRequestSelected.png in Resources */,
 				E577728F19B005370057910F /* Closed-Mail.png in Resources */,

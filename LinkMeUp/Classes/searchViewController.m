@@ -43,19 +43,7 @@
     
     if (sender.state == UIGestureRecognizerStateEnded)
     {
-        if (self.titleField.isFirstResponder)
-        {
-            [self.titleField resignFirstResponder];
-            sender.cancelsTouchesInView = YES;
-        }
-        
-        else if (self.artistField.isFirstResponder)
-        {
-            [self.artistField resignFirstResponder];
-            sender.cancelsTouchesInView = YES;
-        }
-        
-        else if (self.searchBar.isFirstResponder)
+        if (self.searchBar.isFirstResponder)
         {
             // if user clicks outside search results table view...
             if (!(sender.view == self.searchDisplayController.searchResultsTableView))
@@ -74,34 +62,6 @@
     }
 }
 
-#pragma mark - Text field delegate methods
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    if (textField == self.titleField || textField == self.artistField)
-    {
-        if ([self.titleField.text isEqualToString:@""] && [self.artistField.text isEqualToString:@""])
-        {
-            return NO;
-        }
-        
-        else
-        {
-            songInfoViewController *svc = [[songInfoViewController alloc] init];
-            svc.backgroundColor = BLUE_200;
-            
-            self.sharedData.userTitle = self.titleField.text;
-            self.sharedData.userArtist = self.artistField.text;
-            
-            [self.navigationController pushViewController:svc animated:NO];
-            
-            return NO;
-        }
-    }
-    
-    return NO;
-}
-
 #pragma mark - Search display delegate methods
 
 /*-(void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView
@@ -111,7 +71,9 @@
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView
 {
-    CGRect frame = CGRectMake(self.searchBar.frame.origin.x + 8.0f, -5.0f, self.searchBar.frame.size.width - 16.0f, (IS_IPHONE5 ? 5 : 3)*AUTOCOMPLETE_ROW_HEIGHT);
+    int numberSuggestions = (IS_IPHONE5 ? 5 : 3);
+    
+    CGRect frame = CGRectMake(self.searchBar.frame.origin.x + 8.0f, -5.0f, self.searchBar.frame.size.width - 16.0f, numberSuggestions * AUTOCOMPLETE_ROW_HEIGHT);
     
     // set frame
     tableView.frame = frame;
@@ -215,15 +177,56 @@
 - (void)loadSuggestionsForSearchText:(NSString *)searchText
 {
     // Autocomplete
-    //NSLog(@"Start autocomplete query");
+    // NSLog(@"Start autocomplete query");
     
     NSString *autocompleteURL = [NSString stringWithFormat:@"http://suggestqueries.google.com/complete/search?hl=en&ds=yt&client=youtube&hjson=t&cp=1&q=%@&key=%@&format=5&alt=json&callback=?", [Constants urlEncodeString:searchText], YOUTUBE_API_KEY];
     NSURLRequest *autocompleteRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:autocompleteURL]];
+    
+    // while loading results
+    if (![self.searchBar.text isEqualToString:@""] && ![self.searchResults count])
+    {
+        self.searchResults = [[NSMutableArray alloc] initWithObjects:@"", nil];
+        
+        // view to hold activity indicator
+        self.AIView = [[UIView alloc] initWithFrame: self.searchDisplayController.searchResultsTableView.frame];
+        
+        // add activity indicator to search results table view
+        if (!self.searchDisplayAI)
+        {
+            self.searchDisplayAI = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            self.searchDisplayAI.transform = CGAffineTransformMakeScale(1.2f, 1.2f);
+            
+            CGFloat searchDisplayWidth = self.searchDisplayController.searchResultsTableView.frame.size.width;
+            
+            CGFloat aiWidth = self.searchDisplayAI.frame.size.width;
+            CGFloat aiHeight = self.searchDisplayAI.frame.size.height;
+            
+            CGFloat horizOffset = 10;
+            
+            [self.searchDisplayAI setFrame:CGRectMake((searchDisplayWidth - aiWidth)/2 - horizOffset, AUTOCOMPLETE_ROW_HEIGHT + (AUTOCOMPLETE_ROW_HEIGHT - aiHeight)/2, aiWidth, aiHeight)];
+            
+            [self.AIView addSubview: self.searchDisplayAI];
+            self.searchDisplayController.searchResultsTableView.bounces = NO;
+        }
+
+        [self.searchDisplayController.searchResultsTableView addSubview: self.AIView];
+        [self.searchDisplayAI startAnimating];
+    }
     
     [NSURLConnection sendAsynchronousRequest:autocompleteRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
         if (!error)
         {
+            // hide activity indicator
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                // Stop activity indicator
+                [self.searchDisplayAI stopAnimating];
+                [self.AIView removeFromSuperview];
+                self.searchDisplayController.searchResultsTableView.bounces = YES;
+                
+            });
+            
             //NSLog(@"Done %@", [NSDate date]);
             
             NSArray *myData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -263,95 +266,23 @@
 
 - (void)clearAndInitialize
 {
-    // clear search fields
-    self.titleField.text = @"";
-    self.artistField.text = @"";
+    // clear search field
     self.searchBar.text = @"";
     
     // resign first responder
-    [self.titleField resignFirstResponder];
-    [self.artistField resignFirstResponder];
     [self.searchBar resignFirstResponder];
     [self.searchDisplayController setActive:NO animated:NO];
     
-    // default state: send song
-    [self setDefaultState];
-    
     // set status boolean
     self.sharedData.newSong = NO;
-}
-
-#pragma mark - Default state
-
-- (void)setDefaultState
-{
-    // default setting
-    self.selectedState = kSendSong;
-    
-    [Constants highlightButton:self.sendSongButton];
-    [Constants fadeButton:self.sendVideoButton];
-    
-    [self displaySongPrompt];
-    [self displayTitleField];
-    [self displayArtistField];
-    
-    self.videoPromptLabel.hidden = YES;
-    self.searchBar.hidden = YES;
 }
 
 #pragma mark - UI action methods
 
 - (IBAction)sendVideoPressed:(id)sender
 {
-    if (self.selectedState == kSendSong)
-    {
-        // toggle state
-        self.selectedState = kSendVideo;
-        
-        [Constants highlightButton:self.sendVideoButton];
-        [Constants fadeButton:self.sendSongButton];
-        
-        [self displayVideoPrompt];
-        self.searchBar.hidden = NO;
-        //[self displayVideoSearchBar];
-        
-        self.songPromptLabel.hidden = YES;
-        self.titleField.hidden = YES;
-        self.artistField.hidden = YES;
-        
-        // make search bar first responder
-        //[self.searchBar becomeFirstResponder];
-    }
-    
-    else
-    {
-        // search for video
-        [self launchYouTubeSearch];
-    }
-}
-
-- (IBAction)sendAudioPressed:(id)sender
-{
-    if (self.selectedState == kSendVideo)
-    {
-        // toggle state
-        [self setDefaultState];
-    }
-    
-    else
-    {
-        // if both fields are not null, search for song
-        if (!([self.titleField.text isEqualToString:@""] && [self.artistField.text isEqualToString:@""]))
-        {
-            songInfoViewController *svc = [[songInfoViewController alloc] init];
-            svc.backgroundColor = BLUE_200;
-            
-            self.sharedData.userTitle = self.titleField.text;
-            self.sharedData.userArtist = self.artistField.text;
-            
-            [self.navigationController pushViewController:svc animated:NO];
-        }
-    }
+    // search for video
+    [self launchYouTubeSearch];
 }
 
 #pragma mark - View controller lifecycle
@@ -370,8 +301,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    // default setting: send song
-    [self setDefaultState];
+    // initialize UI
+    [Constants highlightButton:self.sendVideoButton];
+    // [self displayVideoPrompt];
+    self.searchBar.hidden = NO;
     
     // exit gesture
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
@@ -384,7 +317,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     // set view background
-    self.view.backgroundColor = BLUE_200;
+    // self.view.backgroundColor = FAINT_GRAY;
     
     if (self.sharedData.newSong)
         [self clearAndInitialize];
@@ -402,83 +335,16 @@
 
 #pragma mark - UI helper methods
 
-- (void)displaySongPrompt
-{
-    if (!self.songPromptLabel)
-    {
-        self.songPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 103.0f, 290.0f, 25.0f)];
-        self.songPromptLabel.font = HELV_18;
-        self.songPromptLabel.textColor = [UIColor whiteColor];
-        self.songPromptLabel.text = @"Enter song info   ";
-        
-        [self.view addSubview:self.songPromptLabel];
-    }
-    
-    else
-    {
-        self.songPromptLabel.hidden = NO;
-    }
-}
-
-- (void)displayTitleField
-{
-    if (!self.titleField)
-    {
-        self.titleField = [[UITextField alloc] initWithFrame:CGRectMake(15.0f, 130.0f, 290.0f, 40.0f)];
-        self.titleField.delegate = self;
-        
-        self.titleField.borderStyle = UITextBorderStyleRoundedRect;
-        self.titleField.backgroundColor = [UIColor whiteColor];
-        
-        self.titleField.font = HELV_16;
-        self.titleField.placeholder = @"Title";
-        self.titleField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        
-        self.titleField.returnKeyType = UIReturnKeySearch;
-        
-        [self.view addSubview:self.titleField];
-    }
-    
-    else
-    {
-        self.titleField.hidden = NO;
-    }
-}
-
-- (void)displayArtistField
-{
-    if (!self.artistField)
-    {
-        self.artistField = [[UITextField alloc] initWithFrame:CGRectMake(15.0f, 170.0f, 290.0f, 40.0f)];
-        
-        self.artistField.delegate = self;
-        
-        self.artistField.borderStyle = UITextBorderStyleRoundedRect;
-        self.artistField.backgroundColor = [UIColor whiteColor];
-        
-        self.artistField.font = HELV_16;
-        self.artistField.placeholder = @"Artist";
-        self.artistField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        
-        self.artistField.returnKeyType = UIReturnKeySearch;
-        
-        [self.view addSubview:self.artistField];
-    }
-    
-    else
-    {
-        self.artistField.hidden = NO;
-    }
-}
-
 - (void)displayVideoPrompt
 {
     if (!self.videoPromptLabel)
     {
-        self.videoPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 103.0f, 290.0f, 25.0f)];
-        self.videoPromptLabel.font = HELV_18;
-        self.videoPromptLabel.textColor = [UIColor whiteColor];
-        self.videoPromptLabel.text = @"Music, comedy, sports, news...";
+        self.videoPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 200.0f, 290.0f, 100.0f)];
+        self.videoPromptLabel.font = HELV_14;
+        self.videoPromptLabel.textColor = [UIColor grayColor];
+        self.videoPromptLabel.numberOfLines = 1;
+        
+        self.videoPromptLabel.text = [NSString stringWithFormat:@"Songs, music videos, comedy, sports, news.."];
         
         [self.view addSubview:self.videoPromptLabel];
     }

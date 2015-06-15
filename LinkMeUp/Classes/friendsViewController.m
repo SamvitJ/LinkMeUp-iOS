@@ -202,14 +202,21 @@
     if (self.receivedPush)
         self.receivedPush = NO;
     
+    // if friends VC selected, reset badge count
+    UITabBarController *myTBC = (UITabBarController *)[self.navigationController parentViewController];
+    (myTBC.selectedIndex == kTabBarIconFriends ? [self resetFriendsBadge] : [self updateFriendsBadge]);
+    
+    // initialize suggestion and request buttons, if neccesary
+    if (self.suggestionButtons && ![self.suggestionButtons count])
+        [self initializeSuggestionButtons];
+    
+    if (self.requestButtons && ![self.requestButtons count])
+        [self initializeRequestButtons];
+    
     // reload tables
     [self.tableView reloadData];
     [self.searchDisplayController.searchResultsTableView reloadData];
     [self stopLoadingIndicator];
-    
-    // if friends VC selected, reset badge count
-    UITabBarController *myTBC = (UITabBarController *)[self.navigationController parentViewController];
-    (myTBC.selectedIndex == kTabBarIconFriends ? [self resetFriendsBadge] : [self updateFriendsBadge]);
 }
 
 #pragma mark - View controller lifecycle
@@ -254,6 +261,12 @@
     // initialize suggestion and request buttons
     self.requestButtons = [[NSMutableArray alloc] init];
     self.suggestionButtons = [[NSMutableArray alloc] init];
+    
+    if (self.sharedData.loadedConnections)
+    {
+        [self initializeRequestButtons];
+        [self initializeSuggestionButtons];
+    }
     
     // initialize search result contacts
     self.searchResults = [[NSMutableArray alloc] init];
@@ -366,6 +379,45 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Initialization methods
+
+- (void)initializeSuggestionButtons
+{
+    for (int i = 0; i < [self.sharedData.suggestedFriends count]; i++)
+    {
+        PFUser *suggestion = self.sharedData.suggestedFriends[i];
+        
+        // "add friend" button
+        UIButton *button = [self createSuggestionButton];
+        button.tag = i;
+        
+        // if request pending, show selected state
+        for (PFUser *pending in self.sharedData.pendingRequests)
+        {
+            if ([pending.objectId isEqualToString:suggestion.objectId])
+            {
+                button.selected = YES;
+            }
+        }
+        
+        // add to array
+        self.suggestionButtons[i] = button;
+    }
+}
+
+- (void)initializeRequestButtons
+{
+    for (int i = 0; i < [self.sharedData.requestSenders count]; i++)
+    {
+        // "accept request" button
+        UIButton *button = [self createRequestButton];
+        button.tag = i;
+        
+        // add to array
+        self.requestButtons[i] = button;
+    }
 }
 
 #pragma mark - Address book permissions
@@ -664,13 +716,6 @@
             cell.textLabel.text = [Constants nameElseUsername:displayPerson];
             cell.backgroundColor = FAINT_PURPLE;
             
-            // "accept request" button
-            UIButton *button = [self createRequestButton];
-            button.tag = indexPath.row;
-            
-            // add to array
-            self.requestButtons[indexPath.row] = button;
-            
             // add "accept request" button to cell
             [cell.contentView addSubview: self.requestButtons[indexPath.row]];
         }
@@ -680,22 +725,6 @@
             PFUser *displayPerson = self.sharedData.suggestedFriends[indexPath.row];
             cell.textLabel.text = [Constants nameElseUsername:displayPerson];
             cell.backgroundColor = FAINT_GREEN;
-            
-            // "add friend" button
-            UIButton *button = [self createSuggestionButton];
-            button.tag = indexPath.row;
-            
-            // if request pending, show selected state
-            for (PFUser *pending in self.sharedData.pendingRequests)
-            {                    
-                if (((id)pending != [NSNull null]) && [pending.objectId isEqualToString:displayPerson.objectId])
-                {
-                    button.selected = YES;
-                }
-            }
-            
-            // add to array
-            self.suggestionButtons[indexPath.row] = button;
             
             // add "add friend" button to cell
             [cell.contentView addSubview: self.suggestionButtons[indexPath.row]];

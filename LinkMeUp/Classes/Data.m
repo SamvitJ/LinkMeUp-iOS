@@ -722,8 +722,6 @@
 {
     if (loadedAddrBookSuggestions && loadedFacebookSuggestions)
     {
-        self.loadedConnections = YES;
-        
         // update data model property
         NSMutableArray *newSuggestedFriends = [[NSMutableArray alloc] initWithArray:self.addrBookSuggestions];
         
@@ -756,6 +754,9 @@
         }
 
         self.suggestedFriends = newSuggestedFriends;
+        
+        self.loadedConnections = YES;
+        NSLog(@"Did finish loading connections");
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedConnections" object:nil userInfo:nil];
     }
@@ -956,7 +957,7 @@
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
                     
-                    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
                     dispatch_async(aQueue, ^{
                         
                         NSData *artData = [NSData dataWithContentsOfURL:artURL];
@@ -1074,7 +1075,7 @@
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
                     
-                    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
                     dispatch_async(aQueue, ^{
                         
                         NSData *artData = [NSData dataWithContentsOfURL:artURL];

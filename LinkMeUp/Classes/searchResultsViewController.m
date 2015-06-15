@@ -207,22 +207,6 @@
     "document.getElementsByTagName('head')[0].appendChild(meta)";
     
     [webView stringByEvaluatingJavaScriptFromString: contentSizeScript];
-    
-    /*// autoplay script
-    NSString *autoplayScript = @"var iframe = document.getElementById('script'); "
-    "var player = new playerjs.Player(iframe);"
-    "player.on('ready', function() {player.play(); });";
-     
-    NSLog(@"Result %@", [webView stringByEvaluatingJavaScriptFromString:autoplayScript]);*/
-    
-    /*// programmatic touch
-    UIButton *webViewPlayButton = [self findButtonInView:webView];
-    [webViewPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];*/
-
-    /*// autoplay script
-    NSString *autoplayScript = [NSString stringWithFormat:@"<!DOCTYPE html> <html> <body> <div id=\"player\"></div> <script> var tag = document.createElement('script'); tag.src = \"http://www.youtube.com/iframe_api\"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); var player; function onYouTubePlayerAPIReady() { player = new YT.Player('player', { width:'180', height:'140', videoId:'%@', events: { 'onReady': onPlayerReady} }); } function onPlayerReady(event) { event.target.playVideo(); } </script> </body> </html>", [self.videos[webView.tag] objectForKey:@"videoId"]];
-    
-    NSLog(@"Result %@", [webView stringByEvaluatingJavaScriptFromString:autoplayScript]);*/
 
     // stop activity indicator
     UIActivityIndicatorView *activityIndicator = self.activityIndicators[webView.tag];
@@ -428,7 +412,7 @@
                 if (videoDefaultThumbnail) videoData[@"videoDefaultThumbnail"] = videoDefaultThumbnail;
                 if (videoHQThumbnail) videoData[@"videoHQThumbnail"] = videoHQThumbnail;
         
-                //NSLog(@"\nVideo %u \n%@ \n%@ \n%@ \n%@ \n%@ \n%@\n\n", i, videoTitle, videoId, videoChannel, videoViews, videoDuration, video);
+                // NSLog(@"\nVideo %u \n%@ \n%@ \n%@ \n%@ \n%@ \n%@\n\n", i, videoTitle, videoData[@"videoId"], videoChannel, videoViews, videoDuration, video);
                 
                 // load thumbnail for video
                 [self loadThumbnailForCell:i];
@@ -518,15 +502,6 @@
 
 #pragma mark - Load video request
 
-/*- (void)checkWebViewStatus:(NSTimer *)timer
-{
-    // webview index
-    int index = (int)[[[timer userInfo] objectForKey:@"tag"] integerValue];
-    UIWebView *webView = self.webViews[index];
-
-    NSLog(@"Webview status: %@", (webView.loading ? @"still loading": @"not loading"));
-}*/
-
 - (void)loadWebViewForCell:(int)index autoplay:(BOOL)shouldAutoplay
 {
     UIWebView *youtubeWebView = [[UIWebView alloc] initWithFrame: CGRectMake(10.0f, 10.0f, 180.0f, 135.0f)];
@@ -545,69 +520,6 @@
     
     // Add webview to array
     self.webViews[index] = youtubeWebView;
-    
-    /*// Fire status timer
-    if (self.webViewStatusTimer)
-    {
-        [self.webViewStatusTimer invalidate];
-        self.webViewStatusTimer = nil;
-    }
-    
-    self.webViewStatusTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(checkWebViewStatus:)
-                                                             userInfo:@{@"tag": [NSNumber numberWithInt:index]} repeats:YES];*/
-    
-    /* // MPMoviePlayerController
-    NSURL *videoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.youtube.com/watch?v=%@", self.videos[index]]];
-    MPMoviePlayerController *moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
-    [moviePlayer prepareToPlay];
-    
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-    [moviePlayer.view setFrame: cell.bounds];
-    [cell.contentView addSubview: moviePlayer.view];
-    
-    [moviePlayer play];*/
-    
-    
-    
-    /* // Load request (embedded) ****
-    //youtubeWebView.allowsInlineMediaPlayback = YES;
-     
-    // Source: S.O.
-    NSString *youTubeVideoHTML = @"<html><head>\
-    <style type=\"text/css\">\
-    body {\
-    background-color: transparent;\
-    color: white;\
-    }\
-    </style>\
-    </head><body style=\"margin:0\">\
-    <embed id=\"yt\" src=\"%@\" type=\"application/x-shockwave-flash\" \
-    width=\"%0.0f\" height=\"%0.0f\"></embed>\
-    </body></html>";
-    
-    CGFloat width = 180.0f; CGFloat height = 140.0f;
-     
-    NSString *URL = [[NSString stringWithFormat:@"http://www.youtube.com/v/"] stringByAppendingString:[self.videos[index] objectForKey:@"videoId"]];
-    NSString *HTML = [NSString stringWithFormat:youTubeVideoHTML, URL, width, height];
-    
-    [youtubeWebView loadHTMLString:HTML baseURL:nil]; */
-    
-    
-    
-    /*// Load request (embedded) ****
-    youtubeWebView.mediaPlaybackRequiresUserAction = NO;
-    youtubeWebView.hidden = YES;
-    
-    // Source: S.O.
-    static NSString *youTubeVideoHTML = @"<!DOCTYPE html><html><head><style>body{margin:0px 0px 0px 0px;}</style></head> <body> <div id=\"player\"></div> <script> var tag = document.createElement('script'); tag.src = \"http://www.youtube.com/player_api\"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); var player; function onYouTubePlayerAPIReady() { player = new YT.Player('player', { width:'%0.0f', height:'%0.0f', videoId:'%@', events: { 'onReady': onPlayerReady, } }); } function onPlayerReady(event) { event.target.playVideo(); } </script> </body> </html>";
-
-    // Source: YouTube API Documentation
-    static NSString *youTubeVideoHTML = @"<!DOCTYPE html> <html> <body> <div id=\"player\"></div> <script> var tag = document.createElement('script'); tag.src = \"http://www.youtube.com/iframe_api\"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); var player; function onYouTubePlayerAPIReady() { player = new YT.Player('player', { width:'%0.0f', height:'%0.0f', videoId:'%@', events: { 'onReady': onPlayerReady} }); } function onPlayerReady(event) { event.target.playVideo(); } </script> </body> </html>";
-    
-    CGFloat width = 180.0f; CGFloat height = 140.0f;
-
-    NSString *HTML = [NSString stringWithFormat:youTubeVideoHTML, width, height, [self.videos[index] objectForKey:@"videoId"]];
-    [youtubeWebView loadHTMLString:HTML baseURL:[[NSBundle mainBundle] resourceURL]];*/
 }
 
 #pragma mark - Table view data source
@@ -635,7 +547,7 @@
         cell.transform = CGAffineTransformRotate(CGAffineTransformIdentity, k90DegreesClockwiseAngle);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        cell.backgroundColor = FAINT_GRAY;
+        cell.backgroundColor = [UIColor whiteColor]; // FAINT_GRAY;
     }
     
     // remove all subviews that should now be off screen
@@ -784,8 +696,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.view.backgroundColor = FAINT_GRAY;
-    self.tableView.backgroundColor = FAINT_GRAY;
+    self.view.backgroundColor = [UIColor whiteColor]; // FAINT_GRAY;
+    self.tableView.backgroundColor = [UIColor whiteColor]; // FAINT_GRAY;
 }
 
 - (void)didReceiveMemoryWarning
