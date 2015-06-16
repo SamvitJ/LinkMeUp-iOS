@@ -154,37 +154,6 @@
 
 #pragma mark - Web view delegate
 
-- (UIButton *)findButtonInView:(UIView *)view
-{
-    UIButton *button = nil;
-    
-    if ([view isMemberOfClass:[UIButton class]])
-    {
-        NSLog(@"Found button");
-        return (UIButton *)view;
-    }
-    
-    if (view.subviews && [view.subviews count] > 0)
-    {
-        NSLog(@"View %@", view);
-        for (UIView *subview in view.subviews)
-        {
-            NSLog(@"Subview: %@", subview);
-            
-            button = [self findButtonInView:subview];
-            
-            if (button)
-            {
-                NSLog(@"Found button");
-                return button;
-            }
-        }
-        NSLog(@"\n\n\n");
-    }
-    
-    return button;
-}
-
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"Error loading webview %@", error);
@@ -232,7 +201,7 @@
     // VEVO video query
     GTLQueryYouTube *videoQueryVEVO = [GTLQueryYouTube queryForSearchListWithPart:@"id,snippet"];
     
-    videoQueryVEVO.maxResults = 8;
+    videoQueryVEVO.maxResults = VEVO_MAX_RESULTS;
     videoQueryVEVO.q = searchTerm;
     videoQueryVEVO.type = @"video";
     
@@ -270,6 +239,10 @@
             queryVEVODone = YES;
             [self launchStatsQuery];
         }
+        else
+        {
+            NSLog(@"Error executing VEVO search list query %@ %@", error, [error userInfo]);
+        }
     }];
     
     
@@ -279,7 +252,7 @@
     
     videoQuery.videoSyndicated = @"true";
     
-    videoQuery.maxResults = 10;
+    videoQuery.maxResults = SYND_MAX_RESULTS;
     videoQuery.q = searchTerm;
     videoQuery.type = @"video";
     
@@ -307,14 +280,14 @@
                 
                 [self.videos addObject:videoData];
             }
-        
+            
             queryNonVEVODone = YES;
             [self launchStatsQuery];
         }
                    
         else
         {
-            NSLog(@"Error executing search list query %@ %@", error, [error userInfo]);
+            NSLog(@"Error executing non-VEVO search list query %@ %@", error, [error userInfo]);
         }
     }];
 }
@@ -411,8 +384,8 @@
                 if (videoDuration) videoData[@"videoDuration"] = videoDuration;
                 if (videoDefaultThumbnail) videoData[@"videoDefaultThumbnail"] = videoDefaultThumbnail;
                 if (videoHQThumbnail) videoData[@"videoHQThumbnail"] = videoHQThumbnail;
-        
-                // NSLog(@"\nVideo %u \n%@ \n%@ \n%@ \n%@ \n%@ \n%@\n\n", i, videoTitle, videoData[@"videoId"], videoChannel, videoViews, videoDuration, video);
+                
+                //NSLog(@"\nVideo %u \n%@ \n%@ \n%@ \n%@ \n%@ \n%@\n\n", i, videoTitle, videoData[@"videoId"], videoChannel, videoViews, videoDuration, video);
                 
                 // load thumbnail for video
                 [self loadThumbnailForCell:i];
@@ -547,7 +520,7 @@
         cell.transform = CGAffineTransformRotate(CGAffineTransformIdentity, k90DegreesClockwiseAngle);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        cell.backgroundColor = [UIColor whiteColor]; // FAINT_GRAY;
+        cell.backgroundColor = FAINT_GRAY; // [UIColor whiteColor];
     }
     
     // remove all subviews that should now be off screen
@@ -664,13 +637,13 @@
     
     // start activity indicator
     self.mainActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    self.mainActivityIndicator.center = CGPointMake(self.view.frame.size.width / 2.0, 170.0f + (IS_IPHONE5 ? 30.0f : 0.0f));
+    self.mainActivityIndicator.center = CGPointMake(self.view.frame.size.width / 2.0, 170.0f + (IS_IPHONE_5 ? 30.0f : 0.0f));
     self.mainActivityIndicator.transform = CGAffineTransformMakeScale(1.6f, 1.6f);
     [self.mainActivityIndicator startAnimating];
     [self.view addSubview: self.mainActivityIndicator];
     
     // use screen space
-    if (IS_IPHONE5)
+    if (IS_IPHONE_5)
         self.tableView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0.0f, 50.0f);
     
     // rotate table
@@ -696,8 +669,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.view.backgroundColor = [UIColor whiteColor]; // FAINT_GRAY;
-    self.tableView.backgroundColor = [UIColor whiteColor]; // FAINT_GRAY;
+    self.view.backgroundColor = FAINT_GRAY; // [UIColor whiteColor];
+    self.tableView.backgroundColor = FAINT_GRAY; // [UIColor whiteColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -752,7 +725,7 @@
 - (void)displayAnnotationView
 {
     // annotation text view
-    self.annotationView = [[UITextView alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 300.0f)/2, self.tableView.frame.origin.y + self.tableView.frame.size.height + 10.0f + (IS_IPHONE5 ? 10.0f : 0.0f), 300.0f, 47.0f)];
+    self.annotationView = [[UITextView alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 300.0f)/2, self.tableView.frame.origin.y + self.tableView.frame.size.height + 10.0f + (IS_IPHONE_5 ? 10.0f : 0.0f), 300.0f, 47.0f)];
     self.annotationView.backgroundColor = [UIColor clearColor];
     
     self.annotationView.scrollEnabled = NO;

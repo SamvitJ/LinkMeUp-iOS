@@ -147,11 +147,6 @@
                 self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
             }
             
-            /*if (remoteNotification & UIRemoteNotificationTypeBadge)
-            {
-                NSLog(@"Notifications - Badge");
-            }*/
-            
             if (remoteNotification & UIRemoteNotificationTypeSound)
             {
                 NSLog(@"Notifications - Sound");

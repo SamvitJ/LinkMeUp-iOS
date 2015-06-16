@@ -167,6 +167,11 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    UIImageView *launchScreen = [[UIImageView alloc] initWithFrame:(IS_IPHONE_5 ? CGRectMake(0, 0, 320, 568) : CGRectMake(0, 0, 320, 480))];
+    launchScreen.image = (IS_IPHONE_5 ? [UIImage imageNamed:@"LaunchImage-568h@2x"] : [UIImage imageNamed:@"LaunchImage@2x"]);
+    
+    [self.view addSubview: launchScreen];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -479,7 +484,11 @@
     // Q: in what cases could this happen?
     [self.statusLabel removeFromSuperview];
     
-    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 300.0f)/2, 210.0f, 300.0f, 40.0f)];
+    CGFloat labelWidth = 300.0;
+    CGFloat labelHeight = 40.0;
+    
+    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - labelWidth)/2, (self.view.frame.size.height - labelHeight)/2, labelWidth, labelHeight)];
+
     self.statusLabel.text = @"";
     
     [self.view addSubview:self.statusLabel];

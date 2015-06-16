@@ -520,6 +520,9 @@
     
     // otherwise...
     
+    // populate recentRecipients
+    self.recentRecipients = self.me[@"recentRecipients"];
+    
     // initialize status booleans
     loadedAddrBookSuggestions = NO;
     loadedFacebookSuggestions = NO;
@@ -645,7 +648,6 @@
             
             // update data model properties
             self.nonUserContacts = newNonUserContacts;
-            self.recentRecipients = self.me[@"recentRecipients"];
             
             loadedAddrBookSuggestions = YES;
             [self postConnectionsNotification];

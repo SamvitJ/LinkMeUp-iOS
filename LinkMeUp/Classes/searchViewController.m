@@ -12,7 +12,7 @@
 #import "searchResultsViewController.h"
 
 // test
-#import "pushNotifViewController.h"
+// #import "pushNotifViewController.h"
 
 @interface searchViewController ()
 
@@ -71,11 +71,10 @@
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView
 {
-    int numberSuggestions = (IS_IPHONE5 ? 5 : 3);
-    
+    // set frame
+    int numberSuggestions = (IS_IPHONE_5 ? 5 : 3);
     CGRect frame = CGRectMake(self.searchBar.frame.origin.x + 8.0f, -5.0f, self.searchBar.frame.size.width - 16.0f, numberSuggestions * AUTOCOMPLETE_ROW_HEIGHT);
     
-    // set frame
     tableView.frame = frame;
     
     // remove seperator
@@ -91,7 +90,42 @@
     return NO;
 }
 
+#pragma mark - Keyboard notifications
+
+- (void)keyboardWillShow
+{
+    //[self animateSearchBarInDirection: kDirectionUp];
+}
+
+- (void)keyboardWillHide
+{
+    //[self animateSearchBarInDirection: kDirectionDown];
+}
+
 #pragma mark - Search bar delegate methods
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    NSLog(@"Search bar text should begin editing");
+    
+    //[self animateSearchBarInDirection: kDirectionUp];
+    
+    return YES;
+}
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar
+{
+    NSLog(@"Search bar text should end editing");
+    
+    //[self animateSearchBarInDirection: kDirectionDown];
+    
+    return YES;
+}
+
+/*- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    NSLog(@"Search bar text did begin editing");
+}*/
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
@@ -217,10 +251,9 @@
         
         if (!error)
         {
-            // hide activity indicator
+            // stop and hide activity indicator
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                // Stop activity indicator
                 [self.searchDisplayAI stopAnimating];
                 [self.AIView removeFromSuperview];
                 self.searchDisplayController.searchResultsTableView.bounces = YES;
@@ -292,6 +325,15 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillShow)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillHide)
+                                                     name:UIKeyboardWillHideNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -317,7 +359,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     // set view background
-    // self.view.backgroundColor = FAINT_GRAY;
+    self.view.backgroundColor = FAINT_GRAY;
     
     if (self.sharedData.newSong)
         [self clearAndInitialize];
@@ -331,6 +373,12 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 #pragma mark - UI helper methods
@@ -381,5 +429,24 @@
         self.searchBar.hidden = NO;
     }
 }*/
+
+#pragma mark - Search bar animation
+
+- (void)animateSearchBarInDirection:(Direction)direction
+{
+    float distance = 80.0f;
+    float movement = (direction ? distance : -distance);
+    float movementDuration = 0.3f;
+    
+    [UIView beginAnimations:@"Scroll" context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: movementDuration];
+    
+    self.searchBar.frame = CGRectOffset(self.searchBar.frame, 0.0f, movement);
+    self.searchDisplayController.searchResultsTableView.frame = CGRectOffset(self.searchDisplayController.searchResultsTableView.frame, 0.0f, movement);
+    
+    [UIView commitAnimations];
+}
+
 
 @end

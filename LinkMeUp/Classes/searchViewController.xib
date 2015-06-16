@@ -15,11 +15,11 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="leq-Qr-P9b">
-                    <rect key="frame" x="0.0" y="381" width="320" height="50"/>
+                    <rect key="frame" x="0.0" y="469" width="320" height="50"/>
                     <color key="backgroundColor" red="0.3750458733" green="0.51078131579999997" blue="0.67633876839999996" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="Bs3-21-EJf"/>
@@ -32,13 +32,6 @@
                         <action selector="sendVideoPressed:" destination="-1" eventType="touchUpInside" id="WzK-B1-SIJ"/>
                     </connections>
                 </button>
-                <searchBar contentMode="redraw" fixedFrame="YES" text="" placeholder="Search for music and videos" translatesAutoresizingMaskIntoConstraints="NO" id="Hbr-rI-hvN" customClass="YouTubeSearchBar">
-                    <rect key="frame" x="7" y="123" width="306" height="44"/>
-                    <textInputTraits key="textInputTraits"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="Si9-mD-VIp"/>
-                    </connections>
-                </searchBar>
                 <view alpha="0.94999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J6z-uy-Cc7">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
                     <subviews>
@@ -92,6 +85,13 @@
                         <constraint firstAttribute="height" constant="77" id="UmQ-Qc-vnE"/>
                     </constraints>
                 </view>
+                <searchBar contentMode="redraw" fixedFrame="YES" text="" placeholder="Search for music and videos" translatesAutoresizingMaskIntoConstraints="NO" id="Hbr-rI-hvN" customClass="YouTubeSearchBar">
+                    <rect key="frame" x="7" y="123" width="306" height="44"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="Si9-mD-VIp"/>
+                    </connections>
+                </searchBar>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="leq-Qr-P9b" secondAttribute="bottom" constant="49" id="2Xa-nZ-S1T"/>
@@ -101,7 +101,7 @@
                 <constraint firstItem="leq-Qr-P9b" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="cYr-r9-Cpt"/>
                 <constraint firstItem="J6z-uy-Cc7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="epQ-jv-4lP"/>
             </constraints>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
             <point key="canvasLocation" x="305" y="330"/>
         </view>
         <searchDisplayController id="dmn-jz-yPE">

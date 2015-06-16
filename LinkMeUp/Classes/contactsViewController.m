@@ -245,7 +245,7 @@ Example
     self.tableContent = [[NSMutableArray alloc] init];
     
     // friends + suggestions + request senders
-    NSArray *allUsers = [[self.sharedData.myFriends arrayByAddingObjectsFromArray:self.sharedData.suggestedFriends] arrayByAddingObjectsFromArray: self.sharedData.requestSenders];
+    NSArray *allUsers = [[[self.sharedData.myFriends arrayByAddingObjectsFromArray:self.sharedData.suggestedFriends] arrayByAddingObjectsFromArray: self.sharedData.requestSenders] arrayByAddingObject:self.sharedData.me];
     bool manyLMUContacts = ([allUsers count] >= MANY_LMU_CONTACTS ? true : false);
     
     // alphabetical section
@@ -288,8 +288,30 @@ Example
         NSSortDescriptor *sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:NO];
         NSArray *sortedUsers = [allUsers sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortByDate, nil]];
         
-        for (NSDictionary *user in sortedUsers)
-            [usersContent addObject:[@{@"contact":user, @"selected": @NO, @"isUser": @YES} mutableCopy]];
+        // add all users that are not also recentRecipients
+        for (PFUser *user in sortedUsers)
+        {
+            bool isInRecents = false;
+            
+            for (NSDictionary *recent in self.sharedData.recentRecipients)
+            {
+                if ([recent[@"isUser"] boolValue] == YES)
+                {
+                    PFUser *recentUser = (PFUser *)recent[@"contact"];
+                    
+                    if ([recentUser.objectId isEqualToString:user.objectId])
+                    {
+                        isInRecents = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!isInRecents)
+            {
+                [usersContent addObject:[@{@"contact":user, @"selected": @NO, @"isUser": @YES} mutableCopy]];
+            }
+        }
      
         // add to top
         [self.tableContent insertObject:@[usersIndexTitle, usersContent] atIndex:0];
@@ -413,6 +435,17 @@ Example
         
         if (!firstName)
             firstName = contactAndState[@"contact"][@"username"];
+        
+        // if user is me, use "me" instead of my name
+        if ([contactAndState[@"isUser"] boolValue] == YES)
+        {
+            PFUser *user = contactAndState[@"contact"];
+            
+            if ([user.objectId isEqualToString:self.sharedData.me.objectId])
+            {
+                firstName = @"me";
+            }
+        }
         
         [namesArray addObject: firstName];
     }
@@ -722,65 +755,86 @@ Example
     
     for (NSDictionary *contactAndState in self.selectedRecipients)
     {
-        if ([contactAndState[@"selected"] boolValue] == YES)
+        // update recently sent
+        
+        // initialize if empty
+        if (!self.sharedData.recentRecipients)
+            self.sharedData.recentRecipients = [[NSMutableArray alloc] init];
+        
+        // check if already in recents
+        if ([contactAndState[@"isUser"] boolValue] == YES)
         {
-            // update recently sent
-            
-            // initialize if empty
-            if (!self.sharedData.recentRecipients)
-                self.sharedData.recentRecipients = [[NSMutableArray alloc] init];
-            
-            // check if already in recents
-            if ([contactAndState[@"isUser"] boolValue] == YES)
+            for (NSDictionary *recentRecipient in self.sharedData.recentRecipients)
             {
-                for (NSDictionary *recentRecipient in self.sharedData.recentRecipients)
+                if ([recentRecipient[@"isUser"] boolValue] == NO)
+                    continue;
+                
+                PFUser *stored = recentRecipient[@"contact"];
+                PFUser *current = contactAndState[@"contact"];
+                
+                // if match found, update its position
+                if ([stored.objectId isEqualToString: current.objectId])
                 {
-                    if ([recentRecipient[@"isUser"] boolValue] == NO)
-                        continue;
-                    
-                    PFUser *stored = recentRecipient[@"contact"];
-                    PFUser *current = contactAndState[@"contact"];
-                    
-                    // if match found, update its position
-                    if ([stored.objectId isEqualToString: current.objectId])
-                    {
-                        [self.sharedData.recentRecipients removeObject:recentRecipient];
-                        break;
-                    }
+                    [self.sharedData.recentRecipients removeObject:recentRecipient];
+                    break;
                 }
+            }
+        }
+        else
+        {
+            for (NSDictionary *recentRecipient in self.sharedData.recentRecipients)
+            {
+                if ([recentRecipient[@"isUser"] boolValue] == YES)
+                    continue;
+                
+                NSDictionary *stored = recentRecipient[@"contact"];
+                NSDictionary *current = contactAndState[@"contact"];
+                
+                // if match found, update its position
+                if ([stored isEqual: current])
+                {
+                    [self.sharedData.recentRecipients removeObject:recentRecipient];
+                    break;
+                }
+            }
+        }
+        
+        // remove least recent if array is full
+        if ([self.sharedData.recentRecipients count] >= NUMBER_RECENTS)
+            [self.sharedData.recentRecipients removeObjectAtIndex:0];
+        
+        // add to front
+        [self.sharedData.recentRecipients addObject:@{@"contact": contactAndState[@"contact"], @"isUser": contactAndState[@"isUser"]}];
+        
+        
+        
+        // update link data
+        if ([contactAndState[@"isUser"] boolValue] == YES)
+        {
+            PFUser *myFriend = contactAndState[@"contact"];
+            
+            // if me
+            if ([myFriend.objectId isEqualToString: self.sharedData.me.objectId])
+            {
+                // receiversData for mobile contact
+                NSMutableDictionary *friendData = [[NSMutableDictionary alloc] init];
+                
+                NSString *myId = me.objectId;
+                NSString *myName = [Constants nameElseUsername:me];
+                
+                // name and identity
+                friendData[@"identity"] = @"me";
+                friendData[@"name"] = @"me";
+                
+                NSMutableDictionary *firstMessage = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:myId, myName, now, self.sharedData.annotation, nil]
+                                                                                         forKeys:[NSArray arrayWithObjects:@"identity", @"name", @"time", @"message", nil]];
+                
+                friendData[@"messages"] = [[NSMutableArray alloc] initWithObjects:firstMessage, nil];
+                
+                [self.myLink.receiversData addObject:friendData];
             }
             else
             {
-                for (NSDictionary *recentRecipient in self.sharedData.recentRecipients)
-                {
-                    if ([recentRecipient[@"isUser"] boolValue] == YES)
-                        continue;
-                    
-                    NSDictionary *stored = recentRecipient[@"contact"];
-                    NSDictionary *current = contactAndState[@"contact"];
-                    
-                    // if match found, update its position
-                    if ([stored isEqual: current])
-                    {
-                        [self.sharedData.recentRecipients removeObject:recentRecipient];
-                        break;
-                    }
-                }
-            }
-            
-            // remove least recent if array is full
-            if ([self.sharedData.recentRecipients count] >= NUMBER_RECENTS)
-                [self.sharedData.recentRecipients removeObjectAtIndex:0];
-            
-            // add to front
-            [self.sharedData.recentRecipients addObject:@{@"contact": contactAndState[@"contact"], @"isUser": contactAndState[@"isUser"]}];
-            
-
-            
-            // update link data
-            if ([contactAndState[@"isUser"] boolValue] == YES)
-            {
-                PFUser *myFriend = contactAndState[@"contact"];
                 [receivers addObject:myFriend];
                 
                 // update read/write permissions
@@ -818,25 +872,26 @@ Example
                 
                 [self.myLink.receiversData addObject:friendData];
             }
-            else
-            {
-                // receiversData for mobile contact
-                NSMutableDictionary *friendData = [[NSMutableDictionary alloc] init];
-                
-                NSString *myId = me.objectId;
-                NSString *myName = [Constants nameElseUsername:me];
-                
-                // name and identity
-                friendData[@"identity"] = @"mobile contact";
-                friendData[@"name"] = [NSString stringWithFormat:@"Text sent to %@", contactAndState[@"contact"][@"name"]];
-                
-                NSMutableDictionary *firstMessage = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:myId, myName, now, self.sharedData.annotation, nil]
-                                                                                         forKeys:[NSArray arrayWithObjects:@"identity", @"name", @"time", @"message", nil]];
-                
-                friendData[@"messages"] = [[NSMutableArray alloc] initWithObjects:firstMessage, nil];
-                
-                [self.myLink.receiversData addObject:friendData];
-            }
+        }
+        
+        else // text message recipient
+        {
+            // receiversData for mobile contact
+            NSMutableDictionary *friendData = [[NSMutableDictionary alloc] init];
+            
+            NSString *myId = me.objectId;
+            NSString *myName = [Constants nameElseUsername:me];
+            
+            // name and identity
+            friendData[@"identity"] = @"mobile contact";
+            friendData[@"name"] = [NSString stringWithFormat:@"Text sent to %@", contactAndState[@"contact"][@"name"]];
+            
+            NSMutableDictionary *firstMessage = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:myId, myName, now, self.sharedData.annotation, nil]
+                                                                                     forKeys:[NSArray arrayWithObjects:@"identity", @"name", @"time", @"message", nil]];
+            
+            friendData[@"messages"] = [[NSMutableArray alloc] initWithObjects:firstMessage, nil];
+            
+            [self.myLink.receiversData addObject:friendData];
         }
     }
 
@@ -860,7 +915,13 @@ Example
                 NSMutableArray *channels = [[NSMutableArray alloc] init];
                 for (NSDictionary *receiverData in self.myLink.receiversData)
                 {
-                    [channels addObject:[NSString stringWithFormat:@"user_%@", [receiverData objectForKey:@"identity"]]];
+                    NSString *receiverId = receiverData[@"identity"];
+                     
+                    // add channel, if not "me"
+                    if (![receiverId isEqualToString:@"me"])
+                    {
+                        [channels addObject:[NSString stringWithFormat:@"user_%@", receiverId]];
+                    }
                 }
                 
                 NSString *alert = [NSString stringWithFormat:@"New link from %@", [Constants nameElseUsername:self.myLink.sender]];
@@ -993,6 +1054,17 @@ Example
     
     // cell text label
     cell.contactLabel.text = [Constants nameElseUsername:(PFUser *)contactAndState[@"contact"]];
+    
+    // special case - if me, add "(me)" to end of name
+    if ([contactAndState[@"isUser"] boolValue] == YES)
+    {
+        PFUser *user = contactAndState[@"contact"];
+        
+        if ([user.objectId isEqualToString:self.sharedData.me.objectId])
+        {
+            cell.contactLabel.text = [NSString stringWithFormat:@"%@ (me)", cell.contactLabel.text];
+        }
+    }
 
     // add appropriate icon image to cell
     if ([contactAndState[@"isUser"] boolValue] == YES)

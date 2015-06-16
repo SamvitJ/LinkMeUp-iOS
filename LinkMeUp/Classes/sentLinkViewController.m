@@ -39,16 +39,29 @@
     NSSortDescriptor *sortDescriptorName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects: sortDescriptorDate, sortDescriptorName, nil];
     
-    self.sortedData = (NSMutableArray *)[self.receiversData sortedArrayUsingDescriptors:sortDescriptors];
+    self.sortedData = [[NSMutableArray alloc] initWithArray:[self.receiversData sortedArrayUsingDescriptors:sortDescriptors]];
+
+    // remove "me", if also sent to myself
     
-    //NSLog(@"%@", self.sortedData);
+    for (NSDictionary *receiver in self.sortedData)
+    {
+        if ([receiver[@"identity"] isEqualToString:@"me"])
+        {
+            [self.sortedData removeObject:receiver];
+            break;
+        }
+    }
 }
 
 #pragma mark - Toolbar methods
 
 - (void)messagesButtonPressed:(id)sender
 {
-    [self.tableView setContentOffset:CGPointMake(0.0f, (self.sharedData.selectedLink.isSong ? YOUTUBE_LINK_ROW_HEIGHT + ITUNES_INFO_HEIGHT - 1.0f: YOUTUBE_LINK_ROW_HEIGHT - 1.0f)) animated:YES];
+    // if not text message and if receiversData not empty
+    if (!self.sharedData.selectedLink.isText && [self.sortedData count])
+    {
+        [self.tableView setContentOffset:CGPointMake(0.0f, (self.sharedData.selectedLink.isSong ? YOUTUBE_LINK_ROW_HEIGHT + ITUNES_INFO_HEIGHT - 1.0f: YOUTUBE_LINK_ROW_HEIGHT - 1.0f)) animated:YES];
+    }
 }
 
 - (void)likeButtonPressed:(id)sender
