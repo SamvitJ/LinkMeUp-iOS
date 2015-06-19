@@ -420,17 +420,16 @@
 {
     NSString *thumbnailURL = [self.videos[index] objectForKey:@"videoHQThumbnail"];
     
-    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(aQueue, ^{
-        
-        // get thumbnail from URL
-        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:thumbnailURL]];
-        
+    // create URL session task
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithURL:[NSURL URLWithString:thumbnailURL]
+                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+       
         dispatch_async(dispatch_get_main_queue(), ^{
             
             // UIImage from data
-            UIImage *thumbnail = [UIImage imageWithData: imageData];
-                                  
+            UIImage *thumbnail = [UIImage imageWithData: data];
+            
             // add image to image view
             UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(10.0f, 10.0f, 180.0f, 135.0f)];
             imageView.tag = index;
@@ -458,7 +457,11 @@
             self.imageViews[index] = imageView;
             [self.tableView reloadData];
         });
-    });
+
+    }];
+    
+    // execute task
+    [task resume];
 }
 
 #pragma mark - Display activity indicator

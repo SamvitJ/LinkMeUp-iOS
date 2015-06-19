@@ -262,7 +262,9 @@
         [self.searchDisplayAI startAnimating];
     }
     
-    [NSURLConnection sendAsynchronousRequest:autocompleteRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:autocompleteRequest
+                                            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         if (!error)
         {
@@ -305,9 +307,12 @@
         
         else
         {
-            NSLog(@"Error loading autocomplete suggestions %@", error);
+            
         }
     }];
+    
+    // execute task
+    [task resume];
 }
 
 #pragma mark - Clear and initialize

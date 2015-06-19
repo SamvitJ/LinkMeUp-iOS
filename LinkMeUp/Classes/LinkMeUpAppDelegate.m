@@ -124,20 +124,6 @@
             // in case of new links/requests/messages
             [self reloadData];
         }
-        else if (remoteNotification & UIRemoteNotificationTypeBadge)
-        {
-            NSLog(@"Notifications - Badge");
-            
-            // if push notifications now on (and were previously off)
-            if (self.updateTimer)
-            {
-                [self.updateTimer invalidate];
-                self.updateTimer = nil;
-            }
-         
-            // in case of new links/requests/messages
-            [self reloadData];
-        }
         else
         {
             // Load data from server periodically
@@ -145,6 +131,11 @@
             {
                 [self reloadData];
                 self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
+            }
+            
+            if (remoteNotification & UIRemoteNotificationTypeBadge)
+            {
+                NSLog(@"Notifications - Badge");
             }
             
             if (remoteNotification & UIRemoteNotificationTypeSound)

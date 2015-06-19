@@ -959,9 +959,10 @@
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
 
-                    // create url task
+                    // create URL session task
                     NSURLSession *session = [NSURLSession sharedSession];
-                    NSURLSessionDataTask *task = [session dataTaskWithURL:artURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    NSURLSessionDataTask *task = [session dataTaskWithURL:artURL
+                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                         
                         if (error)
                             NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);
@@ -1086,9 +1087,10 @@
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
                     
-                    // create url task
+                    // create URL session task
                     NSURLSession *session = [NSURLSession sharedSession];
-                    NSURLSessionDataTask *task = [session dataTaskWithURL:artURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    NSURLSessionDataTask *task = [session dataTaskWithURL:artURL
+                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                         
                         if (error)
                             NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);

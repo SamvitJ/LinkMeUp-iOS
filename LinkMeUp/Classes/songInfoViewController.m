@@ -314,18 +314,17 @@
     // video thumbnail
     NSURL *thumbnailURL = [NSURL URLWithString: self.sharedData.youtubeVideoThumbnail];
     
-    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(aQueue, ^{
-        
-        // get thumbnail from URL
-        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:thumbnailURL]];
+    // create URL session task
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithURL:thumbnailURL
+                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self.activityIndicator stopAnimating];
             
             // thumbnail art
-            self.artImageView = [[UIImageView alloc] initWithImage:image];
+            self.artImageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:data]];
             [self.artImageView setFrame:(IS_IPHONE5 ? CGRectMake(50.0f, 110.0f, 220.0f, 165.0f) : CGRectMake(70.0f, 95.0f, 180.0f, 135.0f))];
             
             // labels
@@ -364,7 +363,11 @@
             // annotation text view
             [self displayAnnotationView];
         });
-    });
+
+    }];
+    
+    // execute task
+    [task resume];
 }
 
 - (void)displaySongInfo
@@ -372,17 +375,16 @@
     // album art
     NSURL *albumArtURL = [NSURL URLWithString:[self.sharedData.iTunesArt stringByReplacingOccurrencesOfString:@"200x200-75.jpg" withString:@"400x400-75.jpg"]];
     
-    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(aQueue, ^{
-        
-        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:albumArtURL]];
+    // create URL session task
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithURL:albumArtURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self.activityIndicator stopAnimating];
             
             // album art
-            self.artImageView = [[UIImageView alloc] initWithImage:image];
+            self.artImageView = [[UIImageView alloc] initWithImage: [UIImage imageWithData:data]];
             [self.artImageView setFrame:(IS_IPHONE5 ? CGRectMake((self.view.bounds.size.width - 180.0f)/2, 110.0f, 180.0f, 180.0f) : CGRectMake((self.view.bounds.size.width - 150.0f)/2, 95.0f, 150.0f, 150.0f))];
             
             // title and artist labels
@@ -414,7 +416,11 @@
             // annotation text view
             [self displayAnnotationView];
         });
-    });
+
+    }];
+    
+    // execute task
+    [task resume];
 }
 
 #pragma mark - UI helper methods
