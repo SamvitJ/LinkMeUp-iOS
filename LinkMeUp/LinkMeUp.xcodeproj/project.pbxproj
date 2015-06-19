@@ -71,7 +71,8 @@
 		F15849CB1954D7A4005EAB1B /* myLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F15849CA1954D7A4005EAB1B /* myLogInViewController.m */; };
 		F15FD5D21B2A63730031CEC5 /* AddressBook4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */; };
 		F15FD5D31B2A63730031CEC5 /* AddressBook5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */; };
-		F15FD5F11B2E677F0031CEC5 /* LaunchImage-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F15FD5EF1B2E677F0031CEC5 /* LaunchImage-568h@2x.png */; };
+		F168839A1B34D0770021D241 /* LaunchImage-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F16883981B34D0770021D241 /* LaunchImage-568h@2x.png */; };
+		F168839B1B34D0770021D241 /* LaunchImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F16883991B34D0770021D241 /* LaunchImage@2x.png */; };
 		F1697B551A02CCBF00E0F9FD /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1697B541A02CCBF00E0F9FD /* FacebookSDK.framework */; };
 		F17AC6A819B69BDA00BF95CE /* legalInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F17AC6A619B69BDA00BF95CE /* legalInfoViewController.m */; };
 		F17AC6A919B69BDA00BF95CE /* legalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6A719B69BDA00BF95CE /* legalInfoViewController.xib */; };
@@ -79,7 +80,6 @@
 		F17AC6BD19B6BABD00BF95CE /* Privacy Policy.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6BB19B6BABD00BF95CE /* Privacy Policy.rtf */; };
 		F17AC6C119B7956C00BF95CE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6C019B7956C00BF95CE /* Credits.rtf */; };
 		F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */; };
-		F1831E0F1B2F98B60049B60D /* LaunchImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1831E0E1B2F98B60049B60D /* LaunchImage@2x.png */; };
 		F1831E171B3103940049B60D /* PushNotifBadge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F1831E161B3103940049B60D /* PushNotifBadge.jpg */; };
 		F1831E2C1B328AF10049B60D /* MagnifyingGlass.png in Resources */ = {isa = PBXBuildFile; fileRef = F1831E2B1B328AF10049B60D /* MagnifyingGlass.png */; };
 		F18704331B18E6BF007D8C00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F18704321B18E6BF007D8C00 /* MessageUI.framework */; };
@@ -239,7 +239,8 @@
 		F15849CA1954D7A4005EAB1B /* myLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myLogInViewController.m; sourceTree = "<group>"; };
 		F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = AddressBook4.jpg; path = Images/Screenshots/AddressBook4.jpg; sourceTree = "<group>"; };
 		F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = AddressBook5.jpg; path = Images/Screenshots/AddressBook5.jpg; sourceTree = "<group>"; };
-		F15FD5EF1B2E677F0031CEC5 /* LaunchImage-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage-568h@2x.png"; path = "Images/Launch Screen/LaunchImage-568h@2x.png"; sourceTree = "<group>"; };
+		F16883981B34D0770021D241 /* LaunchImage-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage-568h@2x.png"; path = "Images/Launch Screen/LaunchImage-568h@2x.png"; sourceTree = "<group>"; };
+		F16883991B34D0770021D241 /* LaunchImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage@2x.png"; path = "Images/Launch Screen/LaunchImage@2x.png"; sourceTree = "<group>"; };
 		F1697B541A02CCBF00E0F9FD /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = Frameworks/FacebookSDK.framework; sourceTree = "<group>"; };
 		F17AC6A519B69BDA00BF95CE /* legalInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = legalInfoViewController.h; sourceTree = "<group>"; };
 		F17AC6A619B69BDA00BF95CE /* legalInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = legalInfoViewController.m; sourceTree = "<group>"; };
@@ -249,7 +250,6 @@
 		F17AC6C019B7956C00BF95CE /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = "Legal Text/Credits.rtf"; sourceTree = "<group>"; };
 		F17C33E21992C74F00482A38 /* YouTubeSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeSearchBar.h; sourceTree = "<group>"; };
 		F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YouTubeSearchBar.m; sourceTree = "<group>"; };
-		F1831E0E1B2F98B60049B60D /* LaunchImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage@2x.png"; path = "Images/Launch Screen/LaunchImage@2x.png"; sourceTree = "<group>"; };
 		F1831E161B3103940049B60D /* PushNotifBadge.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = PushNotifBadge.jpg; path = Images/Screenshots/PushNotifBadge.jpg; sourceTree = "<group>"; };
 		F1831E2B1B328AF10049B60D /* MagnifyingGlass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MagnifyingGlass.png; path = "Images/Search Icon/MagnifyingGlass.png"; sourceTree = "<group>"; };
 		F187040F1B18CFA1007D8C00 /* echoprintViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = echoprintViewController.mm; path = Replaced/echoprintViewController.mm; sourceTree = "<group>"; };
@@ -676,8 +676,8 @@
 		F1400FD019BA7EEC00D5C60D /* Launch Screen */ = {
 			isa = PBXGroup;
 			children = (
-				F1831E0E1B2F98B60049B60D /* LaunchImage@2x.png */,
-				F15FD5EF1B2E677F0031CEC5 /* LaunchImage-568h@2x.png */,
+				F16883981B34D0770021D241 /* LaunchImage-568h@2x.png */,
+				F16883991B34D0770021D241 /* LaunchImage@2x.png */,
 				F1FF125219BA8A0800FBAD8C /* Default-568h@2x.png */,
 			);
 			name = "Launch Screen";
@@ -1044,12 +1044,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11DE4751990094000CD814E /* searchViewController.xib in Resources */,
-				F15FD5F11B2E677F0031CEC5 /* LaunchImage-568h@2x.png in Resources */,
 				E577724219B003C20057910F /* login-button-small.png in Resources */,
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
-				F1831E0F1B2F98B60049B60D /* LaunchImage@2x.png in Resources */,
 				E577723019B0038C0057910F /* glyphicons_136_cogwheel.png in Resources */,
 				F13242841B22844D00641710 /* iconTickSelected.png in Resources */,
+				F168839B1B34D0770021D241 /* LaunchImage@2x.png in Resources */,
 				E577725519B003DE0057910F /* buttonAddFriend.png in Resources */,
 				E577727E19B004AE0057910F /* glyphicons_049_star.png in Resources */,
 				F17AC6BC19B6BABD00BF95CE /* Terms of Use.rtf in Resources */,
@@ -1061,6 +1060,7 @@
 				F17AC6C119B7956C00BF95CE /* Credits.rtf in Resources */,
 				F1D7B24A197ED69000A920A7 /* linkViewController.xib in Resources */,
 				F17AC6A919B69BDA00BF95CE /* legalInfoViewController.xib in Resources */,
+				F168839A1B34D0770021D241 /* LaunchImage-568h@2x.png in Resources */,
 				F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */,
 				F15FD5D21B2A63730031CEC5 /* AddressBook4.jpg in Resources */,
 				F101DCA919A273E300D0D057 /* likeloveStatusViewController.xib in Resources */,

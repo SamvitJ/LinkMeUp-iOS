@@ -159,7 +159,7 @@
             PFQuery *masterLinksQuery = [Link query];
             [masterLinksQuery whereKey:@"sender" equalTo: object];
             [masterLinksQuery whereKey:@"isMaster" equalTo:[NSNumber numberWithBool:YES]];
-            [masterLinksQuery orderByDescending:@"createdAt"];
+            [masterLinksQuery orderByAscending:@"createdAt"];
             [masterLinksQuery findObjectsInBackgroundWithBlock:^(NSArray *masterLinks, NSError *error) {
                 if (!error)
                 {
@@ -215,7 +215,7 @@
                         
                         // updated by sender, used by receiver inbox
                         myData[@"lastSenderUpdate"] = [NSNumber numberWithInt:kLastUpdateNewLink];
-                        myData[@"lastSenderUpdateTime"] = myCopy.lastReceiverUpdateTime;
+                        myData[@"lastSenderUpdateTime"] = [NSDate date]; // myCopy.lastReceiverUpdateTime;
                         
                         // updated by receiver, used by sender message table
                         myData[@"seen"] = [NSNumber numberWithBool:NO];
