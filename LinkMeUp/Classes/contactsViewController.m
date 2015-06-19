@@ -332,19 +332,35 @@ Example
         {
             PFUser *userPointer = recent[@"contact"];
             
-            // traverse through table content to find same PFUser
-            for (NSArray *section in self.tableContent)
+            // if not already in table, must create new contactAndState dictionary
+            if (!manyLMUContacts)
             {
-                for (NSDictionary *userAndState in section[1])
+                // find full user info
+                for (PFUser *user in allUsers)
                 {
-                    if ([userAndState[@"isUser"] boolValue] == YES)
+                    if ([user.objectId isEqualToString:userPointer.objectId])
                     {
-                        PFUser *user = userAndState[@"contact"];
-                        
-                        // found same PFUser
-                        if ([userPointer.objectId isEqualToString:user.objectId])
+                        [recentsContent addObject:[@{@"contact":user, @"selected": @NO, @"isUser": @YES} mutableCopy]];
+                    }
+                }
+            }
+            // else user has already been added to table, so find (and point to) existing contactAndState
+            else
+            {
+                // traverse through table content to find same PFUser
+                for (NSArray *section in self.tableContent)
+                {
+                    for (NSDictionary *userAndState in section[1])
+                    {
+                        if ([userAndState[@"isUser"] boolValue] == YES)
                         {
-                            [recentsContent addObject:userAndState];
+                            PFUser *user = userAndState[@"contact"];
+                            
+                            // found same PFUser
+                            if ([userPointer.objectId isEqualToString:user.objectId])
+                            {
+                                [recentsContent addObject:userAndState];
+                            }
                         }
                     }
                 }
@@ -522,7 +538,7 @@ Example
 
 - (void)sendSongDragEnter:(id)sender
 {
-    NSLog(@"Dragged enter");
+    // NSLog(@"Dragged enter");
     
     [UIView beginAnimations:@"fade out" context:NULL];
     [UIView setAnimationDuration: 0.4];
@@ -532,7 +548,7 @@ Example
 
 - (void)sendSongDragExit:(id)sender
 {
-    NSLog(@"Dragged exit");
+    // NSLog(@"Dragged exit");
     
     [UIView beginAnimations:@"fade in" context:NULL];
     [UIView setAnimationDuration: 0.4];
@@ -695,26 +711,6 @@ Example
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
-
-/*- (void)handleTap:(UITapGestureRecognizer *)sender
-{
-    if (sender.state == UIGestureRecognizerStateEnded)
-    {
-        NSLog(@"Ended");
-        
-        [self sendSongPressed:nil];
-    }
-    else if (sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed)
-    {
-        NSLog(@"Cancelled/failed");
-        return;
-    }
-    else
-    {
-        NSLog(@"Other");
-        return;
-    }
-}*/
 
 - (IBAction)sendSongPressed:(id)sender
 {
@@ -1246,11 +1242,7 @@ Example
     
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
-    
-    /*UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    singleTap.delegate = self;
-    [self.scrollView addGestureRecognizer: singleTap];*/
-    
+
     // add to subviews
     [self.scrollView addSubview: self.textLabel];
     [self.sendSong addSubview: self.scrollView];
@@ -1273,9 +1265,9 @@ Example
     self.scrollView.frame = CGRectMake(self.scrollView.frame.origin.x, self.scrollView.frame.origin.y, scrollViewWidth, self.scrollView.frame.size.height);
     self.scrollView.contentSize = CGSizeMake(labelLeftOffset + newSize.width + scrollViewRightBuffer, self.scrollView.contentSize.height);
     
-    //NSLog(@"String size %@", NSStringFromCGSize(newSize));
-    //NSLog(@"Content size %@", NSStringFromCGSize(self.scrollView.contentSize));
-    //NSLog(@"Bounds size %@", NSStringFromCGSize(self.scrollView.bounds.size));
+    // NSLog(@"String size %@", NSStringFromCGSize(newSize));
+    // NSLog(@"Content size %@", NSStringFromCGSize(self.scrollView.contentSize));
+    // NSLog(@"Bounds size %@", NSStringFromCGSize(self.scrollView.bounds.size));
     
     CGFloat newContentOffsetX = MAX(0, self.scrollView.contentSize.width - self.scrollView.bounds.size.width);
     [self.scrollView setContentOffset:CGPointMake(newContentOffsetX, self.scrollView.contentOffset.y)];
@@ -1286,16 +1278,16 @@ Example
 - (void)animateSendButtonInDirection:(Direction)direction
 {
     float distance = 50.0f;
-    float movement = (direction ? distance : -distance);
+    float movement = ((direction == kDirectionUp) ? distance : -distance);
     float movementDuration = 0.2f;
     
-    [UIView beginAnimations:@"Scroll" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
+    [self.view layoutIfNeeded];
     
-    self.sendSong.frame = CGRectOffset(self.sendSong.frame, 0.0f, movement);
-    
-    [UIView commitAnimations];
+    [UIView animateWithDuration:movementDuration animations:^{
+        
+        self.buttonDistToBottom.constant += movement;
+        [self.view layoutIfNeeded];
+    }];
 }
 
 @end

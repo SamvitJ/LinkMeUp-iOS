@@ -80,12 +80,13 @@
 		F17AC6C119B7956C00BF95CE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F17AC6C019B7956C00BF95CE /* Credits.rtf */; };
 		F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */; };
 		F1831E0F1B2F98B60049B60D /* LaunchImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1831E0E1B2F98B60049B60D /* LaunchImage@2x.png */; };
+		F1831E171B3103940049B60D /* PushNotifBadge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F1831E161B3103940049B60D /* PushNotifBadge.jpg */; };
+		F1831E2C1B328AF10049B60D /* MagnifyingGlass.png in Resources */ = {isa = PBXBuildFile; fileRef = F1831E2B1B328AF10049B60D /* MagnifyingGlass.png */; };
 		F18704331B18E6BF007D8C00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F18704321B18E6BF007D8C00 /* MessageUI.framework */; };
 		F1874CB11A3CA17100E4CF43 /* findContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1874CAF1A3CA17100E4CF43 /* findContactsViewController.m */; };
 		F1874CB21A3CA17100E4CF43 /* findContactsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1874CB01A3CA17100E4CF43 /* findContactsViewController.xib */; };
 		F187D58C1B26605C008370D7 /* pushNotifViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F187D58A1B26605C008370D7 /* pushNotifViewController.m */; };
 		F187D58D1B26605C008370D7 /* pushNotifViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F187D58B1B26605C008370D7 /* pushNotifViewController.xib */; };
-		F187D5A41B292B09008370D7 /* PushNotifNewLink.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F187D5A31B292B09008370D7 /* PushNotifNewLink.jpg */; };
 		F1900A711A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */; };
 		F1A17D75195E8C790095BB7E /* FriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A17D74195E8C790095BB7E /* FriendRequest.m */; };
 		F1A17D8B196107030095BB7E /* contactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A17D89196107030095BB7E /* contactsViewController.m */; };
@@ -249,6 +250,8 @@
 		F17C33E21992C74F00482A38 /* YouTubeSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeSearchBar.h; sourceTree = "<group>"; };
 		F17C33E31992C74F00482A38 /* YouTubeSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YouTubeSearchBar.m; sourceTree = "<group>"; };
 		F1831E0E1B2F98B60049B60D /* LaunchImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage@2x.png"; path = "Images/Launch Screen/LaunchImage@2x.png"; sourceTree = "<group>"; };
+		F1831E161B3103940049B60D /* PushNotifBadge.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = PushNotifBadge.jpg; path = Images/Screenshots/PushNotifBadge.jpg; sourceTree = "<group>"; };
+		F1831E2B1B328AF10049B60D /* MagnifyingGlass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MagnifyingGlass.png; path = "Images/Search Icon/MagnifyingGlass.png"; sourceTree = "<group>"; };
 		F187040F1B18CFA1007D8C00 /* echoprintViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = echoprintViewController.mm; path = Replaced/echoprintViewController.mm; sourceTree = "<group>"; };
 		F18704101B18CFA1007D8C00 /* friendsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = friendsTableViewController.m; path = Replaced/friendsTableViewController.m; sourceTree = "<group>"; };
 		F18704111B18CFA1007D8C00 /* musicStreamingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = musicStreamingViewController.m; path = Replaced/musicStreamingViewController.m; sourceTree = "<group>"; };
@@ -278,7 +281,6 @@
 		F187D5891B26605C008370D7 /* pushNotifViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pushNotifViewController.h; sourceTree = "<group>"; };
 		F187D58A1B26605C008370D7 /* pushNotifViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pushNotifViewController.m; sourceTree = "<group>"; };
 		F187D58B1B26605C008370D7 /* pushNotifViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = pushNotifViewController.xib; path = Classes/pushNotifViewController.xib; sourceTree = "<group>"; };
-		F187D5A31B292B09008370D7 /* PushNotifNewLink.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = PushNotifNewLink.jpg; path = Images/Screenshots/PushNotifNewLink.jpg; sourceTree = "<group>"; };
 		F1900A701A02C5810068D8B8 /* glyphicons_343_thumbs_up_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = glyphicons_343_thumbs_up_selected.png; path = "Images/Toolbar Icons/glyphicons_343_thumbs_up_selected.png"; sourceTree = "<group>"; };
 		F1A17D73195E8C790095BB7E /* FriendRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequest.h; sourceTree = "<group>"; };
 		F1A17D74195E8C790095BB7E /* FriendRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendRequest.m; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 		29B97315FDCFA39411CA2CEA /* Images and Icons */ = {
 			isa = PBXGroup;
 			children = (
+				F1831E1E1B31FD340049B60D /* Search Icon */,
 				F187D58E1B266AAB008370D7 /* Screenshots */,
 				F13242851B228C2300641710 /* Messages Icon */,
 				F1400FD019BA7EEC00D5C60D /* Launch Screen */,
@@ -733,12 +736,20 @@
 			name = "App Icon";
 			sourceTree = "<group>";
 		};
+		F1831E1E1B31FD340049B60D /* Search Icon */ = {
+			isa = PBXGroup;
+			children = (
+				F1831E2B1B328AF10049B60D /* MagnifyingGlass.png */,
+			);
+			name = "Search Icon";
+			sourceTree = "<group>";
+		};
 		F187D58E1B266AAB008370D7 /* Screenshots */ = {
 			isa = PBXGroup;
 			children = (
+				F1831E161B3103940049B60D /* PushNotifBadge.jpg */,
 				F15FD5D01B2A63730031CEC5 /* AddressBook4.jpg */,
 				F15FD5D11B2A63730031CEC5 /* AddressBook5.jpg */,
-				F187D5A31B292B09008370D7 /* PushNotifNewLink.jpg */,
 			);
 			name = Screenshots;
 			sourceTree = "<group>";
@@ -1033,7 +1044,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11DE4751990094000CD814E /* searchViewController.xib in Resources */,
-				F187D5A41B292B09008370D7 /* PushNotifNewLink.jpg in Resources */,
 				F15FD5F11B2E677F0031CEC5 /* LaunchImage-568h@2x.png in Resources */,
 				E577724219B003C20057910F /* login-button-small.png in Resources */,
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
@@ -1072,6 +1082,7 @@
 				E577728F19B005370057910F /* Closed-Mail.png in Resources */,
 				F11DE3F2198C1C9400CD814E /* searchResultsViewController.xib in Resources */,
 				F1FF125119BA885C00FBAD8C /* Images.xcassets in Resources */,
+				F1831E2C1B328AF10049B60D /* MagnifyingGlass.png in Resources */,
 				E577725919B003DE0057910F /* buttonRequest.png in Resources */,
 				F15FD5D31B2A63730031CEC5 /* AddressBook5.jpg in Resources */,
 				E577728019B004AE0057910F /* glyphicons_211_right_arrow.png in Resources */,
@@ -1084,6 +1095,7 @@
 				E577727A19B004AE0057910F /* glyphicons_019_heart_empty.png in Resources */,
 				F1D7B20619749BF000A920A7 /* verificationViewController.xib in Resources */,
 				F1A17DF11964C21F0095BB7E /* inboxViewController.xib in Resources */,
+				F1831E171B3103940049B60D /* PushNotifBadge.jpg in Resources */,
 				F1D7B240197C618500A920A7 /* replyViewController.xib in Resources */,
 				F11CFB1A196F44CC0030B212 /* songInfoViewController.xib in Resources */,
 				E577726519B003FB0057910F /* glyphicons_174_pause.png in Resources */,

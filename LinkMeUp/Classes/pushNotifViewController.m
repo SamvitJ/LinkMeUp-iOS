@@ -63,7 +63,7 @@
     [Constants enableButton: self.continueButton];
     
     // add screenshot
-    UIImage *image = [UIImage imageNamed:@"PushNotifNewLink.jpg"];
+    UIImage *image = [UIImage imageNamed:@"PushNotifBadge.jpg"];
     CGFloat aspectRatio = image.size.height / image.size.width;
     
     // set image width
@@ -71,22 +71,12 @@
     if (IS_IPHONE_5)
     {
         NSLog(@"iPhone >= 5");
-        imageWidth = self.view.frame.size.width / 1.32;
+        imageWidth = self.view.frame.size.width / 1.31;
     }
-    /*else if (IS_IPHONE_6P) 
-    {
-        NSLog(@"iPhone 6 Plus");
-        imageWidth = self.view.frame.size.width / 1.2;
-    }
-    else if (IS_IPHONE_6) 
-    {
-        NSLog(@"iPhone 6");
-        imageWidth = self.view.frame.size.width / 1.3;
-    }*/
     else
     {
         NSLog(@"iPhone 4");
-        imageWidth = self.view.frame.size.width / 1.5;
+        imageWidth = self.view.frame.size.width / 1.55;
     }
     
     // image position

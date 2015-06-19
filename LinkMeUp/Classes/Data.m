@@ -958,21 +958,30 @@
                 if ([receivedArtLoaded[i] isEqual: @NO])
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
-                    
-                    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
-                    dispatch_async(aQueue, ^{
+
+                    // create url task
+                    NSURLSession *session = [NSURLSession sharedSession];
+                    NSURLSessionDataTask *task = [session dataTaskWithURL:artURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                         
-                        NSData *artData = [NSData dataWithContentsOfURL:artURL];
-                        UIImage *art = ([UIImage imageWithData:artData] ? [UIImage imageWithData:artData] : [[UIImage alloc] init]);
+                        if (error)
+                            NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);
+                        
+                        // create image
+                        UIImage *art = ([UIImage imageWithData:data] ? [UIImage imageWithData:data] : [[UIImage alloc] init]);
                         
                         // set art
                         newReceivedLinkData[i][@"art"] = art;
                         
+                        // update status
                         dispatch_async(dispatch_get_main_queue(), ^{
+                           
                             receivedArtLoaded[i] = @YES;
                             [self checkLoadStatus:receivedArtLoaded forReceivedLinks:newReceivedLinkData withUpdates:newReceivedLinkUpdates atIndex:myUpdateIndex];
                         });
-                    });
+                    }];
+                    
+                    // execute task
+                    [task resume];
                 }
             }
         }
@@ -1077,20 +1086,29 @@
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
                     
-                    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
-                    dispatch_async(aQueue, ^{
+                    // create url task
+                    NSURLSession *session = [NSURLSession sharedSession];
+                    NSURLSessionDataTask *task = [session dataTaskWithURL:artURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                         
-                        NSData *artData = [NSData dataWithContentsOfURL:artURL];
-                        UIImage *art = ([UIImage imageWithData:artData] ? [UIImage imageWithData:artData] : [[UIImage alloc] init]);
+                        if (error)
+                            NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);
+                        
+                        // create image
+                        UIImage *art = ([UIImage imageWithData:data] ? [UIImage imageWithData:data] : [[UIImage alloc] init]);
                         
                         // set art
                         newSentLinkData[i][@"art"] = art;
                         
+                        // update status
                         dispatch_async(dispatch_get_main_queue(), ^{
+                            
                             sentArtLoaded[i] = @YES;
                             [self checkLoadStatus:sentArtLoaded forSentLinks:newSentLinkData withUpdates:newSentLinkUpdates atIndex:myUpdateIndex];
                         });
-                    });
+                    }];
+                    
+                    // execute task
+                    [task resume];
                 }
             }
         }

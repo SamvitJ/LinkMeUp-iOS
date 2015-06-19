@@ -29,11 +29,15 @@
 #import "GTLYouTubeVideoContentDetails.h"
 #import "GTLYouTubeVideoStatistics.h"
 
+
+
 @interface searchResultsViewController ()
 {
     // loading status
     BOOL queryVEVODone;
     BOOL queryNonVEVODone;
+    
+    UIColor *screenColor;
 }
 
 @end
@@ -520,7 +524,7 @@
         cell.transform = CGAffineTransformRotate(CGAffineTransformIdentity, k90DegreesClockwiseAngle);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        cell.backgroundColor = FAINT_GRAY; // [UIColor whiteColor];
+        cell.backgroundColor = screenColor;
     }
     
     // remove all subviews that should now be off screen
@@ -669,8 +673,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.view.backgroundColor = FAINT_GRAY; // [UIColor whiteColor];
-    self.tableView.backgroundColor = FAINT_GRAY; // [UIColor whiteColor];
+    screenColor = FAINT_GRAY;
+    
+    self.view.backgroundColor = screenColor;
+    self.tableView.backgroundColor = screenColor;
 }
 
 - (void)didReceiveMemoryWarning
@@ -744,7 +750,7 @@
 - (void)animateContent:(UITextView *)textView inDirection:(Direction)direction
 {
     float distance = 108.0f;
-    float movement = (direction ? distance : -distance);
+    float movement = ((direction == kDirectionDown) ? distance : -distance);
     float movementDuration = 0.3f;
     
     [UIView beginAnimations:@"Scroll" context: nil];

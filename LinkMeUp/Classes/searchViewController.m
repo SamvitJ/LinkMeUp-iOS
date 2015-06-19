@@ -12,13 +12,14 @@
 #import "searchResultsViewController.h"
 
 // test
-// #import "pushNotifViewController.h"
+#import "pushNotifViewController.h"
 
 @interface searchViewController ()
 
 @end
 
 @implementation searchViewController
+
 
 
 #pragma mark - Data initialization
@@ -45,10 +46,17 @@
     {
         if (self.searchBar.isFirstResponder)
         {
-            // if user clicks outside search results table view...
-            if (!(sender.view == self.searchDisplayController.searchResultsTableView))
+            CGPoint tappedPoint = [sender locationInView: self.view];
+            UIView *tappedView = [self.view hitTest:tappedPoint withEvent:nil];
+
+            if (tappedView == self.header)
             {
+                // NSLog(@"Tapped header");
+                
                 [self.searchBar resignFirstResponder];
+                
+                if (self.currentlyShifted)
+                    [self animateScreenContentsInDirection:kDirectionDown];
                 
                 // to prevent UISearchBar text reset
                 NSString *searchText = self.searchDisplayController.searchBar.text;
@@ -66,14 +74,14 @@
 
 /*-(void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView
 {
-    NSLog(@"Did load called");
+    // NSLog(@"Did load called");
 }*/
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView
 {
     // set frame
-    int numberSuggestions = (IS_IPHONE_5 ? 5 : 3);
-    CGRect frame = CGRectMake(self.searchBar.frame.origin.x + 8.0f, -5.0f, self.searchBar.frame.size.width - 16.0f, numberSuggestions * AUTOCOMPLETE_ROW_HEIGHT);
+    int numberSuggestions = (IS_IPHONE_5 ? 6 : 4);
+    CGRect frame = CGRectMake(self.searchBar.frame.origin.x + 8.0f, 6.0f, self.searchBar.frame.size.width - 16.0f, numberSuggestions * AUTOCOMPLETE_ROW_HEIGHT);
     
     tableView.frame = frame;
     
@@ -83,6 +91,8 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
+    // NSLog(@"Should reload");
+    
     // Tells the table data source to reload when text changes
     [self filterContentForSearchText:searchString scope: [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
     
@@ -94,38 +104,43 @@
 
 - (void)keyboardWillShow
 {
-    //[self animateSearchBarInDirection: kDirectionUp];
+    // NSLog(@"Keyboard will show");
 }
 
 - (void)keyboardWillHide
 {
-    //[self animateSearchBarInDirection: kDirectionDown];
+    // NSLog(@"Keyboard will hide");
 }
 
 #pragma mark - Search bar delegate methods
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
-    NSLog(@"Search bar text should begin editing");
+    // NSLog(@"Search bar text should begin editing");
     
-    //[self animateSearchBarInDirection: kDirectionUp];
+    if (!self.currentlyShifted)
+        [self animateScreenContentsInDirection:kDirectionUp];
     
     return YES;
 }
 
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar
 {
-    NSLog(@"Search bar text should end editing");
+    // NSLog(@"Search bar text should end editing");
     
-    //[self animateSearchBarInDirection: kDirectionDown];
+    // if search results table is not present
+    if (!self.searchDisplayController.isActive && self.currentlyShifted)
+        [self animateScreenContentsInDirection:kDirectionDown];
+    
+    // do not hide keyboard if user is scrolling through table
+//    if (self.searchDisplayController.isActive)
+//    {
+//        NSLog(@"Returning no");
+//        return NO;
+//    }
     
     return YES;
 }
-
-/*- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
-{
-    NSLog(@"Search bar text did begin editing");
-}*/
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
@@ -260,23 +275,23 @@
                 
             });
             
-            //NSLog(@"Done %@", [NSDate date]);
+            // NSLog(@"Done %@", [NSDate date]);
             
             NSArray *myData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
             
             NSString *searchQuery = myData[0];
             NSArray *results = myData[1];
             
-            NSLog(@"%@", searchQuery);
+            NSLog(@"Query - %@", searchQuery);
             
             NSMutableArray *autocompleteSuggestions = [[NSMutableArray alloc] init];
             for (NSArray *result in results)
             {
-                //NSLog(@"%@", result[0]);
+                // NSLog(@"%@", result[0]);
                 [autocompleteSuggestions addObject:result[0]];
             }
             
-            //NSLog(@"%@", autocompleteSuggestions);
+            // NSLog(@"%@", autocompleteSuggestions);
             
             // if current text is equal to search query text...
             if ([self.searchBar.text isEqualToString:searchText])
@@ -344,9 +359,9 @@
     // Do any additional setup after loading the view from its nib.
     
     // initialize UI
-    [Constants highlightButton:self.sendVideoButton];
-    // [self displayVideoPrompt];
-    self.searchBar.hidden = NO;
+    [self displaySearchIcon];
+    [self displaySearchPrompt];
+    self.currentlyShifted = NO;
     
     // exit gesture
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
@@ -361,8 +376,16 @@
     // set view background
     self.view.backgroundColor = FAINT_GRAY;
     
+    // clear search bar + hide keyboard if new song
     if (self.sharedData.newSong)
         [self clearAndInitialize];
+    
+    // begin in shifted down state
+    if (self.currentlyShifted)
+    {
+        // NSLog(@"Resetting screen %u", self.currentlyShifted);
+        [self resetScreenContents];
+    }
     
     // test
     // pushNotifViewController *pnvc = [[pushNotifViewController alloc] init];
@@ -383,23 +406,93 @@
 
 #pragma mark - UI helper methods
 
-- (void)displayVideoPrompt
+- (void)displaySearchIcon
 {
-    if (!self.videoPromptLabel)
+    if (!self.searchIconView)
     {
-        self.videoPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 200.0f, 290.0f, 100.0f)];
-        self.videoPromptLabel.font = HELV_14;
-        self.videoPromptLabel.textColor = [UIColor grayColor];
-        self.videoPromptLabel.numberOfLines = 1;
+        UIImage *searchIcon = [UIImage imageNamed: @"MagnifyingGlass.png"];
+        //searchIcon = [Constants renderImage:searchIcon inColor: [UIColor lightGrayColor]];
         
-        self.videoPromptLabel.text = [NSString stringWithFormat:@"Songs, music videos, comedy, sports, news.."];
+        CGFloat desiredWidth = 85;
+        CGFloat desiredHeight = (searchIcon.size.height / searchIcon.size.width) * desiredWidth;
         
-        [self.view addSubview:self.videoPromptLabel];
+        CGFloat viewWidth = self.view.frame.size.width;
+        CGFloat viewHeight = self.view.frame.size.height;
+        
+        CGFloat offsetFromCenterY = (IS_IPHONE_5 ? -20 : -60);
+        
+        self.searchIconView = [[UIImageView alloc] initWithFrame:CGRectMake((viewWidth - desiredWidth)/2, (viewHeight - desiredHeight)/2 + offsetFromCenterY,
+                                                                            desiredWidth, desiredHeight)];
+        self.searchIconView.image = searchIcon;
+        self.searchIconView.alpha = 0.15;
+        
+        [self.view addSubview: self.searchIconView];
     }
     
     else
     {
-        self.videoPromptLabel.hidden = NO;
+        self.searchIconView.hidden = NO;
+    }
+}
+
+- (void)displaySearchPrompt
+{
+    if (!self.captionTitle)
+    {
+        CGFloat viewWidth = self.view.frame.size.width;
+        
+        
+        // caption title
+        
+        CGFloat titleLength = 200;
+        CGFloat titleHeight = 22;
+        
+        CGFloat searchIconBottomY = self.searchIconView.frame.origin.y + self.searchIconView.frame.size.height;
+        CGFloat iconCaptionBuffer = 22.5;
+        
+        self.captionTitle = [[UILabel alloc] initWithFrame:CGRectMake((viewWidth - titleLength)/2, searchIconBottomY + iconCaptionBuffer, titleLength, titleHeight)];
+        self.captionTitle.font = HELV_18;
+        self.captionTitle.textColor = [UIColor grayColor];
+        
+        self.captionTitle.numberOfLines = 1;
+        self.captionTitle.textAlignment = NSTextAlignmentCenter;
+        
+        self.captionTitle.text = [NSString stringWithFormat:@"Search for videos"];
+        
+        
+        // caption text
+        
+        CGFloat textLength = 300;
+        CGFloat textHeight = 50;
+        
+        CGFloat captionTitleBottomY = self.captionTitle.frame.origin.y + self.captionTitle.frame.size.height;
+        CGFloat titleTextBuffer = 8;
+        
+        self.captionText = [[UILabel alloc] initWithFrame:CGRectMake((viewWidth - textLength)/2, captionTitleBottomY + titleTextBuffer, textLength, textHeight)];
+    
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.lineSpacing = 5;
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        paragraphStyle.alignment = NSTextAlignmentCenter;
+        
+        NSString *captionTextString = [NSString stringWithFormat:@" Find music, comedy, sports, or\n news clips to send to your friends"];
+        // NSString *captionTextString = [NSString stringWithFormat:@"Music, comedy, sports, news..."];
+        NSMutableAttributedString *captionAttributedText = [[NSMutableAttributedString alloc] initWithString: captionTextString
+                                                                                                  attributes: @{NSParagraphStyleAttributeName: paragraphStyle,
+                                                                                                                NSFontAttributeName: HELV_15,
+                                                                                                                NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+        
+        self.captionText.attributedText = captionAttributedText;
+        self.captionText.numberOfLines = 2;
+        
+        [self.view addSubview: self.captionTitle];
+        [self.view addSubview: self.captionText];
+    }
+    
+    else
+    {
+        self.captionTitle.hidden = NO;
+        self.captionText.hidden = NO;
     }
 }
 
@@ -432,20 +525,35 @@
 
 #pragma mark - Search bar animation
 
-- (void)animateSearchBarInDirection:(Direction)direction
+- (void)resetScreenContents
 {
-    float distance = 80.0f;
-    float movement = (direction ? distance : -distance);
-    float movementDuration = 0.3f;
+    float distance = (IS_IPHONE_5 ? 73.5 : 27.5);
+    
+    // move down (called only if self.currentlyShifted = YES)
+    self.searchIconView.frame = CGRectOffset(self.searchIconView.frame, 0.0f, distance);
+    self.captionTitle.frame = CGRectOffset(self.captionTitle.frame, 0.0f, distance);
+    self.captionText.frame = CGRectOffset(self.captionText.frame, 0.0f, distance);
+    
+    self.currentlyShifted = NO;
+}
+
+- (void)animateScreenContentsInDirection:(Direction)direction
+{
+    float distance = (IS_IPHONE_5 ? 73.5 : 27.5);
+    float movement = ((direction == kDirectionDown) ? distance : -distance);
+    float movementDuration = (direction ? 0.15f : 0.3f);
     
     [UIView beginAnimations:@"Scroll" context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: movementDuration];
     
-    self.searchBar.frame = CGRectOffset(self.searchBar.frame, 0.0f, movement);
-    self.searchDisplayController.searchResultsTableView.frame = CGRectOffset(self.searchDisplayController.searchResultsTableView.frame, 0.0f, movement);
+    self.searchIconView.frame = CGRectOffset(self.searchIconView.frame, 0.0f, movement);
+    self.captionTitle.frame = CGRectOffset(self.captionTitle.frame, 0.0f, movement);
+    self.captionText.frame = CGRectOffset(self.captionText.frame, 0.0f, movement);
     
     [UIView commitAnimations];
+    
+    self.currentlyShifted = (direction == kDirectionUp ? YES : NO);
 }
 
 

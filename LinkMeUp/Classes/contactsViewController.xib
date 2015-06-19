@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="contactsViewController">
             <connections>
+                <outlet property="buttonDistToBottom" destination="HOL-TT-BuM" id="hMV-Do-B2z"/>
                 <outlet property="header" destination="yRw-hQ-8mv" id="4Cc-D1-Pwj"/>
                 <outlet property="sendSong" destination="9vd-8j-O1f" id="mih-2k-WW9"/>
                 <outlet property="tableView" destination="UrL-b8-81w" id="41N-2m-T1w"/>
@@ -74,7 +75,7 @@
                 <constraint firstAttribute="trailing" secondItem="9vd-8j-O1f" secondAttribute="trailing" id="z9g-dC-hOp"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-            <point key="canvasLocation" x="414" y="294"/>
+            <point key="canvasLocation" x="320" y="288"/>
         </view>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

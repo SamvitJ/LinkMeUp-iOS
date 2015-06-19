@@ -35,6 +35,8 @@
 @property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, strong) UIScrollView *scrollView;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *buttonDistToBottom;
+
 // link
 @property (nonatomic, strong) Link *myLink;
 

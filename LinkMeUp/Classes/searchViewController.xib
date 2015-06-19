@@ -7,9 +7,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="searchViewController">
             <connections>
+                <outlet property="header" destination="J6z-uy-Cc7" id="p7S-e7-3zD"/>
                 <outlet property="searchBar" destination="Hbr-rI-hvN" id="Ihk-uN-b2Q"/>
                 <outlet property="searchDisplayController" destination="dmn-jz-yPE" id="cYG-fA-3TV"/>
-                <outlet property="sendVideoButton" destination="leq-Qr-P9b" id="ZJ2-v6-Zme"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -18,20 +18,6 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="leq-Qr-P9b">
-                    <rect key="frame" x="0.0" y="469" width="320" height="50"/>
-                    <color key="backgroundColor" red="0.3750458733" green="0.51078131579999997" blue="0.67633876839999996" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="50" id="Bs3-21-EJf"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="19"/>
-                    <state key="normal" title="Search                              &gt;">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="sendVideoPressed:" destination="-1" eventType="touchUpInside" id="WzK-B1-SIJ"/>
-                    </connections>
-                </button>
                 <view alpha="0.94999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J6z-uy-Cc7">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
                     <subviews>
@@ -85,8 +71,8 @@
                         <constraint firstAttribute="height" constant="77" id="UmQ-Qc-vnE"/>
                     </constraints>
                 </view>
-                <searchBar contentMode="redraw" fixedFrame="YES" text="" placeholder="Search for music and videos" translatesAutoresizingMaskIntoConstraints="NO" id="Hbr-rI-hvN" customClass="YouTubeSearchBar">
-                    <rect key="frame" x="7" y="123" width="306" height="44"/>
+                <searchBar contentMode="redraw" fixedFrame="YES" text="" placeholder="Search YouTube" translatesAutoresizingMaskIntoConstraints="NO" id="Hbr-rI-hvN" customClass="YouTubeSearchBar">
+                    <rect key="frame" x="0.0" y="77" width="320" height="44"/>
                     <textInputTraits key="textInputTraits"/>
                     <connections>
                         <outlet property="delegate" destination="-1" id="Si9-mD-VIp"/>
@@ -94,11 +80,8 @@
                 </searchBar>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="leq-Qr-P9b" secondAttribute="bottom" constant="49" id="2Xa-nZ-S1T"/>
-                <constraint firstAttribute="trailing" secondItem="leq-Qr-P9b" secondAttribute="trailing" id="GUq-6s-eOh"/>
                 <constraint firstItem="J6z-uy-Cc7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="N5U-cD-zaS"/>
                 <constraint firstAttribute="trailing" secondItem="J6z-uy-Cc7" secondAttribute="trailing" id="NRw-JA-ExL"/>
-                <constraint firstItem="leq-Qr-P9b" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="cYr-r9-Cpt"/>
                 <constraint firstItem="J6z-uy-Cc7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="epQ-jv-4lP"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
