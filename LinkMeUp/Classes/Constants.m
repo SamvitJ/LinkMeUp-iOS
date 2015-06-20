@@ -43,6 +43,11 @@ NSString *const kDidFailToRegisterForPush = @"didFailToRegisterForPush";
 
 NSString *const kUserRespondedToPushNotifAlertView = @"userRespondedToPushNotifAlertView";
 
+// *** Data load ***
+NSString *const kLoadedFriendRequests = @"loadedFriendRequests";
+NSString *const kLoadedFriendList = @"loadedFriendList";
+NSString *const kLoadedConnections = @"loadedConnections";
+
 //----------------------------------------------------------------------------
 
 

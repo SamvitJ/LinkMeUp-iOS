@@ -206,12 +206,12 @@
     UITabBarController *myTBC = (UITabBarController *)[self.navigationController parentViewController];
     (myTBC.selectedIndex == kTabBarIconFriends ? [self resetFriendsBadge] : [self updateFriendsBadge]);
     
-    // initialize suggestion and request buttons, if neccesary
-    if (self.suggestionButtons && ![self.suggestionButtons count])
-        [self initializeSuggestionButtons];
-    
-    if (self.requestButtons && ![self.requestButtons count])
+    // initialize request and suggestion buttons, if neccesary
+    if ([self.sharedData.requestSenders count] != [self.requestButtons count])
         [self initializeRequestButtons];
+    
+    if ([self.sharedData.suggestedFriends count] != [self.suggestionButtons count])
+        [self initializeSuggestionButtons];
     
     // reload tables
     [self.tableView reloadData];
@@ -228,17 +228,17 @@
     {
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didFinishLoadingFriendRequests)
-                                                     name:@"loadedFriendRequests"
+                                                     name:kLoadedFriendRequests
                                                    object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didFinishLoadingFriendList)
-                                                     name:@"loadedFriendList"
+                                                     name:kLoadedFriendList
                                                    object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didFinishLoadingConnections)
-                                                     name:@"loadedConnections"
+                                                     name:kLoadedConnections
                                                    object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -262,11 +262,8 @@
     self.requestButtons = [[NSMutableArray alloc] init];
     self.suggestionButtons = [[NSMutableArray alloc] init];
     
-    if (self.sharedData.loadedConnections)
-    {
-        [self initializeRequestButtons];
-        [self initializeSuggestionButtons];
-    }
+    [self initializeRequestButtons];
+    [self initializeSuggestionButtons];
     
     // initialize search result contacts
     self.searchResults = [[NSMutableArray alloc] init];
@@ -290,7 +287,7 @@
     [self.searchDisplayController.searchResultsTableView addSubview:searchRC];
     
     // display findContactsViewController, if not new user
-    if (self.sharedData.loadedConnections && !self.sharedData.me.isNew)
+    if (self.sharedData.loadedAllConnections && !self.sharedData.me.isNew)
     {
         [self presentFindContacts];
     }
@@ -317,7 +314,7 @@
     }
     
     // if loading data
-    else if (!self.sharedData.loadedConnections)
+    else if (!self.sharedData.loadedAllConnections)
     {
         // if first time loading data, showing loading status
         if ([self.sharedData.requestSenders count] == 0 && [self.sharedData.myFriends count] == 0 && [self.sharedData.suggestedFriends count] == 0)
@@ -331,13 +328,13 @@
     }
     
     // display findContactsViewController, if new user and second entry
-    if (self.sharedData.loadedConnections && self.sharedData.me.isNew)
+    if (self.sharedData.loadedAllConnections && self.sharedData.me.isNew)
     {
         NSNumber *didEnter = [[NSUserDefaults standardUserDefaults] objectForKey: kDidEnterFriendsVC];
         
         if (didEnter != nil && ![didEnter boolValue]) // first entry
         {
-            [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kDidEnterFriendsVC];
+            [[NSUserDefaults standardUserDefaults] setObject:@YES forKey: kDidEnterFriendsVC];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         else if (didEnter != nil && [didEnter boolValue]) // second entry
@@ -369,9 +366,9 @@
     self.tableView.dataSource = nil;
     
     // unsubscribe to notifications
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedFriendRequests" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedFriendList" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedConnections" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kLoadedFriendRequests object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kLoadedFriendList object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kLoadedConnections object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"applicationDidBecomeActive" object:nil];
 }
 
@@ -443,7 +440,7 @@
 
     // load data on user refresh
     // *LOW PRIORITY UPDATES*
-    if (self.sharedData.loadedConnections)
+    if (self.sharedData.loadedAllConnections)
     {
         [self.sharedData loadConnections];
     }

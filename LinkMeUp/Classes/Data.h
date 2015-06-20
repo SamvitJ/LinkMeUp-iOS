@@ -96,7 +96,7 @@
 
 // loading status
 @property (nonatomic) BOOL loadedMasterLinks;
-@property (nonatomic) BOOL loadedConnections;
+@property (nonatomic) BOOL loadedAllConnections;
 @property (nonatomic) BOOL loadedReceivedLinks;
 @property (nonatomic) BOOL loadedSentLinks;
 

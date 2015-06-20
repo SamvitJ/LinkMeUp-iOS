@@ -124,7 +124,7 @@
         
         // set all public status booleans
         self.loadedMasterLinks = YES;
-        self.loadedConnections = YES;
+        self.loadedAllConnections = YES;
         self.loadedReceivedLinks = YES;
         self.loadedSentLinks = YES;
         
@@ -305,6 +305,7 @@
 #pragma mark - Data loading methods
 
 
+
 #pragma mark - Loading all data
 
 - (void)loadAllData
@@ -340,14 +341,14 @@
 
 - (void)loadConnections
 {
-    if (!self.loadedConnections)
+    if (!self.loadedAllConnections)
     {
         NSLog(@"Already loading connections...");
         return;
     }
 
     // initialize status booleans
-    self.loadedConnections = NO;
+    self.loadedAllConnections = NO;
     loadedReceivedRequests = NO;
     loadedCurrentFriends = NO;
     loadedPendingRequests = NO;
@@ -402,7 +403,7 @@
         // set status and post notifications
         loadedReceivedRequests = YES;
         [self loadSuggestions];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedFriendRequests" object:nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kLoadedFriendRequests object:nil userInfo:nil];
     }];
     
     
@@ -467,7 +468,7 @@
                 // set status and post notifications
                 loadedCurrentFriends = YES;
                 [self loadSuggestions];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedFriendList" object:nil userInfo:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kLoadedFriendList object:nil userInfo:nil];
             }];
         }];
     }];
@@ -523,7 +524,7 @@
     // populate recentRecipients
     self.recentRecipients = self.me[@"recentRecipients"];
     
-    // initialize status booleans
+    // initialize local status booleans
     loadedAddrBookSuggestions = NO;
     loadedFacebookSuggestions = NO;
     
@@ -757,10 +758,10 @@
 
         self.suggestedFriends = newSuggestedFriends;
         
-        self.loadedConnections = YES;
+        self.loadedAllConnections = YES;
         NSLog(@"Did finish loading connections");
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"loadedConnections" object:nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kLoadedConnections object:nil userInfo:nil];
     }
 }
 
@@ -959,7 +960,7 @@
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
 
-                    // create URL session task
+                    // create NSURLSession task
                     NSURLSession *session = [NSURLSession sharedSession];
                     NSURLSessionDataTask *task = [session dataTaskWithURL:artURL
                                                         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -1086,8 +1087,8 @@
                 if ([sentArtLoaded[i] isEqual: @NO])
                 {
                     NSURL *artURL = [NSURL URLWithString:currentLink.art];
-                    
-                    // create URL session task
+                                        
+                    // create NSURLSession task
                     NSURLSession *session = [NSURLSession sharedSession];
                     NSURLSessionDataTask *task = [session dataTaskWithURL:artURL
                                                         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -1517,14 +1518,35 @@
 
 
 
-#pragma mark - Art caching
+#pragma mark - Data caching
+
+- (void)createDefaultConfigObject
+{
+    NSURLSessionConfiguration *defaultConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    /* Configure caching behavior for the default session.
+     Note that iOS requires the cache path to be a path relative
+     to the ~/Library/Caches directory */
+    NSString *cachePath = @"/MyCacheDirectory";
+    
+    NSArray *myPathList = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *myPath    = [myPathList  objectAtIndex:0];
+    
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    
+    NSString *fullCachePath = [[myPath stringByAppendingPathComponent:bundleIdentifier] stringByAppendingPathComponent:cachePath];
+    NSLog(@"Cache path: %@\n", fullCachePath);
+    
+    NSURLCache *myCache = [[NSURLCache alloc] initWithMemoryCapacity: 16384 diskCapacity: 268435456 diskPath: cachePath];
+    defaultConfig.URLCache = myCache;
+    defaultConfig.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
+}
 
 // retrieves cached art for link if available, else loads from web URL and caches (synchronous)
 - (NSData *)artDataForLink:(Link *)link withArtURL:(NSURL *)artURL
 {
-    //NSString *filePath = [[self applicationCachesDirectory] stringByAppendingPathComponent:fileName];
-    //http://stackoverflow.com/questions/11445308/apps-must-follow-the-ios-data-storage-guidelines-or-they-will-be-rejected)
-    
+    // NSString *filePath = [[self applicationCachesDirectory] stringByAppendingPathComponent:fileName];
+
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *path = [NSString pathWithComponents:[NSArray arrayWithObjects:dir, self.me.objectId, [NSString stringWithFormat:@"%@.png", link.objectId], nil]];
     

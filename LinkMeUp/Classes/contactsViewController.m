@@ -107,7 +107,7 @@ Example
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didFinishLoadingConnections)
-                                                     name:@"loadedConnections"
+                                                     name:kLoadedConnections
                                                    object:nil];
     }
     return self;
@@ -145,7 +145,7 @@ Example
     [self.sendSong addTarget:self action:@selector(sendSongDragEnter:) forControlEvents:UIControlEventTouchDragEnter];
     
     // display findContactsViewController, if appropriate
-    if (self.sharedData.loadedConnections)
+    if (self.sharedData.loadedAllConnections)
     {
         [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(presentFindContacts) userInfo:nil repeats:NO];
     }
@@ -212,7 +212,7 @@ Example
     self.tableView.dataSource = nil;
     
     // unsubscribe from notifications
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"loadedConnections" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kLoadedConnections object:nil];
 }
 
 #pragma mark - Address book permissions

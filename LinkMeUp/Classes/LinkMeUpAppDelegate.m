@@ -104,7 +104,7 @@
         if (!self.updateTimer)
         {
             [self reloadData];
-            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
+            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
         }
     }
     
@@ -120,9 +120,6 @@
                 [self.updateTimer invalidate];
                 self.updateTimer = nil;
             }
-            
-            // in case of new links/requests/messages
-            [self reloadData];
         }
         else
         {
@@ -130,7 +127,7 @@
             if (!self.updateTimer)
             {
                 [self reloadData];
-                self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
+                self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
             }
             
             if (remoteNotification & UIRemoteNotificationTypeBadge)
@@ -248,7 +245,7 @@
     if (self.myData)
     {
         // *LOW PRIORITY UPDATES*
-        if (self.myData.loadedConnections)
+        if (self.myData.loadedAllConnections)
         {
             [self.myData loadConnections];
         }
