@@ -16,7 +16,7 @@
 #import "Link.h"
 #import "Data.h"
 
-@interface contactsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate>
+@interface contactsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, UIGestureRecognizerDelegate>
 
 // the shared application data model
 @property (nonatomic, weak) Data *sharedData;

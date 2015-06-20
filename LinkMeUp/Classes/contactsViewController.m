@@ -564,6 +564,44 @@ Example
     else self.textLabel.alpha = 1.0;
 }
 
+#pragma mark - Gesture recognizer selectors
+
+/*- (void)handlePress:(UILongPressGestureRecognizer *)sender
+{
+    NSLog(@"Handle press");
+    
+    if (sender.state == UIGestureRecognizerStateBegan)
+    {
+        NSLog(@"Long press began");
+        [self sendSongDragEnter: nil];
+    }
+    else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed)
+    {
+        NSLog(@"Long press ended, cancelled, or failed");
+        [self sendSongDragExit: nil];
+    }
+}*/
+
+- (void)handleTap:(UITapGestureRecognizer *)sender
+{
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        NSLog(@"Ended");
+        
+        [self sendSongPressed:nil];
+    }
+    else if (sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed)
+    {
+        NSLog(@"Cancelled/failed");
+        return;
+    }
+    else
+    {
+        NSLog(@"Other");
+        return;
+    }
+}
+
 #pragma mark - UI action methods
 
 - (void)backButtonPressed:(id)sender
@@ -1243,6 +1281,19 @@ Example
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
 
+    // add tap gesture recognizer to scroll view
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    tap.numberOfTapsRequired = 1;
+    tap.numberOfTouchesRequired = 1;
+    tap.cancelsTouchesInView = NO;
+    [self.scrollView addGestureRecognizer:tap];
+
+    /*UILongPressGestureRecognizer *press = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlePress:)];
+    press.numberOfTapsRequired = 1;
+    press.numberOfTouchesRequired = 1;
+    press.minimumPressDuration = 1.0;
+    [self.scrollView addGestureRecognizer:press];*/
+    
     // add to subviews
     [self.scrollView addSubview: self.textLabel];
     [self.sendSong addSubview: self.scrollView];

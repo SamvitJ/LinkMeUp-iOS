@@ -964,9 +964,9 @@
                     NSURLSessionDataTask *task = [session dataTaskWithURL:artURL
                                                         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                         
-                        if (error)
-                            NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);
-                        
+                        /*if (error)
+                            NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);*/
+                                                            
                         // create image
                         UIImage *art = ([UIImage imageWithData:data] ? [UIImage imageWithData:data] : [[UIImage alloc] init]);
                         
@@ -1092,8 +1092,8 @@
                     NSURLSessionDataTask *task = [session dataTaskWithURL:artURL
                                                         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                         
-                        if (error)
-                            NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);
+                        /*if (error)
+                            NSLog(@"Error loading art for link %@ %@ %@", currentLink, error, [error userInfo]);*/
                         
                         // create image
                         UIImage *art = ([UIImage imageWithData:data] ? [UIImage imageWithData:data] : [[UIImage alloc] init]);

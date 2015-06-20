@@ -49,10 +49,11 @@
             CGPoint tappedPoint = [sender locationInView: self.view];
             UIView *tappedView = [self.view hitTest:tappedPoint withEvent:nil];
 
-            if (tappedView == self.header)
+            bool isTableView = (tappedView == self.searchDisplayController.searchResultsTableView);
+            bool isCellContentView = ([tappedView isMemberOfClass:NSClassFromString(@"UITableViewCellContentView")]);
+            
+            if (!isTableView && !isCellContentView)
             {
-                // NSLog(@"Tapped header");
-                
                 [self.searchBar resignFirstResponder];
                 
                 if (self.currentlyShifted)
