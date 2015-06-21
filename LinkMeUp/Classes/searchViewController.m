@@ -51,8 +51,11 @@
 
             bool isTableView = (tappedView == self.searchDisplayController.searchResultsTableView);
             bool isCellContentView = ([tappedView isMemberOfClass:NSClassFromString(@"UITableViewCellContentView")]);
+            bool isButton = ([tappedView isMemberOfClass:[UIButton class]]);
             
-            if (!isTableView && !isCellContentView)
+            NSLog(@"Tapped view %@", tappedView);
+            
+            if (!isTableView && !isCellContentView && !isButton)
             {
                 [self.searchBar resignFirstResponder];
                 

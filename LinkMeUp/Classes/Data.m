@@ -1051,8 +1051,8 @@
                 
                 for (NSDictionary *receiverData in currentLink.receiversData)
                 {
-                    NSDictionary *receiver = @{@"name": [receiverData objectForKey:@"name"],
-                                               @"identity": [receiverData objectForKey:@"identity"]};
+                    NSDictionary *receiver = @{@"name": (receiverData[@"name"] ? receiverData[@"name"] : @""),
+                                               @"identity": (receiverData[@"identity"] ? receiverData[@"identity"] : @"")};
                     [receivers addObject: receiver];
                 }
                 
