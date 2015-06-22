@@ -104,7 +104,7 @@
         if (!self.updateTimer)
         {
             [self reloadData];
-            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
+            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
         }
     }
     
@@ -127,7 +127,7 @@
             if (!self.updateTimer)
             {
                 [self reloadData];
-                self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
+                self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
             }
             
             if (remoteNotification & UIRemoteNotificationTypeBadge)

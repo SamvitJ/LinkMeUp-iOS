@@ -68,8 +68,8 @@
 - (void)forwardButtonPressed:(id)sender
 {
     // set fields
-    songInfoViewController *srvc = [[songInfoViewController alloc] init];
-    srvc.isForwarding = YES;
+    songInfoViewController *sivc = [[songInfoViewController alloc] init];
+    sivc.isForwarding = YES;
     
     self.sharedData.isSong = self.sharedData.selectedLink.isSong;
     
@@ -97,7 +97,7 @@
     }
     
     // push song info VC
-    [self.navigationController pushViewController:srvc animated:YES];
+    [self.navigationController pushViewController:sivc animated:YES];
 }
 
 - (void)iTunesLinkPressed:(id)sender
