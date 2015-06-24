@@ -706,7 +706,7 @@ Example
         {
             if (!self.myLink.isSong)
             {
-                link = [NSString stringWithFormat:@"%@ - www.youtube.com/watch?v=%@.", self.myLink.title, self.myLink.videoId];
+                link = [NSString stringWithFormat:@"%@ - www.youtube.com/watch?v=%@", self.myLink.title, self.myLink.videoId];
             }
             else
             {
@@ -717,9 +717,12 @@ Example
         }
         else
         {
+            [message appendString:self.myLink.annotation];
+            [message appendString:@" "];
+            
             if (!self.myLink.isSong)
             {
-                link = [NSString stringWithFormat:@"www.youtube.com/watch?v=%@.", self.myLink.videoId];
+                link = [NSString stringWithFormat:@"www.youtube.com/watch?v=%@", self.myLink.videoId];
             }
             else
             {
@@ -727,19 +730,11 @@ Example
             }
             
             [message appendString:link];
-            [message appendString:@"\n\n"];
-            [message appendString:self.myLink.annotation];
         }
     
-        // if sent to at least SEVERAL_RECENTS, then add App Store link to message
-        if ([self.sharedData.recentRecipients count] >= SEVERAL_RECENTS)
-        {
-            [message appendString:@"\n\n"];
-            [message appendString:@"Sent via LinkMeUp (https://appsto.re/i6Lr6JT)"];
-            
-            /* HTML link
-            [NSString stringWithFormat:@"Sent via <a href=\"sms:%@&body=%@\">LinkMeUp</a>", [contact[@"phone"] firstObject], @"https://appsto.re/i6Lr6JT"]; */
-        }
+        // App Store link
+        [message appendString:@"\n\n"];
+        [message appendString:@"Sent via LinkMeUp (https://appsto.re/i6Lr6JT)"];
         
         controller.body = message;
         
