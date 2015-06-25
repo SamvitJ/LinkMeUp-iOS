@@ -132,8 +132,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    NSLog(@"pushNotifViewController - view did disappear");
-    
     // clear timer
     [self.didPresentTimer invalidate];
     self.didPresentTimer = nil;
