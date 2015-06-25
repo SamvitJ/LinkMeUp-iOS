@@ -80,6 +80,7 @@
 // friend suggestions
 @property (nonatomic) BOOL hasAddressBookAccess;
 @property (nonatomic) BOOL isLinkedWithFB;
+
 @property (nonatomic, strong) NSMutableArray *pendingRequests;  // PFUser (sent by me)
 @property (nonatomic, strong) NSMutableArray *suggestedFriends; // PFUser
 

@@ -12,6 +12,8 @@
 
 #import "Constants.h"
 
+
+
 @interface pushNotifViewController ()
 
 @end
@@ -90,6 +92,33 @@
     // add image
     [self.view addSubview: self.imageView];
     [self.view sendSubviewToBack: self.imageView];
+    
+    // initialize alert views
+    NSString *alertTitle = @"Enable Push Notifications";
+    NSString *alertMessage = [NSString stringWithFormat: @"\nPlease go to Settings \u2192 Notification Center \u2192 LinkMeUp.\n\n Then select Banners and toggle \"Badge App Icon\" to On."];
+    
+    if (IS_IOS8)
+    {
+        self.alertController = [UIAlertController alertControllerWithTitle:alertTitle
+                                                                   message:alertMessage
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                style: UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction *action) {
+                                                                  [self dismissAndReturn];
+                                                              }];
+        
+        [self.alertController addAction: defaultAction];
+    }
+    else
+    {
+        self.alertView = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                    message:alertMessage
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -101,6 +130,18 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    NSLog(@"pushNotifViewController - view did disappear");
+    
+    // clear timer
+    [self.didPresentTimer invalidate];
+    self.didPresentTimer = nil;
+    
+    // set delegate to nil
+    self.alertView.delegate = nil;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -109,6 +150,10 @@
 
 - (void)dealloc
 {
+    // clear NSUserDefault flags
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDidAttemptToRegisterForPushNotif];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDidPresentPushNotifAlertView];
+    
     // unsubscribe from notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kDidRegisterForPush object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kDidFailToRegisterForPush object:nil];
@@ -118,11 +163,15 @@
 
 #pragma mark - NSTimer methods
 
-- (void)checkAlertView
+- (void)checkAlertViewStatus
 {
+    NSLog(@"Checking alert view status");
+    
     // if haven't presented default alert view, present custom alert view
     if (![[[NSUserDefaults standardUserDefaults] objectForKey:kDidPresentPushNotifAlertView] boolValue])
     {
+        NSLog(@"Haven't presented default");
+        
         [self.didPresentTimer invalidate];
         self.didPresentTimer = nil;
         
@@ -139,16 +188,12 @@
 
 - (void)didFailToRegister
 {
-    [self dismissAndReturn];
+
 }
 
 - (void)dismissAndReturn
 {
     NSLog(@"Dismiss and return called");
-    
-    // clear NSUserDefaults
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDidAttemptToRegisterForPushNotif];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDidPresentPushNotifAlertView];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -208,7 +253,7 @@
         // present custom alert view if default (Apple's) alert view isn't being presented
         self.didPresentTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
                                                                 target:self
-                                                              selector:@selector(checkAlertView)
+                                                              selector:@selector(checkAlertViewStatus)
                                                               userInfo:nil
                                                                repeats:NO];
     }
@@ -216,36 +261,15 @@
 
 - (void)presentCustomAlertView
 {
-    NSString *alertTitle = @"Enable Push Notifications";
-    NSString *alertMessage = [NSString stringWithFormat: @"\nPlease go to Settings \u2192 Notification Center \u2192 LinkMeUp.\n\n Then select Banners and toggle \"Badge App Icon\" to On."];
+    NSLog(@"Presenting alert view");
     
     if (IS_IOS8)
     {
-        NSLog(@"iOS 8");
-        
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:alertTitle
-                                                                       message:alertMessage
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                style: UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction *action) {
-                                                                  [self dismissAndReturn];
-                                                              }];
-        
-        [alert addAction: defaultAction];
-        
-        [self presentViewController:alert animated:YES completion:nil];
+        [self presentViewController:self.alertController animated:YES completion:nil];
     }
     else
     {
-        NSLog(@"iOS 7");
-        
-        [[[UIAlertView alloc] initWithTitle:alertTitle
-                                    message:alertMessage
-                                   delegate:self
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
+        [self.alertView show];
     }
 }
 

@@ -334,6 +334,14 @@
 - (void)updateAddressBookStatus
 {
     self.hasAddressBookAccess = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized);
+    
+    self.me[kHasAddrBookAccess] = [NSNumber numberWithBool: self.hasAddressBookAccess];
+    [self.me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving addr book access status to Parse %@ %@", error, [error userInfo]);
+        }
+    }];
 }
 
 

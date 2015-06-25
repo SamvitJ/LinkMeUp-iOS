@@ -147,6 +147,14 @@
                 if (granted)
                 {
                    NSLog(@"Address book access permission granted");
+                
+                   // if existing (V1) user, update addr book status and reload suggestions
+                   PFUser *me = [PFUser currentUser];
+                   if (!me.isNew)
+                   {
+                       [self.sharedData updateAddressBookStatus];
+                       [self.sharedData loadConnections];
+                   }
                 }
                 
                 else
@@ -287,7 +295,7 @@
             [defaultSettings dismissViewControllerAnimated:YES completion:nil];
         }
         
-        else // V1 user who previously denied address book permissions
+        else // V1 user who previously denied address book permissions - case not currently reachable
         {
             // update authorization status
             [self.sharedData updateAddressBookStatus];
@@ -298,11 +306,11 @@
             [presentingPresenting dismissViewControllerAnimated:YES completion:nil];
         }
     }
-    else // exisiting user
+    else // existing user
     {
         NSLog(@"Return and launch - other");
         
-        // update authorization status
+        // update authorization status - not determined -> denied OR not determined -> accepted (redundant)
         [self.sharedData updateAddressBookStatus];
         
         UIViewController *presenting = self.presentingViewController;

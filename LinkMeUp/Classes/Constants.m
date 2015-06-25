@@ -69,6 +69,8 @@ NSString *const kDidEnterFriendsVC = @"didEnterFriendsVC";
 NSString *const kNumberPushRequests = @"numberPushRequests";
 NSString *const kNumberABRequests = @"numberABRequests";
 
+NSString *const kHasAddrBookAccess = @"hasAddrBookAccess";
+
 NSString *const kRecentRecipients = @"recentRecipients"; // unused
 NSString *const kAddressBook = @"address_book";          // unused
 

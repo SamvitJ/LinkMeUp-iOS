@@ -23,6 +23,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *lastTextLine;
 @property (weak, nonatomic) IBOutlet UIButton *continueButton;
 
+@property (nonatomic, strong) UIAlertController *alertController;
+@property (nonatomic, strong) UIAlertView *alertView;
+
 @property (nonatomic, strong) UIImageView *imageView;
 
 @end
