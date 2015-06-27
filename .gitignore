@@ -16,5 +16,8 @@ DerivedData
 *.ipa
 *.xcuserstate
 
-# Other large files
+# Large media files
 *.mov
+*.mp3
+*.mp4
+*.mpeg

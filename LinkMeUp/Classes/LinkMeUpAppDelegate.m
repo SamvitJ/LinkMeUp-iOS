@@ -37,7 +37,7 @@
     // Parse Initialization
     [Link registerSubclass];
     [FriendRequest registerSubclass];
-    [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
+    [Parse setApplicationId:PARSE_PROD_APP_ID clientKey:PARSE_PROD_CLIENT_KEY];
     [PFFacebookUtils initializeFacebook];
 
     /* // Twitter
