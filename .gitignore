@@ -21,3 +21,7 @@ DerivedData
 *.mp3
 *.mp4
 *.mpeg
+
+# Other sensitive data
+Documents/Promotional/Promo Codes/*
+Documents/Promotional/Team/*.jpg
