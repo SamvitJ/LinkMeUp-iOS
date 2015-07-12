@@ -803,9 +803,9 @@
         ABMultiValueRef ABRphoneNumbers = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonPhoneProperty);
         NSMutableArray *phoneNumbers = [[NSMutableArray alloc] init];
         
-        if (ABMultiValueGetCount(ABRphoneNumbers) > 0)
+        long indexCount = ABMultiValueGetCount(ABRphoneNumbers);
+        if (indexCount > 0)
         {
-            long indexCount = ABMultiValueGetCount(ABRphoneNumbers);
             for (long index = 0; index < indexCount; index++)
             {
                 CFStringRef CFSRtype = ABMultiValueCopyLabelAtIndex(ABRphoneNumbers, index);
@@ -822,11 +822,13 @@
                     [phoneNumbers addObject:phone];
                 }
                 
-                CFRelease(CFSRtype);
+                if (CFSRtype)
+                    CFRelease(CFSRtype);
             }
         }
         
-        CFRelease(ABRphoneNumbers);
+        if (ABRphoneNumbers)
+            CFRelease(ABRphoneNumbers);
         
         // email
         ABMultiValueRef ABRemails = ABRecordCopyValue((__bridge ABRecordRef)(person), kABPersonEmailProperty);
@@ -835,7 +837,8 @@
         if (ABMultiValueGetCount(ABRemails) > 0)
             emails = (__bridge_transfer NSMutableArray *)ABMultiValueCopyArrayOfAllValues(ABRemails);
         
-        CFRelease(ABRemails);
+        if (ABRemails)
+            CFRelease(ABRemails);
         
         // NSLog(@"Contact %@ %@ %@ %@", firstName, lastName, phoneNumbers, emails);
         

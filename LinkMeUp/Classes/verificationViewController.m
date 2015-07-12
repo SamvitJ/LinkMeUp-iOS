@@ -43,19 +43,21 @@
         // Correct code entered
         if ([self.codeTextField.text isEqualToString:self.code])
         {
+            // user completed verification process
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
             PFUser *me = [PFUser currentUser];
             me[@"mobile_number"] = self.phoneNumber;
+            me[@"mobileVerified"] = [NSNumber numberWithBool:YES];
             
             [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (error)
                 {
-                    NSLog(@"Error saving mobile number %@ %@", error, [error userInfo]);
+                    NSLog(@"Error saving mobile number and verification status (true) %@ %@", error, [error userInfo]);
                 }
             }];
             
-            // user completed verification process
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
-            [[NSUserDefaults standardUserDefaults] synchronize];
             
             // remove code fields and display activity indicator
             [self.codeVerificationLabel removeFromSuperview];

@@ -361,7 +361,8 @@
 {
     NSLog(@"Logged in");
     
-    if ([PFUser currentUser].isNew) // new account via Facebook
+    PFUser *me = [PFUser currentUser];
+    if (me.isNew) // new account via Facebook
     {
         verificationViewController *vvc = [[verificationViewController alloc] init];
         
@@ -369,7 +370,16 @@
         [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        NSLog(@"NSUserDefaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+        // set mobile verification status in Parse
+        me[@"mobileVerified"] = [NSNumber numberWithBool:NO];
+        [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (error)
+            {
+                NSLog(@"Error saving verification status (false) %@ %@", error, [error userInfo]);
+            }
+        }];
+        
+        // NSLog(@"NSUserDefaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
         
         [self.myLogIn presentViewController:vvc animated:YES completion:nil];
     }
@@ -459,7 +469,17 @@
     [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    NSLog(@"NSUserDefaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+    // set mobile verification status in Parse
+    PFUser *me = [PFUser currentUser];
+    me[@"mobileVerified"] = [NSNumber numberWithBool:NO];
+    [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving verification status (false) %@ %@", error, [error userInfo]);
+        }
+    }];
+    
+    // NSLog(@"NSUserDefaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     
     [mySignUp presentViewController:mySignUp.verificationVC animated:YES completion:nil];
 }
