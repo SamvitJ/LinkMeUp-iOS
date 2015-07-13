@@ -37,7 +37,7 @@
     // Parse Initialization
     [Link registerSubclass];
     [FriendRequest registerSubclass];
-    [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
+    [Parse setApplicationId:PARSE_PROD_APP_ID clientKey:PARSE_PROD_CLIENT_KEY];
     [PFFacebookUtils initializeFacebook];
 
     /* // Twitter
@@ -242,7 +242,8 @@
 
 - (void)reloadData
 {
-    if (self.myData)
+    // if user logged in and has data property
+    if ([PFUser currentUser] && self.myData)
     {
         // *LOW PRIORITY UPDATES*
         if (self.myData.loadedAllConnections)

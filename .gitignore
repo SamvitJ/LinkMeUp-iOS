@@ -15,3 +15,14 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+
+# Large media files
+*.mov
+*.mp3
+*.mp4
+*.mpeg
+
+# Other sensitive data
+Documents/Promotional/Promo Codes/*
+Documents/Promotional/Team/*.jpg
+Documents/Promotional/Social Media Posts/*

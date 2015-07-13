@@ -40,14 +40,15 @@
     
     else
     {
-        // Correct code entered
+        // correct code entered
         if ([self.codeTextField.text isEqualToString:self.code])
         {
+            PFUser *me = [PFUser currentUser];
+            
             // user completed verification process
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_%@", me.objectId, kDidNotVerifyNumber]];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            PFUser *me = [PFUser currentUser];
             me[@"mobile_number"] = self.phoneNumber;
             me[@"mobileVerified"] = [NSNumber numberWithBool:YES];
             
@@ -80,7 +81,7 @@
                     // climb up through presenting view controller hierarchy...
                     PFUser *user = [PFUser currentUser];
                     
-                    if ([PFFacebookUtils isLinkedWithUser:(PFUser *)user] && (user.email == NULL))
+                    if (user.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
                     {
                         myLogInViewController *logIn = (myLogInViewController *) self.presentingViewController;
                         DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
