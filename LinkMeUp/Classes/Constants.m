@@ -38,12 +38,13 @@ const NSInteger kPhoneLengthSansUSCC = 10; // phone # length w/o U.S. country co
 
 // NOTIFICATION NAMES --------------------------------------------------------
 
+// *** permissions ***
 NSString *const kDidRegisterForPush = @"didRegisterForPush";
 NSString *const kDidFailToRegisterForPush = @"didFailToRegisterForPush";
 
 NSString *const kUserRespondedToPushNotifAlertView = @"userRespondedToPushNotifAlertView";
 
-// *** Data load ***
+// *** data load ***
 NSString *const kLoadedFriendRequests = @"loadedFriendRequests";
 NSString *const kLoadedFriendList = @"loadedFriendList";
 NSString *const kLoadedConnections = @"loadedConnections";
@@ -53,12 +54,18 @@ NSString *const kLoadedConnections = @"loadedConnections";
 
 // STANDARD USER DEFAULTS ----------------------------------------------------
 
+// *** permissions ***
 NSString *const kDidShowPushVCThisSession = @"didShowPushVCThisSession";
 
 NSString *const kDidAttemptToRegisterForPushNotif = @"didAttemptToRegisterForPushNotif";
 NSString *const kDidPresentPushNotifAlertView = @"didPresentPushNotifAlertView";
 
 NSString *const kDidEnterFriendsVC = @"didEnterFriendsVC";
+
+// *** account creation ***
+NSString *const kDidNotLaunchNewAccount = @"didNotLaunch";
+NSString *const kDidNotVerifyNumber = @"unverified";
+NSString *const kDidCreateAccountWithSameEmail = @"existingAccount";
 
 //----------------------------------------------------------------------------
 

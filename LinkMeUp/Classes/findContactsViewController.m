@@ -227,7 +227,7 @@
                  
                  // supplemental info
                  me[@"first_name"] = fbUser.first_name;
-                 me[@"facebook_email"] = [fbUser objectForKey:@"email"];;
+                 me[@"facebook_email"] = [fbUser objectForKey:@"email"];
                  
                  [me saveInBackground];
              }];
@@ -276,7 +276,7 @@
     {
         NSLog(@"Return and launch - verification");
         
-        if ([PFFacebookUtils isLinkedWithUser:(PFUser *)user] && (user.email == NULL)) // new user, created via FB login
+        if (user.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user]) // new user, created via FB login
         {
             verificationViewController *verify = (verificationViewController *) presenting;
             myLogInViewController *logIn = (myLogInViewController *) verify.presentingViewController;
@@ -285,7 +285,7 @@
             [defaultSettings dismissViewControllerAnimated:YES completion:nil];
         }
         
-        else if (user.isNew) // new user, but not created via Facebook
+        else if (user.isNew) // new user, but not created via FB login
         {
             verificationViewController *verify = (verificationViewController *) presenting;
             mySignUpViewController *signUp = (mySignUpViewController *) verify.presentingViewController;
@@ -310,7 +310,7 @@
     {
         NSLog(@"Return and launch - other");
         
-        // update authorization status - not determined -> denied OR not determined -> accepted (redundant)
+        // update authorization status: not determined -> denied OR not determined -> accepted (redundant)
         [self.sharedData updateAddressBookStatus];
         
         UIViewController *presenting = self.presentingViewController;

@@ -242,7 +242,8 @@
 
 - (void)reloadData
 {
-    if (self.myData)
+    // if user logged in and has data property
+    if ([PFUser currentUser] && self.myData)
     {
         // *LOW PRIORITY UPDATES*
         if (self.myData.loadedAllConnections)

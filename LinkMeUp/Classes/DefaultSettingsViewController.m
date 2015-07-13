@@ -88,6 +88,10 @@
 
 - (void)launchNew
 {
+    // clear standard user default
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_%@", [PFUser currentUser].objectId, kDidNotLaunchNewAccount]];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[UIApplication sharedApplication].delegate;
     
     UITabBarController *tbc = appDelegate.tbc;
@@ -178,22 +182,55 @@
 {
     [super viewDidAppear:animated];
     
-    // did user finish signing up?
-    NSNumber *userUnverified = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
+    PFUser *user = [PFUser currentUser];
     
-    if (![PFUser currentUser] || [userUnverified boolValue] == YES) // No user logged in OR user terminated sign up process
+    // did user terminate signup process or have existing account with same (facebook) email?
+    NSNumber *unverified = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@", user.objectId, kDidNotVerifyNumber]];
+    NSNumber *didNotLaunch = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@", user.objectId, kDidNotLaunchNewAccount]];
+    NSNumber *existingAccount = [[NSUserDefaults standardUserDefaults] objectForKey:kDidCreateAccountWithSameEmail];
+    
+    // No user logged in OR terminated signup process OR existing account
+    if (!user || [unverified boolValue] == YES || [existingAccount boolValue] == YES)
     {
-        if ([userUnverified boolValue] == YES)
+        if ([unverified boolValue] == YES)
         {
-            // user account terminated
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
+            NSLog(@"User terminated signup process without verifying number");
+            
+            // clear standard user default
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_%@", user.objectId, kDidNotVerifyNumber]];
             [[NSUserDefaults standardUserDefaults] synchronize];
+
+            // if account linked with Facebook, clear FB token info
+            if ([PFFacebookUtils isLinkedWithUser: user])
+                [[FBSession activeSession] closeAndClearTokenInformation];
             
             // delete user
-            [[PFUser currentUser] deleteInBackground];
+            [user deleteInBackground];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"User logged out" object:nil];
+        }
+        else if ([existingAccount boolValue] == YES)
+        {
+            NSLog(@"Existing account with same email");
+            
+            [[[UIAlertView alloc] initWithTitle:@"Existing account"
+                                        message:@"It seems like you already have an account with this email. Please log in to your existing account."
+                                       delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil] show];
+            
+            // clear standard user default
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDidCreateAccountWithSameEmail];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            // clear FB token info
+            [[FBSession activeSession] closeAndClearTokenInformation];
+            
+            // delete user
+            [user deleteInBackground];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"User logged out" object:nil];
         }
         
-        //NSLog(@"NSUserDefaults %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+        // NSLog(@"NSUserDefaults %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
         
         // Create the log in view controller
         self.myLogIn = [[myLogInViewController alloc] init];
@@ -206,7 +243,7 @@
         
         // Create the sign up view controller
         mySignUpViewController *signUpViewController = [[mySignUpViewController alloc] init];
-        //signUpViewController.fields = (PFSignUpFields)(PFSignUpFieldsUsernameAndPassword |PFSignUpFieldsSignUpButton | PFSignUpFieldsDismissButton);
+        //signUpViewController.fields = (PFSignUpFields)(PFSignUpFieldsUsernameAndPassword | PFSignUpFieldsSignUpButton | PFSignUpFieldsDismissButton);
         [signUpViewController setDelegate:self]; // Set ourselves as the delegate
         
         // Assign our sign up controller to be displayed from the login controller
@@ -216,7 +253,7 @@
         [self launchLogIn];
     }
 
-    else if ([PFUser currentUser].isNew) // new user
+    else if (user.isNew || [didNotLaunch boolValue] == YES) // new user
     {
         // create status label
         [self createStatusLabel];
@@ -225,97 +262,25 @@
         [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidEnterFriendsVC];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        PFUser *user = [PFUser currentUser];
+        NSLog(@"Now welcoming");
         
         // new account is a facebook account (created through "login with facebook" option)
-        if ([PFFacebookUtils isLinkedWithUser:(PFUser *)user] && (user.email == NULL))
+        if ([PFFacebookUtils isLinkedWithUser: user])
         {
-            // show loading status...
-            [self setLoadingLabel];
-            
-            // get the user's data from Facebook
-            [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error)
-             {
-                 // check and see if a user already exists for this email
-                 PFQuery *query = [PFUser query];
-                 [query whereKey:@"email" equalTo:[fbUser objectForKey:@"email"]];
-                 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                     
-                     if (objects == nil | [objects count] == 0) // no existing LMU account -- new user!
-                     {
-                         NSLog(@"No existing LMU account found");
-                         
-                         // critical info
-                         user.username = [fbUser objectForKey:@"email"];
-                         user.email = [fbUser objectForKey:@"email"];
-                         user[@"facebook_id"] = [fbUser objectForKey:@"id"];
-                         user[@"name"] = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
-                         
-                         // supplemental info
-                         user[@"first_name"] = fbUser.first_name;
-                         
-                         [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                             if (!error)
-                             {
-                                 NSLog(@"Now welcoming");
-                                 [self setWelcomeLabelForUser: fbUser.first_name];
-                                 [self launchApplication: kApplicationLaunchNew];
-                             }
-                             else
-                             {
-                                 NSLog(@"Error saving user information %@ %@", error, [error localizedDescription]);
-                             }
-                         }];
-                     }
-                     
-                     for (PFObject *object in objects) // existing accounts (w/same email) found
-                     {
-                         PFUser *existingUser = (PFUser *)object;
-                         
-                         // existing account (w/same email) found
-                         // (besides FB account just created)
-                         if (![PFFacebookUtils isLinkedWithUser:(PFUser *)existingUser])
-                         {
-                             NSLog(@"It seems like you already have a LinkMeUp account.");
-                             NSLog(@"Please log in, and then go to your Profile to link your account to Facebook.");
-                             
-                             [[[UIAlertView alloc] initWithTitle:@"Existing account"
-                                                         message:@"To enable login with facebook, please sign in, go to Friends, and link your account with Facebook."
-                                                        delegate:nil
-                                               cancelButtonTitle:@"OK"
-                                               otherButtonTitles:nil] show];
-                             
-                             [user deleteInBackground];
-                             
-                             // put the user logged out notification on the wire
-                             [[NSNotificationCenter defaultCenter] postNotificationName:@"User logged out" object:nil];
-                             [[FBSession activeSession] closeAndClearTokenInformation];
-                             
-                             // Present the log in view controller
-                             self.myLogIn.fields = (PFLogInFields)(PFLogInFieldsDefault);
-                             [self launchLogIn];
-                         }
-                         
-                         // existing FB-linked account (w/same email) found
-                         // shouldn't happen
-                         else
-                         {
-                         }
-                     }
-                 }];
-             }];
+            NSLog(@"New account via FB log in");
+            [self setWelcomeLabelForUser: user[@"first_name"]];
+            [self launchApplication: kApplicationLaunchNew];
         }
-        
         else // new account is a LMU account
         {
             NSLog(@"New LMU account");
-            [self setWelcomeLabelForUser:user.username];
+            [self setWelcomeLabelForUser: user.username];
             [self launchApplication: kApplicationLaunchNew];
         }
     }
     
     else // user logged in
-    {        
+    {
         NSLog(@"User logged in");
         [self launchApplication: kApplicationLaunchReturning];
     }
@@ -359,32 +324,70 @@
 // Sent to the delegate when a PFUser is logged in.
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
 {
-    NSLog(@"Logged in");
+    NSLog(@"logInVC didLogInUser");
     
     PFUser *me = [PFUser currentUser];
-    if (me.isNew) // new account via Facebook
+    if (me.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user]) // new account via Facebook
     {
         verificationViewController *vvc = [[verificationViewController alloc] init];
         
-        // user began sign up process
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        // set NSUserDefault statuses
+        [self setVerificationAndLaunchStatuses];
         
         // set mobile verification status in Parse
         me[@"mobileVerified"] = [NSNumber numberWithBool:NO];
-        [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (error)
-            {
-                NSLog(@"Error saving verification status (false) %@ %@", error, [error userInfo]);
-            }
-        }];
         
-        // NSLog(@"NSUserDefaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+        // get the user's data from Facebook
+        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error) {
+            
+            // critical info
+            NSString *oldUsername = me.username;
+            me.username = [fbUser objectForKey:@"email"];
+            me.email = [fbUser objectForKey:@"email"];
+            me[@"facebook_id"] = [fbUser objectForKey:@"id"];
+            me[@"name"] = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
+
+            // supplemental info
+            me[@"first_name"] = fbUser.first_name;
+            
+            [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                
+                if (error)
+                {
+                    NSLog(@"Error saving user info to Parse (new account creation via Facebook) %@ %@", error, [error userInfo]);
+                    
+                    if (error.code == 202 || error.code == 203)
+                    {
+                        NSLog(@"Username or email is taken");
+                        
+                        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kDidCreateAccountWithSameEmail];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                        
+                        me.username = oldUsername;
+                        me.email = nil;
+                        me[@"facebook_email"] = [fbUser objectForKey:@"email"];
+                        me[@"name"] = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
+                        me[@"first_name"] = fbUser.first_name;
+                        
+                        [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                           
+                            if (error)
+                            {
+                                NSLog(@"Error saving user info to Parse (after discovering existing account with email) %@ %@", error, [error userInfo]);
+                            }
+                            
+                        }];
+                    }
+                }
+                
+            }];
+
+        }];
         
         [self.myLogIn presentViewController:vvc animated:YES completion:nil];
     }
     
-    else 
+    else
     {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
@@ -465,9 +468,8 @@
     mySignUpViewController *mySignUp = (mySignUpViewController *)signUpController;
     mySignUp.verificationVC = [[verificationViewController alloc] init];
     
-    // user began sign up process
-    [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:[NSString stringWithFormat:@"%@_unverified", [PFUser currentUser].objectId]];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    // set NSUserDefault statuses
+    [self setVerificationAndLaunchStatuses];
     
     // set mobile verification status in Parse
     PFUser *me = [PFUser currentUser];
@@ -478,8 +480,6 @@
             NSLog(@"Error saving verification status (false) %@ %@", error, [error userInfo]);
         }
     }];
-    
-    // NSLog(@"NSUserDefaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     
     [mySignUp presentViewController:mySignUp.verificationVC animated:YES completion:nil];
 }
@@ -494,6 +494,21 @@
 - (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController
 {
     NSLog(@"User dismissed the signUpViewController");
+}
+
+#pragma mark - Verification and launch statuses
+
+- (void)setVerificationAndLaunchStatuses
+{
+    // user began sign up process
+    [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:[NSString stringWithFormat:@"%@_%@", [PFUser currentUser].objectId, kDidNotLaunchNewAccount]];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // user account unverified
+    [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:[NSString stringWithFormat:@"%@_%@", [PFUser currentUser].objectId, kDidNotVerifyNumber]];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // NSLog(@"NSUserDefaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
 }
 
 #pragma mark - UI helper methods
