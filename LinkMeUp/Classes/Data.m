@@ -747,7 +747,7 @@
                 {
                     if ([facebookSuggestion.objectId isEqualToString:addrBookSuggestion.objectId])
                     {
-                        NSLog(@"Duplicate %@", addrBookSuggestion);
+                        // NSLog(@"Duplicate %@", addrBookSuggestion);
                         isContained = true;
                         break;
                     }
