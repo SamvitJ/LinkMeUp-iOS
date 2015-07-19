@@ -34,7 +34,7 @@
     
     // Override point for customization after application launch.
 
-    // Parse Initialization
+    // Parse initialization
     [Link registerSubclass];
     [FriendRequest registerSubclass];
     [Parse setApplicationId:PARSE_PROD_APP_ID clientKey:PARSE_PROD_CLIENT_KEY];
@@ -55,7 +55,7 @@
     [self.window setRootViewController:self.ds];
     [self.window makeKeyAndVisible];
     
-    // set didShowPushVCThisSession to NO
+    // Set didShowPushVCThisSession to NO
     [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidShowPushVCThisSession];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
