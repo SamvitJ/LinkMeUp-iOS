@@ -139,8 +139,8 @@
     [self.view addSubview: self.verificationScreen];
     [self.verificationScreen addSubview: self.activityIndicator];
     
-    // remove punctuation
-    self.phoneNumber = [[self.mobileNumberTextField.text componentsSeparatedByCharactersInSet:MOBILE_PUNCT_SET] componentsJoinedByString:@""];
+    // set phone number
+    self.phoneNumber = self.mobileNumberTextField.text;
     
     // check for existing accounts
     PFQuery *mobileNumberQuery = [PFUser query];
@@ -348,7 +348,7 @@
     self.mobileNumberTextField.layer.borderWidth = 2.0f;
     
     self.mobileNumberTextField.placeholder = @"Mobile Number";
-    self.mobileNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.mobileNumberTextField.keyboardType = UIKeyboardTypePhonePad;
     self.mobileNumberTextField.textAlignment = NSTextAlignmentCenter;
     self.mobileNumberTextField.font = HELV_18;
     

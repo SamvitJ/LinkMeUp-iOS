@@ -89,7 +89,7 @@
 @property (nonatomic, strong) NSMutableArray *nonUserContacts;  // NSDictionary
 
 // recent link recipients
-@property (nonatomic, strong) NSMutableArray *recentRecipients;     // NSDictionary
+@property (nonatomic, strong) NSMutableArray *recentRecipients; // NSDictionary
 
 // links
 @property (nonatomic, strong) NSMutableArray *receivedLinkData;
