@@ -21,11 +21,15 @@
 #                     add PFUser to 'participants'
 
 import json
+import httplib, urllib
 import os
 import dateutil.parser
 import datetime
 import pytz
 from operator import itemgetter
+
+from getLinkData import returnLinkData
+from getUserData import returnUserData
 
 linksUnsorted = []
 linkSorted = []
@@ -40,115 +44,113 @@ blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ
 #             Samvit J.,    Ananya J.,    Sanjay J.,    Vishakha A.,  Sunny B.,     Little P.,    Alex M.,      Ishan R.,     Meg H.,       Jacob K.,     Nick W.
 
 start_date = datetime.datetime(2015, 7, 22, 2, 27, 00, tzinfo=pytz.utc)
-# start_date = pytz.utc.localize(start_date_naive)
+# file_date = "07:23:15"
 
-file_date = "07:23:15"
+link_data = returnLinkData()
+# with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/Link.json" % file_date) as link_json:
+#     link_data = json.load(link_json)
 
-with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/Link.json" % file_date) as link_json:
-    
-    link_data = json.load(link_json)
+print "\nUnsorted links\n--------------"
 
-    print "\nUnsorted links\n--------------"
+for link in link_data:
 
-    for link in link_data['results']:
-        
-        link_title = link.get('title', None)
+    link_title = link.get('title', None)
 
-        link_sender = link.get('sender', None)
-        link_sender_id = link_sender.get('objectId', None)
+    link_sender = link.get('sender', None)
+    link_sender_id = link_sender.get('objectId', None)
 
-        link_date_ISO = link.get('createdAt', None)
-        link_datetime = dateutil.parser.parse(link_date_ISO)
+    link_date_ISO = link.get('createdAt', None)
+    link_datetime = dateutil.parser.parse(link_date_ISO)
 
-        # print "%s %70s %s" % (link_sender_id, link_title, link_datetime)
+    # print "%s %70s %s" % (link_sender_id, link_title, link_datetime)
 
-        if link_datetime > start_date:
+    if link_datetime > start_date:
 
-            linksUnsorted.append(link)
-
-            print "%s  %-70s  %s" % (link_sender_id, link_title, link_datetime)
-
-    linksSorted = sorted(linksUnsorted, key = itemgetter('createdAt'))
-
-    print "\nSorted links\n--------------"
-
-    for link in linksSorted:
-
-        link_title = link.get('title', None)
-
-        link_date_ISO = link.get('createdAt', None)
-        link_datetime = dateutil.parser.parse(link_date_ISO)
-
-        link_sender = link.get('sender', None)
-        link_sender_id = link_sender.get('objectId', None)
-
-        if (link_sender_id != 'ZEQEIkpgPV' and link_sender_id not in candidateIdList):
-            candidateIdList.append(link_sender_id)
+        linksUnsorted.append(link)
 
         print "%s  %-70s  %s" % (link_sender_id, link_title, link_datetime)
 
-    print
+linksSorted = sorted(linksUnsorted, key = itemgetter('createdAt'))
 
-    print candidateIdList
+print "\nSorted links\n--------------"
 
-    print "\nCandidates\n--------------"
+for link in linksSorted:
 
-    with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/_User.json" % file_date) as user_json:
-    
-        user_data = json.load(user_json)
-        user_list = user_data['results']
+    link_title = link.get('title', None)
 
-        for candidateId in candidateIdList:
+    link_date_ISO = link.get('createdAt', None)
+    link_datetime = dateutil.parser.parse(link_date_ISO)
 
-            for user in user_list:
+    link_sender = link.get('sender', None)
+    link_sender_id = link_sender.get('objectId', None)
 
-                # objectId
-                user_id = user.get('objectId', None)
+    if (link_sender_id != 'ZEQEIkpgPV' and link_sender_id not in candidateIdList):
+        candidateIdList.append(link_sender_id)
 
-                if (candidateId == user_id):
+    print "%s  %-70s  %s" % (link_sender_id, link_title, link_datetime)
 
-                    # name else username
-                    user_name = user.get('name', None)
+print
 
-                    if user_name is None:
-                        user_name = user.get('username', None)
+print candidateIdList
 
-                    # mobile phone number
-                    user_phone = user.get('mobile_number', None)
+print "\nCandidates\n--------------"
 
-                    print "%-20s %-20s %-20s" % (user_name, user_id, user_phone)
+user_data = returnUserData()
+# with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/_User.json" % file_date) as user_json:
+#     user_data = json.load(user_json)
+#     user_list = user_data['results']
 
-                    # check if Greater Seattle Area resident
-                    if user_phone is not None:
+for candidateId in candidateIdList:
 
-                        if ((user_phone[0:3] == '425' or user_phone[0:3] == '206' or user_phone[0:4] == '1425' or user_phone[0:4] == '1206') 
-                            and user_id not in blackList):
+    for user in user_data:
 
-                            participantList.append(user)
+        # objectId
+        user_id = user.get('objectId', None)
 
-                        elif user_id in whiteList:
-
-                            participantList.append(user)
-
-                    elif user_id in whiteList:
-
-                        participantList.append(user)
-
-        print "\nParticipants\n--------------"
-
-        for participant in participantList:
-
-            # objectId
-            participant_id = participant.get('objectId', None)
+        if (candidateId == user_id):
 
             # name else username
-            participant_name = participant.get('name', None)
+            user_name = user.get('name', None)
 
-            if participant_name is None:
-                participant_name = participant.get('username', None)
+            if user_name is None:
+                user_name = user.get('username', None)
 
-            print "%-20s %-20s" % (participant_name, participant_id)
+            # mobile phone number
+            user_phone = user.get('mobile_number', None)
 
-    print
+            print "%-20s %-20s %-20s" % (user_name, user_id, user_phone)
+
+            # check if Greater Seattle Area resident
+            if user_phone is not None:
+
+                if ((user_phone[0:3] == '425' or user_phone[0:3] == '206' or user_phone[0:4] == '1425' or user_phone[0:4] == '1206') 
+                    and user_id not in blackList):
+
+                    participantList.append(user)
+
+                elif user_id in whiteList: # non-Seattle area code, but lives in Seattle area
+
+                    participantList.append(user)
+
+            elif user_id in whiteList: # no phone number provided, but lives in Seattle area
+
+                participantList.append(user)
+
+print "\nParticipants\n--------------"
+
+for participant in participantList:
+
+    # objectId
+    participant_id = participant.get('objectId', None)
+
+    # name else username
+    participant_name = participant.get('name', None)
+
+    if participant_name is None:
+        participant_name = participant.get('username', None)
+
+    print "%-20s %-20s" % (participant_name, participant_id)
+
+print
 
         
