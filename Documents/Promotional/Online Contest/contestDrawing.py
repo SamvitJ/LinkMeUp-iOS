@@ -1,7 +1,7 @@
 # Contest Drawing
 #
 # Requirements: link must have been sent after 2:27 PM PST on July 22, 2015
-#               mobile number area code must be 425 (Redmond/Bellevue/Sammamish/Kirkland/Issaquah) or 206 (Seattle)
+#               mobile number area code must be 425 (Eastside), 206 (Seattle), 253 (Tacoma), or 360 (W. Washington)
 #               email address need NOT be verified to ENTER contest
 #               email address must be verified to be declared a winner
 #
@@ -26,7 +26,7 @@ import os
 import dateutil.parser
 import datetime
 import pytz
-from operator import itemgetter
+import operator
 
 from getLinkData import returnLinkData
 from getUserData import returnUserData
@@ -68,9 +68,9 @@ for link in link_data:
 
         linksUnsorted.append(link)
 
-        print "%s  %-70s  %s" % (link_sender_id, link_title, link_datetime)
+        print "%s  %-70s  %s" % (link_sender_id, link_title[:66], link_datetime)
 
-linksSorted = sorted(linksUnsorted, key = itemgetter('createdAt'))
+linksSorted = sorted(linksUnsorted, key = operator.itemgetter('createdAt'))
 
 print "\nSorted links\n--------------"
 
@@ -87,7 +87,7 @@ for link in linksSorted:
     if (link_sender_id != 'ZEQEIkpgPV' and link_sender_id not in candidateIdList):
         candidateIdList.append(link_sender_id)
 
-    print "%s  %-70s  %s" % (link_sender_id, link_title, link_datetime)
+    print "%s  %-70s  %s" % (link_sender_id, link_title[:66], link_datetime.astimezone(pytz.timezone('US/Pacific')))
 
 print
 
@@ -118,12 +118,15 @@ for candidateId in candidateIdList:
             # mobile phone number
             user_phone = user.get('mobile_number', None)
 
-            print "%-20s %-20s %-20s" % (user_name, user_id, user_phone)
+            print "%-20s %-20s %-20s" % (user_name[:16], user_id, user_phone)
 
             # check if Greater Seattle Area resident
             if user_phone is not None:
 
-                if ((user_phone[0:3] == '425' or user_phone[0:3] == '206' or user_phone[0:4] == '1425' or user_phone[0:4] == '1206') 
+                if ((user_phone[0:3] == '425' or user_phone[0:4] == '1425' or 
+                     user_phone[0:3] == '206' or user_phone[0:4] == '1206' or 
+                     user_phone[0:3] == '253' or user_phone[0:4] == '1253' or
+                     user_phone[0:3] == '360' or user_phone[0:4] == '1360') 
                     and user_id not in blackList):
 
                     participantList.append(user)
@@ -149,8 +152,8 @@ for participant in participantList:
     if participant_name is None:
         participant_name = participant.get('username', None)
 
-    print "%-20s %-20s" % (participant_name, participant_id)
+    print "%-20s %-20s" % (participant_name[:16], participant_id)
 
 print
 
-        
+
