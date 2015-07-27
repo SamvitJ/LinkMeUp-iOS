@@ -46,6 +46,9 @@
     [currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", [PFUser currentUser].objectId] forKey:@"channels"];
     [currentInstallation saveInBackground];
     
+    // post session logs to Parse (pre-launch)
+    [appDelegate saveSessionLogsToParse];
+    
     if (launchType == kApplicationLaunchNew)
     {
         // set up application for launch
@@ -324,10 +327,18 @@
 // Sent to the delegate when a PFUser is logged in.
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
 {
-    NSLog(@"logInVC didLogInUser");
+    NSLog(@"Callback -logInVC: didLogInUser: entered");
     
+    // set user/name property on session logs
+    [self setUserInfoInSessionLogs];
+    
+    // post session logs to Parse
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate saveSessionLogsToParse];
+    
+    // new account via Facebook
     PFUser *me = [PFUser currentUser];
-    if (me.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user]) // new account via Facebook
+    if (me.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
     {
         verificationViewController *vvc = [[verificationViewController alloc] init];
         
@@ -366,14 +377,32 @@
                         me.username = oldUsername;
                         me.email = nil;
                         me[@"facebook_email"] = [fbUser objectForKey:@"email"];
-                        me[@"name"] = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
-                        me[@"first_name"] = fbUser.first_name;
                         
                         [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                            
                             if (error)
                             {
                                 NSLog(@"Error saving user info to Parse (after discovering existing account with email) %@ %@", error, [error userInfo]);
+                            }
+                            
+                        }];
+                    }
+                    else
+                    {
+                        if (error.code == 125)
+                        {
+                            NSLog(@"Facebook email is invalid");
+                        }
+                        
+                        me.username = [fbUser objectForKey:@"email"];
+                        me.email = nil;
+                        me[@"facebook_email"] = [fbUser objectForKey:@"email"];
+                        
+                        [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            
+                            if (error)
+                            {
+                                NSLog(@"Error saving user info to Parse (after discovering other error) %@ %@", error, [error userInfo]);
                             }
                             
                         }];
@@ -468,6 +497,13 @@
     mySignUpViewController *mySignUp = (mySignUpViewController *)signUpController;
     mySignUp.verificationVC = [[verificationViewController alloc] init];
     
+    // set user/name property on session logs
+    [self setUserInfoInSessionLogs];
+    
+    // post session logs to Parse
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate saveSessionLogsToParse];
+    
     // set NSUserDefault statuses
     [self setVerificationAndLaunchStatuses];
     
@@ -494,6 +530,27 @@
 - (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController
 {
     NSLog(@"User dismissed the signUpViewController");
+}
+
+#pragma mark - Session logs
+
+- (void)setUserInfoInSessionLogs
+{
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    PFUser *me = [PFUser currentUser];
+    
+    // set login status
+    appDelegate.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedIn;
+    
+    // update write permissions
+    PFACL *ACL = appDelegate.sessionLogs.ACL;
+    [ACL setPublicWriteAccess: NO];
+    [ACL setWriteAccess:YES forUser: me];
+    appDelegate.sessionLogs.ACL = ACL;
+    
+    // set user/name properties
+    appDelegate.sessionLogs.user = me;
+    appDelegate.sessionLogs.name = [Constants nameElseUsername: me];
 }
 
 #pragma mark - Verification and launch statuses

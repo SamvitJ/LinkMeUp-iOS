@@ -11,10 +11,15 @@
 
 #import "DefaultSettingsViewController.h"
 
+#import "Logs.h"
+
 @interface LinkMeUpAppDelegate : NSObject <UIApplicationDelegate, UIActionSheetDelegate, UITabBarControllerDelegate>
 
 // application data model
 @property (nonatomic, strong) Data *myData;
+
+// logs
+@property (nonatomic, strong) Logs *sessionLogs;
 
 // UI elements
 @property (nonatomic, strong) IBOutlet UIWindow *window;
@@ -44,6 +49,9 @@
 
 // internet connectivity
 - (void)checkNetworkStatus:(NSNotification *)notice;
+
+// session logs
+- (void)saveSessionLogsToParse;
 
 @end
 

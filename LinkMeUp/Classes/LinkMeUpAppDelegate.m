@@ -37,13 +37,18 @@
     // Parse initialization
     [Link registerSubclass];
     [FriendRequest registerSubclass];
+    [Logs registerSubclass];
     [Parse setApplicationId:PARSE_PROD_APP_ID clientKey:PARSE_PROD_CLIENT_KEY];
     [PFFacebookUtils initializeFacebook];
 
-    /* // Twitter
-    [PFTwitterUtils initializeWithConsumerKey:@"your_twitter_consumer_key" consumerSecret:@"your_twitter_consumer_secret"];
-    // Parse analytics tracking
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions]; */
+    /* // Save current installation to Parse
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving PFInstallation to Parse %@ %@", error, [error userInfo]);
+        }
+    }]; */
     
     // Set default ACLs
     PFACL *defaultACL = [PFACL ACL];
@@ -72,6 +77,31 @@
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayback withOptions:nil error:nil];
     
+    // Initialize logging and save new session logs object to Parse
+    self.sessionLogs = [[Logs alloc] init];
+    self.sessionLogs.messages = [[NSMutableArray alloc] init];
+    
+    self.sessionLogs.versionInstalled = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    self.sessionLogs.installation = [PFInstallation currentInstallation];
+    
+    PFUser *me = [PFUser currentUser];
+    if (me)
+    {
+        self.sessionLogs.user = me;
+        self.sessionLogs.name = [Constants nameElseUsername: me];
+        
+        self.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedIn;
+    }
+    else
+    {
+        // set public write access
+        PFACL *ACL = self.sessionLogs.ACL;
+        [ACL setPublicWriteAccess:YES];
+        self.sessionLogs.ACL = ACL;
+    }
+    
+    [self saveSessionLogsToParse];
+
     return YES;
 }
 
@@ -171,6 +201,9 @@
      If your application supports background execution, called instead of applicationWillTerminate: when the user quits.
      */
     NSLog(@"Application did enter background");
+    
+    // post session logs to Parse
+    [self saveSessionLogsToParse];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -188,6 +221,9 @@
     
     // unsubscribe to notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+    
+    // post session logs to Parse
+    [self saveSessionLogsToParse];
 }
 
 #pragma mark - UITabBarController delegate
@@ -469,6 +505,18 @@
     }
 }
 
+#pragma mark - Session logs
+
+- (void)saveSessionLogsToParse
+{
+    [self.sessionLogs saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving session logs to Parse %@ %@", error, [error userInfo]);
+        }
+    }];
+}
+
 #pragma mark - Network status
 
 - (void)checkNetworkStatus:(NSNotification *)notice
@@ -541,9 +589,20 @@
     // display login screen
     [self.window setRootViewController:self.ds];
     
+    // set public write access and logged out status
+    NSLog(@"Logging out");
+    
+    PFACL *ACL = self.sessionLogs.ACL;
+    [ACL setPublicWriteAccess:YES];
+    self.sessionLogs.ACL = ACL;
+    
+    self.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedOut;
+    
+    // post session logs to Parse
+    [self saveSessionLogsToParse];
+    
     // logout Parse/FB user
     [PFUser logOut];
-    
     NSLog(@"Logged out");
 }
 

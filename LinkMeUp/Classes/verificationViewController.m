@@ -35,14 +35,19 @@
     
     if (!self.verificationScreen.window)
     {
+        NSLog(@"\"Send code\" button pressed");
         [self sendVerificationCode];
     }
     
     else
     {
+        NSLog(@"\"Verify code\" button pressed");
+        
         // correct code entered
         if ([self.codeTextField.text isEqualToString:self.code])
         {
+            NSLog(@"Correct code entered!");
+            
             PFUser *me = [PFUser currentUser];
             
             // user completed verification process
@@ -110,6 +115,8 @@
         
         else
         {
+            NSLog(@"Incorrect code entered");
+            
             self.codeTextField.text = @"";
             
             // disable button
@@ -175,6 +182,7 @@
                 if (!error)
                 {
                     NSLog(@"Verification SMS sent");
+                    
                     [self.activityIndicator stopAnimating];
                     
                     [self.verificationButton setTitle:@"Verify Code                       >" forState:UIControlStateNormal];
@@ -188,10 +196,12 @@
                 
                 else
                 {
+                    NSLog(@"Error sending verification code to provided number %@ %@", error, [error userInfo]);
+                    
                     [self.activityIndicator stopAnimating];
                     [self.verificationScreen removeFromSuperview];
                     
-                    NSString *message = @"Please enter a valid mobile number";
+                    NSString *message = @"Oops, something went wrong :(\nTry entering your number again.";
                     [[[UIAlertView alloc] initWithTitle:@"Error"
                                                 message:message
                                                delegate:nil
@@ -205,9 +215,11 @@
 
 - (void)backLabelPressed:(id)sender
 {
+    NSLog(@"Back label pressed");
+    
     if (self.backPressedCounter >= 3)
     {
-        NSLog(@"Too many attempts");
+        NSLog(@"Too many verification attempts");
         
         NSString *message = @"Too many verification attempts";
         [[[UIAlertView alloc] initWithTitle:@"Error"
@@ -323,6 +335,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"Displayed verification screen");
+    
     // display mobile number text field
     [self displayMobileNumberTextField];
 }
