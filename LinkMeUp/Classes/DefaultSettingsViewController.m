@@ -41,10 +41,21 @@
 {
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    // add user channel to current installation (if not already added)
+    // add user to 'currentUser', 'allUsers', and 'channels' fields of current installation (if not already added)
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    currentInstallation[@"currentUser"] = [PFUser currentUser];
+    
+    PFRelation *allUsers = [currentInstallation relationForKey:@"allUsers"];
+    [allUsers addObject: [PFUser currentUser]];
+    
     [currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", [PFUser currentUser].objectId] forKey:@"channels"];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after adding user to channels %@ %@", error, [error userInfo]);
+        }
+    }];
     
     // post session logs to Parse (pre-launch)
     [appDelegate saveSessionLogsToParse];
@@ -351,11 +362,26 @@
         // get the user's data from Facebook
         [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error) {
             
-            // critical info
+            if (error)
+            {
+                NSLog(@"Error requesting for FB user %@ %@", error, [error userInfo]);
+            }
+            
+            // usernames
             NSString *oldUsername = me.username;
-            me.username = [fbUser objectForKey:@"email"];
-            me.email = [fbUser objectForKey:@"email"];
-            me[@"facebook_id"] = [fbUser objectForKey:@"id"];
+            NSString *newUsername = fbUser[@"email"];
+            if (!newUsername)
+            {
+                if (fbUser.first_name || fbUser.last_name)
+                    newUsername = [NSString stringWithFormat:@"%@%@", fbUser.first_name, fbUser.last_name];
+                
+                else NSLog(@"Both email and name not provided by user/available");
+            }
+            
+            // set critical info
+            me.username = newUsername;
+            me.email = fbUser[@"email"];
+            me[@"facebook_id"] = fbUser[@"id"];
             me[@"name"] = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
 
             // supplemental info
@@ -376,15 +402,13 @@
                         
                         me.username = oldUsername;
                         me.email = nil;
-                        me[@"facebook_email"] = [fbUser objectForKey:@"email"];
+                        me[@"facebook_email"] = fbUser[@"email"];
                         
                         [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                           
                             if (error)
                             {
-                                NSLog(@"Error saving user info to Parse (after discovering existing account with email) %@ %@", error, [error userInfo]);
+                                NSLog(@"Error saving user info to Parse (after discovering existing account with same email) %@ %@", error, [error userInfo]);
                             }
-                            
                         }];
                     }
                     else
@@ -394,17 +418,15 @@
                             NSLog(@"Facebook email is invalid");
                         }
                         
-                        me.username = [fbUser objectForKey:@"email"];
+                        me.username = fbUser[@"email"];
                         me.email = nil;
-                        me[@"facebook_email"] = [fbUser objectForKey:@"email"];
+                        me[@"facebook_email"] = fbUser[@"email"];
                         
                         [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            
                             if (error)
                             {
-                                NSLog(@"Error saving user info to Parse (after discovering other error) %@ %@", error, [error userInfo]);
+                                NSLog(@"Error saving user info to Parse (after discovering some other error) %@ %@", error, [error userInfo]);
                             }
-                            
                         }];
                     }
                 }
@@ -425,7 +447,7 @@
 // Sent to the delegate when the log in attempt fails.
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error
 {
-    NSLog(@"Failed to log in...");
+    NSLog(@"Failed to log in... %@", error);
     
     // Internal server error || Failed to initialize mongo connection
     if (error.code == 1 || error.code == 159)
@@ -472,6 +494,8 @@
     // Display an alert if a field wasn't completed
     if (!informationComplete)
     {
+        NSLog(@"Missing information");
+        
         [[[UIAlertView alloc] initWithTitle:@"Missing Information"
                                     message:@"Make sure you fill out all of the information!"
                                    delegate:nil
@@ -481,6 +505,8 @@
     
     if (!passwordSecure)
     {
+        NSLog(@"Password too short");
+        
         [[[UIAlertView alloc] initWithTitle:@"Password Too Short"
                                     message:@"Your password must be at least 6 characters"
                                    delegate:nil
@@ -494,6 +520,8 @@
 // Sent to the delegate when a PFUser is signed up.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user
 {
+    NSLog(@"Callback -signUpVC: didSignUpUser: entered");
+    
     mySignUpViewController *mySignUp = (mySignUpViewController *)signUpController;
     mySignUp.verificationVC = [[verificationViewController alloc] init];
     
@@ -523,13 +551,13 @@
 // Sent to the delegate when the sign up attempt fails.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error
 {
-    NSLog(@"Failed to sign up...");
+    NSLog(@"Failed to sign up... %@", error);
 }
 
 // Sent to the delegate when the sign up screen is dismissed.
 - (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController
 {
-    NSLog(@"User dismissed the signUpViewController");
+    NSLog(@"User cancelled signup");
 }
 
 #pragma mark - Session logs

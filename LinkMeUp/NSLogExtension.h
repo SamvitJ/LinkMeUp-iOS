@@ -8,14 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#ifdef DEBUG
-    #define NSLog(args...) ExtendNSLog(__TIME__,__FILE__,__LINE__,__PRETTY_FUNCTION__,args);
-#else
-    #define NSLog(...);
+#ifndef DEBUG
+    #define NSLog(args...) ExtendNSLog(__FILE__,__LINE__,args);
 #endif
 
 @interface NSLogExtension : NSObject
 
-void ExtendNSLog(const char *time, const char *file, int lineNumber, const char *functionName, NSString *format, ...);
+void ExtendNSLog(const char *file, int lineNumber, NSString *format, ...);
 
 @end

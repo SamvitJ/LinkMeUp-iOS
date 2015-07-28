@@ -41,14 +41,14 @@
     [Parse setApplicationId:PARSE_PROD_APP_ID clientKey:PARSE_PROD_CLIENT_KEY];
     [PFFacebookUtils initializeFacebook];
 
-    /* // Save current installation to Parse
+    // Save new installation to Parse
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error)
         {
-            NSLog(@"Error saving PFInstallation to Parse %@ %@", error, [error userInfo]);
+            NSLog(@"Error saving installation to Parse after launching application %@ %@", error, [error userInfo]);
         }
-    }]; */
+    }];
     
     // Set default ACLs
     PFACL *defaultACL = [PFACL ACL];
@@ -376,7 +376,12 @@
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
 
     currentInstallation.badge = self.myData.receivedLinkUpdates + self.myData.sentLinkUpdates + self.myData.sentRequestUpdates + self.myData.receivedRequestUpdates;
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after updating badge %@ %@", error, [error userInfo]);
+        }
+    }];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -398,11 +403,7 @@
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error)
         {
-            NSLog(@"Error saving current installation in Parse %@ %@", error, [error userInfo]);
-        }
-        else
-        {
-            NSLog(@"Saved current installation in Parse");
+            NSLog(@"Error saving installation to Parse after setting device token %@ %@", error, [error userInfo]);
         }
     }];
 }
@@ -576,7 +577,12 @@
     
     // unregister for push notifications
     [currentInstallation removeObject:[NSString stringWithFormat:@"user_%@", self.myData.me.objectId] forKey:@"channels"];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after removing user from channels %@ %@", error, [error userInfo]);
+        }
+    }];
     
     // set didShowPushVCThisSession to NO
     [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidShowPushVCThisSession];
