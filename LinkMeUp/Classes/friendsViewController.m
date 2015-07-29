@@ -164,7 +164,12 @@
         if ([[request objectForKey:@"seen"] boolValue] == NO)
         {
             request.seen = YES;
-            [request saveInBackground];
+            [request saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (error)
+                {
+                    NSLog(@"Error marking friend request as seen %@ %@", error, [error userInfo]);
+                }
+            }];
         }
     }
     
@@ -784,7 +789,12 @@
                  me[@"first_name"] = fbUser.first_name;
                  me[@"facebook_email"] = [fbUser objectForKey:@"email"];;
                  
-                 [me saveInBackground];
+                 [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                     if (error)
+                     {
+                         NSLog(@"Error saving user after linking with Facebook %@", error);
+                     }
+                 }];
              }];
         }
         
@@ -868,7 +878,7 @@
             if (error)
             {
                 // Log details of the failure
-                NSLog(@"Error adding new friend %@ %@", error, [error userInfo]);
+                NSLog(@"Error adding new friend to friends list %@ %@", error, [error userInfo]);
             }
         }];
     }
@@ -936,7 +946,7 @@
         
             else
             {
-                NSLog(@"Error saving friend request %@ %@", error, [error userInfo]);
+                NSLog(@"Error saving new friend request %@ %@", error, [error userInfo]);
             }
         }];
     }
