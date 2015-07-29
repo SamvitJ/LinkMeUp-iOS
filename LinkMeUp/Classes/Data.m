@@ -439,7 +439,13 @@
             for (FriendRequest *request in objects)
             {
                 [myFriends addObject:request.receiver];
-                [request deleteInBackground];
+                
+                [request deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (error)
+                    {
+                        NSLog(@"Error deleting accepted friend request %@", error);
+                    }
+                }];
             }
         }
         

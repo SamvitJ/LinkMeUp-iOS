@@ -37,18 +37,26 @@
     // Parse initialization
     [Link registerSubclass];
     [FriendRequest registerSubclass];
+    [Logs registerSubclass];
     [Parse setApplicationId:PARSE_PROD_APP_ID clientKey:PARSE_PROD_CLIENT_KEY];
     [PFFacebookUtils initializeFacebook];
 
-    /* // Twitter
-    [PFTwitterUtils initializeWithConsumerKey:@"your_twitter_consumer_key" consumerSecret:@"your_twitter_consumer_secret"];
-    // Parse analytics tracking
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions]; */
+    // Parse analytics
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     // Set default ACLs
     PFACL *defaultACL = [PFACL ACL];
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    
+    // Save new installation to Parse
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after launching application %@ %@", error, [error userInfo]);
+        }
+    }];
     
     // Initialize view controllers
     self.ds = [[DefaultSettingsViewController alloc] init];
@@ -72,6 +80,28 @@
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayback withOptions:nil error:nil];
     
+    // Initialize logging and save new session logs object to Parse
+    self.sessionLogs = [[Logs alloc] init];
+    self.sessionLogs.messages = [[NSMutableArray alloc] init];
+    
+    self.sessionLogs.versionInstalled = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    self.sessionLogs.installation = [PFInstallation currentInstallation];
+    
+    PFACL *ACL = self.sessionLogs.ACL;
+    [ACL setPublicWriteAccess:YES];
+    self.sessionLogs.ACL = ACL;
+    
+    PFUser *me = [PFUser currentUser];
+    if (me)
+    {
+        self.sessionLogs.user = me;
+        self.sessionLogs.name = [Constants nameElseUsername: me];
+        
+        self.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedIn;
+    }
+    
+    [self saveSessionLogsToParse];
+
     return YES;
 }
 
@@ -86,8 +116,7 @@
     // FB
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
     
-    // special case code
-    // if push notif alert view was presented, notify pushNotifVC that user responded
+    // special case code - if push notif alert view was presented, notify pushNotifVC that user responded
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidPresentPushNotifAlertView] boolValue])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:kUserRespondedToPushNotifAlertView object:nil];
@@ -142,7 +171,7 @@
             
             if (remoteNotification & UIRemoteNotificationTypeNewsstandContentAvailability)
             {
-                NSLog (@"Notifications - ContentAvailability");
+                NSLog(@"Notifications - ContentAvailability");
             }
         }
     }
@@ -156,13 +185,26 @@
     
     NSLog(@"Will resign active");
     
-    // special case code
-    // if attempted to register for push notif, and now leaving the app, push notif alert view was presented
+    // special case - if attempted to register for push notif, and now leaving the app, push notif alert view was presented
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidAttemptToRegisterForPushNotif] boolValue])
     {
         [[NSUserDefaults standardUserDefaults] setObject:@YES forKey: kDidPresentPushNotifAlertView];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    
+    // post session logs to Parse
+    [self beginBackgroundUpdateTask];
+    
+    [self.sessionLogs saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        if (error)
+        {
+            NSLog(@"Error saving session logs to Parse %@", error);
+        }
+        
+        [self endBackgroundUpdateTask];
+        
+    }];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -188,6 +230,33 @@
     
     // unsubscribe to notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+    
+    // post session logs to Parse
+    [self saveSessionLogsToParse];
+}
+
+#pragma mark - Background tasks
+
+- (void)beginBackgroundUpdateTask
+{
+    // existing background task
+    if (self.backgroundTask)
+    {
+        NSLog(@"Existing background task");
+        [self endBackgroundUpdateTask];
+    }
+    
+    self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [self endBackgroundUpdateTask];
+    }];
+}
+
+- (void)endBackgroundUpdateTask
+{
+    // NSLog(@"Ending task");
+    
+    [[UIApplication sharedApplication] endBackgroundTask: self.backgroundTask];
+    self.backgroundTask = UIBackgroundTaskInvalid;
 }
 
 #pragma mark - UITabBarController delegate
@@ -340,7 +409,12 @@
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
 
     currentInstallation.badge = self.myData.receivedLinkUpdates + self.myData.sentLinkUpdates + self.myData.sentRequestUpdates + self.myData.receivedRequestUpdates;
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after updating badge %@ %@", error, [error userInfo]);
+        }
+    }];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -362,11 +436,7 @@
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error)
         {
-            NSLog(@"Error saving current installation in Parse %@ %@", error, [error userInfo]);
-        }
-        else
-        {
-            NSLog(@"Saved current installation in Parse");
+            NSLog(@"Error saving installation to Parse after setting device token %@ %@", error, [error userInfo]);
         }
     }];
 }
@@ -469,6 +539,22 @@
     }
 }
 
+#pragma mark - Session logs
+
+- (void)saveSessionLogsToParse
+{
+    [self.sessionLogs saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving session logs to Parse %@", error);
+        }
+        /* else
+        {
+            NSLog(@"Successfully saved session logs to Parse");
+        } */
+    }];
+}
+
 #pragma mark - Network status
 
 - (void)checkNetworkStatus:(NSNotification *)notice
@@ -512,7 +598,7 @@
     }
 }
 
-#pragma mark - Log Out
+#pragma mark - Logout
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -528,7 +614,12 @@
     
     // unregister for push notifications
     [currentInstallation removeObject:[NSString stringWithFormat:@"user_%@", self.myData.me.objectId] forKey:@"channels"];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after removing user from channels %@ %@", error, [error userInfo]);
+        }
+    }];
     
     // set didShowPushVCThisSession to NO
     [[NSUserDefaults standardUserDefaults] setObject:@NO forKey: kDidShowPushVCThisSession];
@@ -541,9 +632,13 @@
     // display login screen
     [self.window setRootViewController:self.ds];
     
+    // set logout status and post session logs to Parse
+    NSLog(@"Logging out");
+    self.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedOut;
+    [self saveSessionLogsToParse];
+    
     // logout Parse/FB user
     [PFUser logOut];
-    
     NSLog(@"Logged out");
 }
 

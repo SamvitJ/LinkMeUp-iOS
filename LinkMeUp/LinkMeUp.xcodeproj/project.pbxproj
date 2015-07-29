@@ -59,6 +59,8 @@
 		F13242831B22844D00641710 /* iconTick.png in Resources */ = {isa = PBXBuildFile; fileRef = F13242811B22844D00641710 /* iconTick.png */; };
 		F13242841B22844D00641710 /* iconTickSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = F13242821B22844D00641710 /* iconTickSelected.png */; };
 		F13242891B228C7C00641710 /* iPhoneMessages.png in Resources */ = {isa = PBXBuildFile; fileRef = F13242871B228C7C00641710 /* iPhoneMessages.png */; };
+		F14A90F71B6498A00057980D /* Logs.m in Sources */ = {isa = PBXBuildFile; fileRef = F14A90F61B6498A00057980D /* Logs.m */; };
+		F14A91091B6551170057980D /* NSLogExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = F14A91081B6551170057980D /* NSLogExtension.m */; };
 		F1584773194F9266005EAB1B /* libGTLTouchStaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F158476E194F924D005EAB1B /* libGTLTouchStaticLib.a */; };
 		F158477719539981005EAB1B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F158477619539981005EAB1B /* CoreLocation.framework */; };
 		F158477919539994005EAB1B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F158477819539994005EAB1B /* QuartzCore.framework */; };
@@ -225,6 +227,10 @@
 		F13242811B22844D00641710 /* iconTick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iconTick.png; path = "Images/Checkmark Icon/iconTick.png"; sourceTree = "<group>"; };
 		F13242821B22844D00641710 /* iconTickSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iconTickSelected.png; path = "Images/Checkmark Icon/iconTickSelected.png"; sourceTree = "<group>"; };
 		F13242871B228C7C00641710 /* iPhoneMessages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPhoneMessages.png; path = "Images/Messages Icons/iPhoneMessages.png"; sourceTree = "<group>"; };
+		F14A90F51B6498A00057980D /* Logs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logs.h; sourceTree = "<group>"; };
+		F14A90F61B6498A00057980D /* Logs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Logs.m; sourceTree = "<group>"; };
+		F14A91071B6551170057980D /* NSLogExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSLogExtension.h; sourceTree = "<group>"; };
+		F14A91081B6551170057980D /* NSLogExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSLogExtension.m; sourceTree = "<group>"; };
 		F1584764194F924C005EAB1B /* GTL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GTL.xcodeproj; path = trunk/Source/GTL.xcodeproj; sourceTree = "<group>"; };
 		F158477619539981005EAB1B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F158477819539994005EAB1B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -760,6 +766,8 @@
 				8D1107310486CEB800E47090 /* LinkMeUp-Info.plist */,
 				32CA4F630368D1EE00C91783 /* LinkMeUp_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				F14A91071B6551170057980D /* NSLogExtension.h */,
+				F14A91081B6551170057980D /* NSLogExtension.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -795,6 +803,8 @@
 				F1A17D74195E8C790095BB7E /* FriendRequest.m */,
 				F1A17DCA1961E6FE0095BB7E /* Link.h */,
 				F1A17DCB1961E6FE0095BB7E /* Link.m */,
+				F14A90F51B6498A00057980D /* Logs.h */,
+				F14A90F61B6498A00057980D /* Logs.m */,
 			);
 			name = "Parse Classes";
 			sourceTree = "<group>";
@@ -1116,6 +1126,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				F17C33E41992C74F00482A38 /* YouTubeSearchBar.m in Sources */,
 				F1C74D9F199FF456001D5333 /* settingsViewController.m in Sources */,
+				F14A90F71B6498A00057980D /* Logs.m in Sources */,
 				F15849CB1954D7A4005EAB1B /* myLogInViewController.m in Sources */,
 				F11CFB19196F44CC0030B212 /* songInfoViewController.m in Sources */,
 				F11DE4741990094000CD814E /* searchViewController.m in Sources */,
@@ -1129,6 +1140,7 @@
 				F1D7B24F197EF17A00A920A7 /* sentLinkViewController.m in Sources */,
 				F1A17DCC1961E6FE0095BB7E /* Link.m in Sources */,
 				F17AC6A819B69BDA00BF95CE /* legalInfoViewController.m in Sources */,
+				F14A91091B6551170057980D /* NSLogExtension.m in Sources */,
 				F1D7B244197D988E00A920A7 /* messagesTableViewCell.m in Sources */,
 				F1C74DA419A006C1001D5333 /* settingsTableViewCell.m in Sources */,
 				F1A17DF61964C8620095BB7E /* friendsViewController.m in Sources */,

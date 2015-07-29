@@ -41,10 +41,24 @@
 {
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    // add user channel to current installation (if not already added)
+    // add user to 'currentUser', 'allUsers', and 'channels' fields of current installation (if not already added)
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    currentInstallation[@"currentUser"] = [PFUser currentUser];
+    
+    PFRelation *allUsers = [currentInstallation relationForKey:@"allUsers"];
+    [allUsers addObject: [PFUser currentUser]];
+    
     [currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", [PFUser currentUser].objectId] forKey:@"channels"];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after adding user to channels %@ %@", error, [error userInfo]);
+        }
+    }];
+    
+    // post session logs to Parse (pre-launch)
+    [appDelegate saveSessionLogsToParse];
     
     if (launchType == kApplicationLaunchNew)
     {
@@ -182,6 +196,7 @@
 {
     [super viewDidAppear:animated];
     
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[UIApplication sharedApplication].delegate;
     PFUser *user = [PFUser currentUser];
     
     // did user terminate signup process or have existing account with same (facebook) email?
@@ -205,8 +220,16 @@
                 [[FBSession activeSession] closeAndClearTokenInformation];
             
             // delete user
-            [user deleteInBackground];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"User logged out" object:nil];
+            [user deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (error)
+                {
+                    NSLog(@"Error deleting user in background %@", error);
+                }
+            }];
+            
+            // set logout status and post session logs to Parse
+            appDelegate.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedOut;
+            [appDelegate saveSessionLogsToParse];
         }
         else if ([existingAccount boolValue] == YES)
         {
@@ -226,8 +249,16 @@
             [[FBSession activeSession] closeAndClearTokenInformation];
             
             // delete user
-            [user deleteInBackground];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"User logged out" object:nil];
+            [user deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (error)
+                {
+                    NSLog(@"Error deleting user in background %@", error);
+                }
+            }];
+            
+            // set logout status and post session logs to Parse
+            appDelegate.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedOut;
+            [appDelegate saveSessionLogsToParse];
         }
         
         // NSLog(@"NSUserDefaults %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
@@ -282,6 +313,14 @@
     else // user logged in
     {
         NSLog(@"User logged in");
+        
+        // fix for existing users with Facebook signup issue
+        if ([PFFacebookUtils isLinkedWithUser:user] && !user.email && !user[@"name"])
+        {
+            NSLog(@"Resolving Facebook signup issue for existing user");
+            [self getUserDataFromFacebook];
+        }
+        
         [self launchApplication: kApplicationLaunchReturning];
     }
 }
@@ -304,6 +343,201 @@
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
 }
 
+#pragma mark - Signup with Facebook
+
+- (void)getUserDataFromFacebook
+{
+    [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error) {
+        
+        if (!error)
+        {
+            // use FB data to set PFUser info
+            [self setInfoForFBGraphUser:fbUser];
+        }
+        
+        else
+        {
+            NSLog(@"Error requesting for FBGraphUser %@ %@", error, [error userInfo]);
+            
+            if (fbUser)
+            {
+                NSLog(@"Non fatal error - FBGraphUser available %@", fbUser);
+                [self setInfoForFBGraphUser:fbUser];
+            }
+            else
+            {
+                NSLog(@"Fatal error - FBGraphUser unavailable");
+            }
+        }
+        
+    }];
+}
+
+- (void)setInfoForFBGraphUser:(NSDictionary<FBGraphUser> *)fbUser
+{
+    PFUser *me = [PFUser currentUser];
+    
+    // username
+    NSString *oldUsername = me.username;
+    NSString *newUsername = fbUser[@"email"];
+    if (!newUsername)
+    {
+        if (fbUser.first_name || fbUser.last_name)
+            newUsername = [NSString stringWithFormat:@"%@%@", fbUser.first_name, fbUser.last_name];
+        
+        else NSLog(@"Both email and name not provided by user/available");
+    }
+    
+    // name
+    NSString *fullName;
+    if (fbUser.first_name && fbUser.last_name)
+    {
+        fullName = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
+    }
+    else if (fbUser.first_name)
+    {
+        fullName = fbUser.first_name;
+    }
+
+    // set critical info
+    me.username = newUsername;
+    me.email = fbUser[@"email"];
+    
+    // supplemental info
+    me[@"facebook_id"] = fbUser[@"id"];
+    me[@"name"] = fullName;
+    me[@"first_name"] = fbUser.first_name;
+    
+    [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        if (error)
+        {
+            NSLog(@"Error saving user info to Parse (new account creation via Facebook) %@ %@", error, [error userInfo]);
+            
+            if (error.code == 202 || error.code == 203)
+            {
+                NSLog(@"Username or email is taken");
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kDidCreateAccountWithSameEmail];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                me.username = oldUsername;
+                me.email = nil;
+                me[@"facebook_email"] = fbUser[@"email"];
+                
+                [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (error)
+                    {
+                        NSLog(@"Error saving user info to Parse (after discovering existing account with same email) %@ %@", error, [error userInfo]);
+                    }
+                }];
+            }
+            else
+            {
+                if (error.code == 125)
+                {
+                    NSLog(@"Facebook email is invalid");
+                }
+                
+                me.username = fbUser[@"email"];
+                me.email = nil;
+                me[@"facebook_email"] = fbUser[@"email"];
+                
+                [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (error)
+                    {
+                        NSLog(@"Error saving user info to Parse (after discovering some other error) %@ %@", error, [error userInfo]);
+                    }
+                }];
+            }
+        }
+        
+    }];
+}
+
+- (bool)hasProfilePermission
+{
+    NSArray *permissions = [[[PFFacebookUtils session] accessTokenData] permissions];
+    
+    for (NSString *entry in permissions)
+    {
+        if ([entry isEqualToString:@"public_profile"])
+            return true;
+    }
+    
+    return false;
+}
+
+- (bool)hasEmailPermission
+{
+    NSArray *permissions = [[[PFFacebookUtils session] accessTokenData] permissions];
+    
+    for (NSString *entry in permissions)
+    {
+        if ([entry isEqualToString:@"email"])
+            return true;
+    }
+    
+    return false;
+}
+
+- (void)handleDeniedPermissions
+{
+    NSLog(@"Denied permissions - email address or name must be provided");
+    
+    // delete user
+    [[PFUser currentUser] deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error deleting user in background %@", error);
+        }
+    }];
+    
+    // set logout status and post session logs to Parse
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedOut;
+    [appDelegate saveSessionLogsToParse];
+    
+    // initialize alert views
+    NSString *alertTitle = @"Denied Permissions";
+    NSString *alertMessage = [NSString stringWithFormat: @"\nYour name and email address are required to create an account.\n\n Please press the signup button to make an account with LinkMeUp."];
+    
+    if (IS_IOS8)
+    {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle
+                                                                                 message:alertMessage
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                style: UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction *action) {
+                                                                  
+                                                                  // do nothing
+                                                                  return;
+                                                              }];
+        
+        [alertController addAction: defaultAction];
+        
+        [self.myLogIn presentViewController:alertController animated:YES completion:nil];
+    }
+    else
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                            message:alertMessage
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        
+        [alertView show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    // do nothing
+    return;
+}
+
 #pragma mark - PFLogInViewControllerDelegate
 
 // Sent to the delegate to determine whether the log in request should be submitted to the server.
@@ -324,66 +558,43 @@
 // Sent to the delegate when a PFUser is logged in.
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
 {
-    NSLog(@"logInVC didLogInUser");
+    NSLog(@"Callback -logInVC: didLogInUser: entered");
     
+    // set user/name property on session logs
+    [self setUserInfoInSessionLogs];
+    
+    // post session logs to Parse
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate saveSessionLogsToParse];
+    
+    // new account via Facebook
     PFUser *me = [PFUser currentUser];
-    if (me.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user]) // new account via Facebook
+    if (me.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
     {
-        verificationViewController *vvc = [[verificationViewController alloc] init];
+        // check granted Facebook permissions
+        bool hasProfile = [self hasProfilePermission];
+        bool hasEmail = [self hasEmailPermission];
         
+        // NSLog(@"%u %u", hasProfile, hasEmail);
+        
+        // if declined both permissions, show alert and return
+        if (!hasProfile && !hasEmail)
+        {
+            [self handleDeniedPermissions];
+            return;
+        }
+
         // set NSUserDefault statuses
         [self setVerificationAndLaunchStatuses];
         
         // set mobile verification status in Parse
         me[@"mobileVerified"] = [NSNumber numberWithBool:NO];
         
-        // get the user's data from Facebook
-        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error) {
-            
-            // critical info
-            NSString *oldUsername = me.username;
-            me.username = [fbUser objectForKey:@"email"];
-            me.email = [fbUser objectForKey:@"email"];
-            me[@"facebook_id"] = [fbUser objectForKey:@"id"];
-            me[@"name"] = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
-
-            // supplemental info
-            me[@"first_name"] = fbUser.first_name;
-            
-            [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                
-                if (error)
-                {
-                    NSLog(@"Error saving user info to Parse (new account creation via Facebook) %@ %@", error, [error userInfo]);
-                    
-                    if (error.code == 202 || error.code == 203)
-                    {
-                        NSLog(@"Username or email is taken");
-                        
-                        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kDidCreateAccountWithSameEmail];
-                        [[NSUserDefaults standardUserDefaults] synchronize];
-                        
-                        me.username = oldUsername;
-                        me.email = nil;
-                        me[@"facebook_email"] = [fbUser objectForKey:@"email"];
-                        me[@"name"] = [NSString stringWithFormat:@"%@ %@", fbUser.first_name, fbUser.last_name];
-                        me[@"first_name"] = fbUser.first_name;
-                        
-                        [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                           
-                            if (error)
-                            {
-                                NSLog(@"Error saving user info to Parse (after discovering existing account with email) %@ %@", error, [error userInfo]);
-                            }
-                            
-                        }];
-                    }
-                }
-                
-            }];
-
-        }];
+        // use FB data to set PFUser info, if possible
+        [self getUserDataFromFacebook];
         
+        // continue signup process
+        verificationViewController *vvc = [[verificationViewController alloc] init];
         [self.myLogIn presentViewController:vvc animated:YES completion:nil];
     }
     
@@ -396,7 +607,7 @@
 // Sent to the delegate when the log in attempt fails.
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error
 {
-    NSLog(@"Failed to log in...");
+    NSLog(@"Failed to log in... %@", error);
     
     // Internal server error || Failed to initialize mongo connection
     if (error.code == 1 || error.code == 159)
@@ -443,6 +654,8 @@
     // Display an alert if a field wasn't completed
     if (!informationComplete)
     {
+        NSLog(@"Missing information");
+        
         [[[UIAlertView alloc] initWithTitle:@"Missing Information"
                                     message:@"Make sure you fill out all of the information!"
                                    delegate:nil
@@ -452,6 +665,8 @@
     
     if (!passwordSecure)
     {
+        NSLog(@"Password too short");
+        
         [[[UIAlertView alloc] initWithTitle:@"Password Too Short"
                                     message:@"Your password must be at least 6 characters"
                                    delegate:nil
@@ -465,8 +680,17 @@
 // Sent to the delegate when a PFUser is signed up.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user
 {
+    NSLog(@"Callback -signUpVC: didSignUpUser: entered");
+    
     mySignUpViewController *mySignUp = (mySignUpViewController *)signUpController;
     mySignUp.verificationVC = [[verificationViewController alloc] init];
+    
+    // set user/name property on session logs
+    [self setUserInfoInSessionLogs];
+    
+    // post session logs to Parse
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate saveSessionLogsToParse];
     
     // set NSUserDefault statuses
     [self setVerificationAndLaunchStatuses];
@@ -487,13 +711,28 @@
 // Sent to the delegate when the sign up attempt fails.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error
 {
-    NSLog(@"Failed to sign up...");
+    NSLog(@"Failed to sign up... %@", error);
 }
 
 // Sent to the delegate when the sign up screen is dismissed.
 - (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController
 {
-    NSLog(@"User dismissed the signUpViewController");
+    NSLog(@"User cancelled signup");
+}
+
+#pragma mark - Session logs
+
+- (void)setUserInfoInSessionLogs
+{
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    PFUser *me = [PFUser currentUser];
+    
+    // set login status
+    appDelegate.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedIn;
+    
+    // set user/name properties
+    appDelegate.sessionLogs.user = me;
+    appDelegate.sessionLogs.name = [Constants nameElseUsername: me];
 }
 
 #pragma mark - Verification and launch statuses
