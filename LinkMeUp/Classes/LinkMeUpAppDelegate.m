@@ -41,6 +41,14 @@
     [Parse setApplicationId:PARSE_PROD_APP_ID clientKey:PARSE_PROD_CLIENT_KEY];
     [PFFacebookUtils initializeFacebook];
 
+    // Parse analytics
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    // Set default ACLs
+    PFACL *defaultACL = [PFACL ACL];
+    [defaultACL setPublicReadAccess:YES];
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    
     // Save new installation to Parse
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -49,11 +57,6 @@
             NSLog(@"Error saving installation to Parse after launching application %@ %@", error, [error userInfo]);
         }
     }];
-    
-    // Set default ACLs
-    PFACL *defaultACL = [PFACL ACL];
-    [defaultACL setPublicReadAccess:YES];
-    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     // Initialize view controllers
     self.ds = [[DefaultSettingsViewController alloc] init];
@@ -84,6 +87,10 @@
     self.sessionLogs.versionInstalled = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     self.sessionLogs.installation = [PFInstallation currentInstallation];
     
+    PFACL *ACL = self.sessionLogs.ACL;
+    [ACL setPublicWriteAccess:YES];
+    self.sessionLogs.ACL = ACL;
+    
     PFUser *me = [PFUser currentUser];
     if (me)
     {
@@ -91,13 +98,6 @@
         self.sessionLogs.name = [Constants nameElseUsername: me];
         
         self.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedIn;
-    }
-    else
-    {
-        // set public write access
-        PFACL *ACL = self.sessionLogs.ACL;
-        [ACL setPublicWriteAccess:YES];
-        self.sessionLogs.ACL = ACL;
     }
     
     [self saveSessionLogsToParse];
@@ -116,8 +116,7 @@
     // FB
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
     
-    // special case code
-    // if push notif alert view was presented, notify pushNotifVC that user responded
+    // special case code - if push notif alert view was presented, notify pushNotifVC that user responded
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidPresentPushNotifAlertView] boolValue])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:kUserRespondedToPushNotifAlertView object:nil];
@@ -172,7 +171,7 @@
             
             if (remoteNotification & UIRemoteNotificationTypeNewsstandContentAvailability)
             {
-                NSLog (@"Notifications - ContentAvailability");
+                NSLog(@"Notifications - ContentAvailability");
             }
         }
     }
@@ -186,13 +185,26 @@
     
     NSLog(@"Will resign active");
     
-    // special case code
-    // if attempted to register for push notif, and now leaving the app, push notif alert view was presented
+    // special case - if attempted to register for push notif, and now leaving the app, push notif alert view was presented
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:kDidAttemptToRegisterForPushNotif] boolValue])
     {
         [[NSUserDefaults standardUserDefaults] setObject:@YES forKey: kDidPresentPushNotifAlertView];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    
+    // post session logs to Parse
+    [self beginBackgroundUpdateTask];
+    
+    [self.sessionLogs saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        if (error)
+        {
+            NSLog(@"Error saving session logs to Parse %@", error);
+        }
+        
+        [self endBackgroundUpdateTask];
+        
+    }];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -201,9 +213,6 @@
      If your application supports background execution, called instead of applicationWillTerminate: when the user quits.
      */
     NSLog(@"Application did enter background");
-    
-    // post session logs to Parse
-    [self saveSessionLogsToParse];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -224,6 +233,30 @@
     
     // post session logs to Parse
     [self saveSessionLogsToParse];
+}
+
+#pragma mark - Background tasks
+
+- (void)beginBackgroundUpdateTask
+{
+    // existing background task
+    if (self.backgroundTask)
+    {
+        NSLog(@"Existing background task");
+        [self endBackgroundUpdateTask];
+    }
+    
+    self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [self endBackgroundUpdateTask];
+    }];
+}
+
+- (void)endBackgroundUpdateTask
+{
+    // NSLog(@"Ending task");
+    
+    [[UIApplication sharedApplication] endBackgroundTask: self.backgroundTask];
+    self.backgroundTask = UIBackgroundTaskInvalid;
 }
 
 #pragma mark - UITabBarController delegate
@@ -513,8 +546,12 @@
     [self.sessionLogs saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error)
         {
-            NSLog(@"Error saving session logs to Parse %@ %@", error, [error userInfo]);
+            NSLog(@"Error saving session logs to Parse %@", error);
         }
+        /* else
+        {
+            NSLog(@"Successfully saved session logs to Parse");
+        } */
     }];
 }
 
@@ -561,7 +598,7 @@
     }
 }
 
-#pragma mark - Log Out
+#pragma mark - Logout
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -595,16 +632,9 @@
     // display login screen
     [self.window setRootViewController:self.ds];
     
-    // set public write access and logged out status
+    // set logout status and post session logs to Parse
     NSLog(@"Logging out");
-    
-    PFACL *ACL = self.sessionLogs.ACL;
-    [ACL setPublicWriteAccess:YES];
-    self.sessionLogs.ACL = ACL;
-    
     self.sessionLogs.sessionLoginStatus = kSessionLoginStatusLoggedOut;
-    
-    // post session logs to Parse
     [self saveSessionLogsToParse];
     
     // logout Parse/FB user

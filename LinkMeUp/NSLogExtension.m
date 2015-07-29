@@ -52,7 +52,7 @@ void ExtendNSLog(const char *file, int lineNumber, NSString *format, ...)
     [appDelegate.sessionLogs.messages addObject: logMessage];
     
     // Print to console
-    fprintf(stderr, [logMessage UTF8String]);
+    // fprintf(stderr, [logMessage UTF8String]);
     // NSLogv(logMessage, ap);
 }
 

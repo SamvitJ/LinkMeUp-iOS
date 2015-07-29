@@ -37,6 +37,9 @@
 // interent connectivity
 @property (nonatomic) BOOL internetActive;
 
+// background task object
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
+
 // application set up
 - (void)initializeData;
 - (void)duplicateMasterLinks;
@@ -52,6 +55,9 @@
 
 // session logs
 - (void)saveSessionLogsToParse;
+
+// logout
+- (void)logOut;
 
 @end
 

@@ -15,7 +15,7 @@
 #import "mySignUpViewController.h"
 #import "verificationViewController.h"
 
-@interface DefaultSettingsViewController : UIViewController <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
+@interface DefaultSettingsViewController : UIViewController <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) myLogInViewController *myLogIn;
 

@@ -789,7 +789,12 @@
                  me[@"first_name"] = fbUser.first_name;
                  me[@"facebook_email"] = [fbUser objectForKey:@"email"];;
                  
-                 [me saveInBackground];
+                 [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                     if (error)
+                     {
+                         NSLog(@"Error saving user after linking with Facebook %@", error);
+                     }
+                 }];
              }];
         }
         
