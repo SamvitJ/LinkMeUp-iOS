@@ -196,14 +196,12 @@
     [self beginBackgroundUpdateTask];
     
     [self.sessionLogs saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
         if (error)
         {
             NSLog(@"Error saving session logs to Parse %@", error);
         }
         
         [self endBackgroundUpdateTask];
-        
     }];
 }
 

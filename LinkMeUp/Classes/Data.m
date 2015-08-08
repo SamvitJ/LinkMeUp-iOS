@@ -439,7 +439,6 @@
             for (FriendRequest *request in objects)
             {
                 [myFriends addObject:request.receiver];
-                
                 [request deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (error)
                     {

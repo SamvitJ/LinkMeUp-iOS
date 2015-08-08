@@ -27,3 +27,10 @@ Documents/Promotional/Promo Codes/*
 Documents/Promotional/Team/*.jpg
 Documents/Promotional/App Reviews/*
 Documents/Promotional/Online Contest/Message to Mr. Lombardi.docx
+
+# Selectively include files
+Production and Analytics/Subscription List/*
+!Production and Analytics/Subscription List/extractEmails.py
+
+Production and Analytics/Remote Logging/*
+!Production and Analytics/Remote Logging/logMessages.py

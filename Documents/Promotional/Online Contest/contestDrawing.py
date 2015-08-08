@@ -40,8 +40,8 @@ participantList = []
 whiteList = ['aiuSTn5mRz', 'R5Np0HPpBH', 'iLC2RikhL3', 'xUv2Tl56dU', 'Ai2pCedWWS', 'jiflPG7Xd1', 'aftT9aLur9', 'epR9xFDRTh', 'djdZqG7osL', 'TqFUnEDiie', 'umHzK7AkTT'] 
 #             supersurb,    Anand N.,     Andrew W.,    Tristan H.,   Caren B.,     Adarsh K.,    Justin B.,    akritish,     Sai G.,       Devansh K.,   Ishan N.     
 
-blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ', 'Ok4Jhbxqen', 'TvXEq0Bl0d', 'V71YkER7ka', 'X0qvVAfjgw', 'UNF2h9Uyg1', '7ea3cG2b80']
-#             Samvit J.,    Ananya J.,    Sanjay J.,    Vishakha A.,  Sunny B.,     Little P.,    Alex M.,      Ishan R.,     Meg H.,       Jacob K.,     Nick W.
+blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ', 'Ok4Jhbxqen', 'TvXEq0Bl0d', 'V71YkER7ka', 'X0qvVAfjgw', 'UNF2h9Uyg1', '7ea3cG2b80', 't8DgS2nJ0i']
+#             Samvit J.,    Ananya J.,    Sanjay J.,    Vishakha A.,  Sunny B.,     Little P.,    Alex M.,      Ishan R.,     Meg H.,       Jacob K.,     Nick W.,      Deena S.
 
 start_date = datetime.datetime(2015, 7, 22, 2, 27, 00, tzinfo=pytz.utc)
 # file_date = "07:23:15"

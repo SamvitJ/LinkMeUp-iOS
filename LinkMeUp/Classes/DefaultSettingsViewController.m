@@ -348,13 +348,11 @@
 - (void)getUserDataFromFacebook
 {
     [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error) {
-        
         if (!error)
         {
             // use FB data to set PFUser info
             [self setInfoForFBGraphUser:fbUser];
         }
-        
         else
         {
             NSLog(@"Error requesting for FBGraphUser %@ %@", error, [error userInfo]);
@@ -369,7 +367,6 @@
                 NSLog(@"Fatal error - FBGraphUser unavailable");
             }
         }
-        
     }];
 }
 
@@ -465,6 +462,7 @@
             return true;
     }
     
+    NSLog(@"Profile permission denied");
     return false;
 }
 
@@ -478,6 +476,7 @@
             return true;
     }
     
+    NSLog(@"Email permission denied");
     return false;
 }
 
