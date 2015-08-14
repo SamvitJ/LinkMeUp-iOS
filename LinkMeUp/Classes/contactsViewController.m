@@ -473,7 +473,7 @@ Example
     [self updateSendButtonLabel];
 }
 
-#pragma mark - MFMessageComposeViewControllerDelegate delegate
+#pragma mark - MFMessageComposeViewControllerDelegate methods
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
@@ -734,7 +734,7 @@ Example
     
         // App Store link
         [message appendString:@"\n\n"];
-        [message appendString:@"Sent via LinkMeUp (https://appsto.re/i6Lr6JT)"];
+        [message appendString:@"Sent via LinkMeUp (www.linkmeupmessenger.com)"];
         
         controller.body = message;
         

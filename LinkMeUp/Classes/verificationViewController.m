@@ -28,7 +28,7 @@
 
 #pragma mark - UI action methods
 
-- (IBAction)sendVerificationSMS:(id)sender
+- (IBAction)handleButtonPress:(id)sender
 {
     // disabled button until action handled
     [Constants disableButton:self.verificationButton];
@@ -138,6 +138,7 @@
     self.verificationScreen = [[UIView alloc] initWithFrame:CGRectMake(0, 77.0f, 320.0f, 270.0f)];
     self.verificationScreen.backgroundColor = [UIColor whiteColor];
     
+    // display activity indicator
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.activityIndicator.transform = CGAffineTransformMakeScale(2.0f, 2.0f);
     self.activityIndicator.center = CGPointMake(self.view.frame.size.width / 2.0, 120.0f);
@@ -170,8 +171,8 @@
         
         else
         {
-            // generate code
-            self.code = [NSString stringWithFormat:@"%i", arc4random_uniform(999999)];
+            // generate code between 100,000 and 999,999
+            self.code = [NSString stringWithFormat:@"%i", 100000 + arc4random_uniform(900000)];
             
             // SMS info
             NSDictionary *params = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:self.phoneNumber, self.code, nil]

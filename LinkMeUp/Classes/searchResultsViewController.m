@@ -99,8 +99,8 @@
     [textView resignFirstResponder];
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
     if ([text isEqualToString:@"\n"])
     {
         [textView resignFirstResponder];
@@ -221,7 +221,7 @@
                 GTLYouTubeResourceId *identifier = result.identifier;
                 GTLYouTubeSearchResultSnippet *snippet = result.snippet;
                 
-                //NSString *videoTitle = [snippet.JSON objectForKey:@"title"];
+                // NSString *videoTitle = [snippet.JSON objectForKey:@"title"];
                 NSString *videoId = [identifier.JSON objectForKey:@"videoId"];
                 NSString *videoChannel = [snippet.JSON objectForKey:@"channelTitle"];
                 
@@ -230,7 +230,7 @@
                 {
                     NSMutableDictionary *videoData = [[NSMutableDictionary alloc] init];
                 
-                    //if (videoTitle) videoData[@"videoTitle"] = videoTitle;
+                    // if (videoTitle) videoData[@"videoTitle"] = videoTitle;
                     if (videoId) videoData[@"videoId"] = videoId;
                     
                     if (!self.VEVOvideos)
@@ -272,14 +272,14 @@
             {
                 GTLYouTubeSearchResult *result = searchResults.items[i];
                 GTLYouTubeResourceId *identifier = result.identifier;
-                //GTLYouTubeSearchResultSnippet *snippet = result.snippet;
+                // GTLYouTubeSearchResultSnippet *snippet = result.snippet;
                 
-                //NSString *videoTitle = [snippet.JSON objectForKey:@"title"];
+                // NSString *videoTitle = [snippet.JSON objectForKey:@"title"];
                 NSString *videoId = [identifier.JSON objectForKey:@"videoId"];
                 
                 NSMutableDictionary *videoData = [[NSMutableDictionary alloc] init];
                 
-                //if (videoTitle) videoData[@"videoTitle"] = videoTitle;
+                // if (videoTitle) videoData[@"videoTitle"] = videoTitle;
                 if (videoId) videoData[@"videoId"] = videoId;
                 
                 [self.videos addObject:videoData];
@@ -760,8 +760,8 @@
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: movementDuration];
 
-    //self.tableView.center = CGPointMake(self.tableView.center.x, self.tableView.center.y + movement);
-    //self.tableView.transform = CGAffineTransformTranslate(self.tableView.transform, 0.0f, movement);
+    // self.tableView.center = CGPointMake(self.tableView.center.x, self.tableView.center.y + movement);
+    // self.tableView.transform = CGAffineTransformTranslate(self.tableView.transform, 0.0f, movement);
     
     if (IS_IOS8)
         self.tableView.bounds = CGRectOffset(self.tableView.bounds, movement, 0.0f);

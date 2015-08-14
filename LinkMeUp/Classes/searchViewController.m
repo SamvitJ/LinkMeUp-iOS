@@ -137,11 +137,11 @@
         [self animateScreenContentsInDirection:kDirectionDown];
     
     // do not hide keyboard if user is scrolling through table
-//    if (self.searchDisplayController.isActive)
-//    {
-//        NSLog(@"Returning no");
-//        return NO;
-//    }
+    /* if (self.searchDisplayController.isActive)
+    {
+        NSLog(@"Returning no");
+        return NO;
+    } */
     
     return YES;
 }
@@ -334,13 +334,13 @@
     self.sharedData.newSong = NO;
 }
 
-#pragma mark - UI action methods
+/* #pragma mark - UI action methods
 
 - (IBAction)sendVideoPressed:(id)sender
 {
     // search for video
     [self launchYouTubeSearch];
-}
+} */
 
 #pragma mark - View controller lifecycle
 
@@ -450,9 +450,7 @@
     {
         CGFloat viewWidth = self.view.frame.size.width;
         
-        
         // caption title
-        
         CGFloat titleLength = 200;
         CGFloat titleHeight = 22;
         
@@ -468,9 +466,7 @@
         
         self.captionTitle.text = [NSString stringWithFormat:@"Search for videos"];
         
-        
         // caption text
-        
         CGFloat textLength = 300;
         CGFloat textHeight = 50;
         
@@ -494,6 +490,7 @@
         self.captionText.attributedText = captionAttributedText;
         self.captionText.numberOfLines = 2;
         
+        // add caption title/text to view
         [self.view addSubview: self.captionTitle];
         [self.view addSubview: self.captionText];
     }

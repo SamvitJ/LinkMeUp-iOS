@@ -430,13 +430,12 @@
     [self.songPlayer removeObserver:self forKeyPath:@"status"];
 }
 
-/*
- // Override to allow orientations other than the default portrait orientation.
- - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
- // Return YES for supported orientations
- return (interfaceOrientation == UIInterfaceOrientationPortrait);
- }
- */
+/* // Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+} */
 
 #pragma mark - YouTube requests
 
@@ -826,8 +825,8 @@
 {
     NSLog(@"Reached");
     
-    //UILabel *iTunesLabel = (UILabel *)gestureRecognizer.view;
-    //iTunesLabel.highlighted = YES;
+    // UILabel *iTunesLabel = (UILabel *)gestureRecognizer.view;
+    // iTunesLabel.highlighted = YES;
     
     return YES;
 }

@@ -41,22 +41,6 @@
 {
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    // add user to 'currentUser', 'allUsers', and 'channels' fields of current installation (if not already added)
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    
-    currentInstallation[@"currentUser"] = [PFUser currentUser];
-    
-    PFRelation *allUsers = [currentInstallation relationForKey:@"allUsers"];
-    [allUsers addObject: [PFUser currentUser]];
-    
-    [currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", [PFUser currentUser].objectId] forKey:@"channels"];
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error)
-        {
-            NSLog(@"Error saving installation to Parse after adding user to channels %@ %@", error, [error userInfo]);
-        }
-    }];
-    
     // post session logs to Parse (pre-launch)
     [appDelegate saveSessionLogsToParse];
     
@@ -395,7 +379,7 @@
     {
         fullName = fbUser.first_name;
     }
-
+    
     // set critical info
     me.username = newUsername;
     me.email = fbUser[@"email"];
@@ -436,7 +420,6 @@
                     NSLog(@"Facebook email is invalid");
                 }
                 
-                me.username = fbUser[@"email"];
                 me.email = nil;
                 me[@"facebook_email"] = fbUser[@"email"];
                 
@@ -559,8 +542,9 @@
 {
     NSLog(@"Callback -logInVC: didLogInUser: entered");
     
-    // set user/name property on session logs
+    // set user/name property on session logs and installation
     [self setUserInfoInSessionLogs];
+    [self setUserInfoOnInstallation];
     
     // post session logs to Parse
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -608,11 +592,19 @@
 {
     NSLog(@"Failed to log in... %@", error);
     
-    // Internal server error || Failed to initialize mongo connection
-    if (error.code == 1 || error.code == 159)
+    // Internal server error || ConnectionFailed || Failed to initialize mongo connection
+    if (error.code == 1 || error.code == 100 || error.code == 159)
     {
         [[[UIAlertView alloc] initWithTitle:@"Server Issues"
                                     message:@"We're sorry, but we're experiencing server issues :( \nPlease try again in a bit."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+    }
+    else if (error.code == 101)
+    {
+        [[[UIAlertView alloc] initWithTitle:@"Incorrect username or password"
+                                    message:@""
                                    delegate:nil
                           cancelButtonTitle:@"OK"
                           otherButtonTitles:nil] show];
@@ -684,8 +676,9 @@
     mySignUpViewController *mySignUp = (mySignUpViewController *)signUpController;
     mySignUp.verificationVC = [[verificationViewController alloc] init];
     
-    // set user/name property on session logs
+    // set user/name property on session logs and installation
     [self setUserInfoInSessionLogs];
+    [self setUserInfoOnInstallation];
     
     // post session logs to Parse
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -717,6 +710,27 @@
 - (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController
 {
     NSLog(@"User cancelled signup");
+}
+
+#pragma mark - Installations
+
+- (void)setUserInfoOnInstallation
+{
+    // add user to 'currentUser', 'allUsers', and 'channels' fields of current installation (if not already added)
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    currentInstallation[@"currentUser"] = [PFUser currentUser];
+    
+    PFRelation *allUsers = [currentInstallation relationForKey:@"allUsers"];
+    [allUsers addObject: [PFUser currentUser]];
+    
+    [currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", [PFUser currentUser].objectId] forKey:@"channels"];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error saving installation to Parse after adding user to channels %@ %@", error, [error userInfo]);
+        }
+    }];
 }
 
 #pragma mark - Session logs

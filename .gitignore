@@ -22,15 +22,15 @@ DerivedData
 *.mp4
 *.mpeg
 
-# Other sensitive data
+# Other data
 Documents/Promotional/Promo Codes/*
 Documents/Promotional/Team/*.jpg
 Documents/Promotional/App Reviews/*
-Documents/Promotional/Online Contest/Message to Mr. Lombardi.docx
 
-# Selectively include files
-Production and Analytics/Subscription List/*
-!Production and Analytics/Subscription List/extractEmails.py
-
-Production and Analytics/Remote Logging/*
-!Production and Analytics/Remote Logging/logMessages.py
+Production and Analytics/Analytics/
+!Production and Analytics/Analytics/rank_users.py
+Production and Analytics/Beta Testing/
+Production and Analytics/Crash Reports/
+Production and Analytics/Export IPAs/
+Production and Analytics/Subscription List/
+!Production and Analytics/Subscription List/extract_emails.py

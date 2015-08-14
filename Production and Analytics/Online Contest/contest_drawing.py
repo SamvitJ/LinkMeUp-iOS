@@ -28,8 +28,10 @@ import datetime
 import pytz
 import operator
 
-from getLinkData import returnLinkData
-from getUserData import returnUserData
+import sys
+sys.path.insert(0, '/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Production and Analytics/Data Requests')
+
+from get_class_data import returnClassData
 
 linksUnsorted = []
 linkSorted = []
@@ -46,7 +48,7 @@ blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ
 start_date = datetime.datetime(2015, 7, 22, 2, 27, 00, tzinfo=pytz.utc)
 # file_date = "07:23:15"
 
-link_data = returnLinkData()
+link_data = returnClassData("Link")
 # with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/Link.json" % file_date) as link_json:
 #     link_data = json.load(link_json)
 
@@ -95,7 +97,7 @@ print candidateIdList
 
 print "\nCandidates\n--------------"
 
-user_data = returnUserData()
+user_data = returnClassData("_User")
 # with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/_User.json" % file_date) as user_json:
 #     user_data = json.load(user_json)
 #     user_list = user_data['results']

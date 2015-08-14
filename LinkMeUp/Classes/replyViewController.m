@@ -90,8 +90,8 @@
     [textView resignFirstResponder];
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
     if ([text isEqualToString:@"\n"])
     {
         // done editing
@@ -142,7 +142,7 @@
                 [self.sharedData.selectedLink saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (!error)
                     {
-                        // send push notifications to recipients
+                        // send push notification to recipient
                         NSString *channel = (self.isLinkSender ? [NSString stringWithFormat:@"user_%@", [self.receiverData objectForKey:@"identity"]] : [NSString stringWithFormat:@"user_%@", self.sharedData.selectedLink.sender.objectId]);
                         
                         NSString *alert = [NSString stringWithFormat:@"New message from %@", [Constants nameElseUsername:me]];;

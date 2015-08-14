@@ -35,7 +35,7 @@
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="sendVerificationSMS:" destination="-1" eventType="touchUpInside" id="nuA-sk-QGU"/>
+                        <action selector="handleButtonPress:" destination="-1" eventType="touchUpInside" id="s3c-O0-koD"/>
                     </connections>
                 </button>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Note: Your phone number is kept strictly confidential" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dNu-jb-dQ7">
