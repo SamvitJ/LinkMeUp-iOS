@@ -78,13 +78,13 @@ NSString *const kNumberABRequests = @"numberABRequests";
 
 NSString *const kHasAddrBookAccess = @"hasAddrBookAccess";
 
-NSString *const kRecentRecipients = @"recentRecipients"; // unused
-NSString *const kAddressBook = @"address_book";          // unused
+NSString *const kRecentRecipients = @"recentRecipients";        // unused
+NSString *const kAddressBook = @"address_book";                 // unused
 
 // *** contactAndState (contactsVC) ***
-NSString *const kContact = @"contact";                   // unused
-NSString *const kIsUser = @"isUser";                     // unused
-NSString *const kSelected = @"selected";                 // unused
+NSString *const kContact = @"contact";                          // unused
+NSString *const kIsUser = @"isUser";                            // unused
+NSString *const kSelected = @"selected";                        // unused
 
 //----------------------------------------------------------------------------
 

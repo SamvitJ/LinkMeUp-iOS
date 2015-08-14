@@ -91,7 +91,7 @@
 
 #pragma mark - Set up
 
-- (id) init
+- (id)init
 {
     self = [super init];
     if (self)
@@ -305,7 +305,6 @@
 #pragma mark - Data loading methods
 
 
-
 #pragma mark - Loading all data
 
 - (void)loadAllData
@@ -321,7 +320,7 @@
 }
 
 
-#pragma mark - Update link with FB status
+#pragma mark - Facebook status
 
 - (void)updateLinkWithFacebookStatus
 {
@@ -329,7 +328,7 @@
 }
 
 
-#pragma mark - Update address book status
+#pragma mark - Address book status
 
 - (void)updateAddressBookStatus
 {
@@ -621,7 +620,7 @@
             for (NSDictionary *contact in self.addressBookData)
             {
                 // default: not LinkMeUp user
-                BOOL isUser = false;
+                bool isUser = false;
                 
                 // determine if contact is a LMU user based on mobile number
                 NSArray *phoneArray = contact[@"phone"];
@@ -1348,9 +1347,8 @@
 }
 
 
-#pragma mark - Local data updates
 
-#pragma mark - Seen state updates
+#pragma mark - Local data updates
 
 - (BOOL)receivedLinkSeen:(Link *)link
 {
@@ -1398,140 +1396,11 @@
     else return YES;
 }
 
-- (void)receiverActionByUserWithId:(NSString *)userId seenOnSentLink:(Link *)link
-{
-    NSMutableDictionary *receiverData = [self receiverDataForUserId:userId inLink:link];
-    receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:YES];
-}
-
-#pragma mark - Link like/love
-
-- (void)likeLink:(Link *)link
-{
-    NSMutableDictionary *receiverData = [self receiverDataForUserId:self.me.objectId inLink:link];
-    
-    NSDate *now = [NSDate date];
-    
-    // link not currently "liked"
-    if ([[receiverData objectForKey:@"liked"] boolValue] == NO)
-    {
-        receiverData[@"liked"] = [NSNumber numberWithBool:YES];
-        receiverData[@"timeLiked"] = now;
-        
-        // if previously "loved", demote status but do not tell sender
-        if ([[receiverData objectForKey:@"loved"] boolValue] == YES)
-        {
-            receiverData[@"loved"] = [NSNumber numberWithBool:NO];
-        }
-        
-        else // tell sender!
-        {
-            // update status for sender
-            link.lastReceiverUpdate = [NSNumber numberWithInt:kLastUpdateNewLike];
-            link.lastReceiverUpdateTime = now;
-            
-            // update for sender's messages summary table
-            receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionLiked];
-            receiverData[@"lastReceiverActionTime"] = now;
-            receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:NO];
-        }
-    }
-    
-    // link currently "liked"
-    else
-    {
-        // demote staus but do not tell sender
-        receiverData[@"liked"] = [NSNumber numberWithBool:NO];
-    }
-}
-
-- (void)loveLink:(Link *)link
-{
-    NSMutableDictionary *receiverData = [self receiverDataForUserId:self.me.objectId inLink:link];
-    
-    NSDate *now = [NSDate date];
-    
-    // link not currently "loved"
-    if ([[receiverData objectForKey:@"loved"] boolValue] == NO)
-    {
-        receiverData[@"loved"] = [NSNumber numberWithBool:YES];
-        receiverData[@"timeLoved"] = now;
-        
-        // if previously "liked", promote status!
-        if ([[receiverData objectForKey:@"liked"] boolValue] == YES)
-        {
-            // link no longer just "liked"
-            receiverData[@"liked"] = [NSNumber numberWithBool:NO];
-        }
-        
-        // update status for sender
-        link.lastReceiverUpdate = [NSNumber numberWithInt:kLastUpdateNewLove];
-        link.lastReceiverUpdateTime = now;
-        
-        // update for sender's messages summary table
-        receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionLoved];
-        receiverData[@"lastReceiverActionTime"] = now;
-        receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:NO];
-    }
-    
-    // link currently "loved"
-    else
-    {
-        // demote status but do not tell sender
-        receiverData[@"loved"] = [NSNumber numberWithBool:NO];
-    }
-}
-
-#pragma mark - Link messages
-
-- (void)updateLink:(Link *)link sentToRecipientWithId:(NSString *)recipientId withMessage:(NSDictionary *)message
-{
-    NSDate *now = [NSDate date];
-    
-    // if link was sent BY me
-    if ([link.sender.objectId isEqualToString:self.me.objectId])
-    {
-        // find receiver data of link recipient
-        NSMutableDictionary *receiverData = [self receiverDataForUserId:recipientId inLink:link];
-        
-        // update status for receiver
-        receiverData[@"lastSenderUpdate"] = [NSNumber numberWithInt:kLastUpdateNewMessage];
-        receiverData[@"lastSenderUpdateTime"] = now;
-        
-        // update for my summary table
-        receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionNoAction];
-        
-        // add new message to array
-        [[receiverData objectForKey:@"messages"] addObject:message];
-    }
-    
-    else // link sent TO me
-    {
-        // update status for sender
-        link.lastReceiverUpdate = [NSNumber numberWithInt:kLastUpdateNewMessage];
-        link.lastReceiverUpdateTime = now;
-        
-        // find my receiver data
-        NSMutableDictionary *receiverData = [self receiverDataForUserId:recipientId inLink:link];
-        
-        // if I hadn't yet responded, set responded to YES
-        if ([[receiverData objectForKey:@"responded"] boolValue] == NO)
-        {
-            receiverData[@"responded"] = [NSNumber numberWithBool:YES];
-        }
-        
-        // update for sender's messages summary table
-        receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionResponded];
-        receiverData[@"lastReceiverActionTime"] = now;
-        receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:NO];
-        
-        // add new message to array
-        [[receiverData objectForKey:@"messages"] addObject:message];
-    }
-}
 
 
 
+
+#pragma mark - Not in use
 
 
 #pragma mark - Data caching

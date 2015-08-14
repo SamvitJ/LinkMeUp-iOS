@@ -217,7 +217,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"applicationDidBecomeActive" object:nil];
 }
 
-#pragma mark - Present push notification view controller
+#pragma mark - Permissions flow
 
 - (void)presentPushScreen
 {

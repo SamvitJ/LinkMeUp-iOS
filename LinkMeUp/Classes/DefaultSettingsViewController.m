@@ -315,7 +315,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - FBLogInMethods
+#pragma mark - Facebook oauth callback
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {

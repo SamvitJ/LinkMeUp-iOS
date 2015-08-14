@@ -22,7 +22,7 @@ DerivedData
 *.mp4
 *.mpeg
 
-# Other data
+# Other files/folders
 Documents/Promotional/Promo Codes/*
 Documents/Promotional/Team/*.jpg
 Documents/Promotional/App Reviews/*
@@ -34,3 +34,11 @@ Production and Analytics/Crash Reports/
 Production and Analytics/Export IPAs/
 Production and Analytics/Subscription List/
 !Production and Analytics/Subscription List/extract_emails.py
+
+Android Development/App Walkthrough.pptx
+Android Development/ConnectionsLogic.txt
+Android Development/Debugger Logs/
+Android Development/Employment_Contract_Signed.pdf
+Android Development/Meeting Notes.docx
+Android Development/Signup and Launch Flow/
+Android Development/To Do Lists/iOS Code Documentation.docx
