@@ -473,7 +473,7 @@ Example
     [self updateSendButtonLabel];
 }
 
-#pragma mark - MFMessageComposeViewControllerDelegate delegate
+#pragma mark - MFMessageComposeViewControllerDelegate methods
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
@@ -734,7 +734,7 @@ Example
     
         // App Store link
         [message appendString:@"\n\n"];
-        [message appendString:@"Sent via LinkMeUp (https://appsto.re/i6Lr6JT)"];
+        [message appendString:@"Sent via LinkMeUp (www.linkmeupmessenger.com)"];
         
         controller.body = message;
         
@@ -842,65 +842,45 @@ Example
         {
             PFUser *myFriend = contactAndState[@"contact"];
             
-            // if me
-            if ([myFriend.objectId isEqualToString: self.sharedData.me.objectId])
-            {
-                // receiversData for mobile contact
-                NSMutableDictionary *friendData = [[NSMutableDictionary alloc] init];
-                
-                NSString *myId = me.objectId;
-                NSString *myName = [Constants nameElseUsername:me];
-                
-                // name and identity
-                friendData[@"identity"] = @"me";
-                friendData[@"name"] = @"me";
-                
-                NSMutableDictionary *firstMessage = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:myId, myName, now, self.sharedData.annotation, nil]
-                                                                                         forKeys:[NSArray arrayWithObjects:@"identity", @"name", @"time", @"message", nil]];
-                
-                friendData[@"messages"] = [[NSMutableArray alloc] initWithObjects:firstMessage, nil];
-                
-                [self.myLink.receiversData addObject:friendData];
-            }
-            else
-            {
-                [receivers addObject:myFriend];
-                
-                // update read/write permissions
-                PFACL *ACL = self.myLink.ACL;
-                [ACL setReadAccess:YES forUser:myFriend];
-                [ACL setWriteAccess:YES forUser:myFriend];
-                self.myLink.ACL = ACL;
-                
-                // receiversData for friend i
-                NSMutableDictionary *friendData = [[NSMutableDictionary alloc] init];
-                
-                NSString *myId = me.objectId;
-                NSString *myName = [Constants nameElseUsername:me];
-                
-                // identity/name
-                friendData[@"identity"] = myFriend.objectId;
-                friendData[@"name"] = [Constants nameElseUsername:myFriend];
-                
-                // updated by sender, used by receiver inbox
-                friendData[@"lastSenderUpdate"] = [NSNumber numberWithInt:kLastUpdateNewLink];
-                friendData[@"lastSenderUpdateTime"] = now;
-                
-                // updated by receiver, used by sender message table
-                friendData[@"seen"] = [NSNumber numberWithBool:NO];
-                friendData[@"responded"] = [NSNumber numberWithBool:NO];
-                
-                // updated by receiver, used by both sender/receiver
-                friendData[@"liked"] = [NSNumber numberWithBool:NO];
-                friendData[@"loved"] = [NSNumber numberWithBool:NO];
-                
-                NSMutableDictionary *firstMessage = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:myId, myName, now, self.sharedData.annotation, nil]
-                                                                                         forKeys:[NSArray arrayWithObjects:@"identity", @"name", @"time", @"message", nil]];
-                
-                friendData[@"messages"] = [[NSMutableArray alloc] initWithObjects:firstMessage, nil];
-                
-                [self.myLink.receiversData addObject:friendData];
-            }
+            bool isMe = [myFriend.objectId isEqualToString: self.sharedData.me.objectId];
+            
+            // add friend to receivers field
+            [receivers addObject:myFriend];
+            
+            // update read/write permissions
+            PFACL *ACL = self.myLink.ACL;
+            [ACL setReadAccess:YES forUser:myFriend];
+            [ACL setWriteAccess:YES forUser:myFriend];
+            self.myLink.ACL = ACL;
+            
+            // receiversData for friend i
+            NSMutableDictionary *friendData = [[NSMutableDictionary alloc] init];
+            
+            NSString *myId = me.objectId;
+            NSString *myName = [Constants nameElseUsername:me];
+            
+            // identity/name
+            friendData[@"identity"] = myFriend.objectId;
+            friendData[@"name"] = (isMe ? @"me" : [Constants nameElseUsername:myFriend]);
+            
+            // updated by sender, used by receiver inbox
+            friendData[@"lastSenderUpdate"] = [NSNumber numberWithInt:kLastUpdateNewLink];
+            friendData[@"lastSenderUpdateTime"] = now;
+            
+            // updated by receiver, used by sender message table
+            friendData[@"seen"] = [NSNumber numberWithBool:NO];
+            friendData[@"responded"] = [NSNumber numberWithBool:NO];
+            
+            // updated by receiver, used by both sender/receiver
+            friendData[@"liked"] = [NSNumber numberWithBool:NO];
+            friendData[@"loved"] = [NSNumber numberWithBool:NO];
+            
+            NSMutableDictionary *firstMessage = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:myId, myName, now, self.sharedData.annotation, nil]
+                                                                                     forKeys:[NSArray arrayWithObjects:@"identity", @"name", @"time", @"message", nil]];
+            
+            friendData[@"messages"] = [[NSMutableArray alloc] initWithObjects:firstMessage, nil];
+            
+            [self.myLink.receiversData addObject:friendData];
         }
         
         else // text message recipient
@@ -945,9 +925,9 @@ Example
                 for (NSDictionary *receiverData in self.myLink.receiversData)
                 {
                     NSString *receiverId = receiverData[@"identity"];
-                     
-                    // add channel, if not "me"
-                    if (![receiverId isEqualToString:@"me"])
+                    
+                    // add channel, if not me
+                    if (![receiverId isEqualToString: self.sharedData.me.objectId])
                     {
                         [channels addObject:[NSString stringWithFormat:@"user_%@", receiverId]];
                     }

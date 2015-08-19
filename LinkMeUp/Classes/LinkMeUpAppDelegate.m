@@ -30,8 +30,8 @@
 #pragma mark -
 #pragma mark Application lifecycle
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
-    
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     // Override point for customization after application launch.
 
     // Parse initialization
@@ -196,14 +196,12 @@
     [self beginBackgroundUpdateTask];
     
     [self.sessionLogs saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
         if (error)
         {
             NSLog(@"Error saving session logs to Parse %@", error);
         }
         
         [self endBackgroundUpdateTask];
-        
     }];
 }
 

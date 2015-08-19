@@ -341,7 +341,8 @@
     {
         // mark last receiver action as seen (local copy)
         NSString *contactId = [self.sortedData[indexPath.row - 1] objectForKey:@"identity"];
-        [self.sharedData receiverActionByUserWithId:contactId seenOnSentLink:self.sharedData.selectedLink];
+        NSMutableDictionary *receiverData = [self.sharedData receiverDataForUserId:contactId inLink:self.sharedData.selectedLink];
+        receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:YES];
         
         // update data in Parse
         PFQuery *linkQuery = [Link query];
@@ -351,7 +352,8 @@
             {
                 // update server copy
                 Link *link = (Link *)object;
-                [self.sharedData receiverActionByUserWithId:contactId seenOnSentLink:link];
+                NSMutableDictionary *receiverData = [self.sharedData receiverDataForUserId:contactId inLink:link];
+                receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:YES];
                 
                 // update local pointers, if applicable
                 if ([self.sharedData.selectedLink.objectId isEqualToString:link.objectId])
@@ -441,6 +443,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        // custom initialization
     }
     return self;
 }

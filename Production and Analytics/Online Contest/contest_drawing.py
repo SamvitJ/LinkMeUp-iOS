@@ -28,8 +28,10 @@ import datetime
 import pytz
 import operator
 
-from getLinkData import returnLinkData
-from getUserData import returnUserData
+import sys
+sys.path.insert(0, '/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Production and Analytics/Data Requests')
+
+from get_class_data import returnClassData
 
 linksUnsorted = []
 linkSorted = []
@@ -40,13 +42,13 @@ participantList = []
 whiteList = ['aiuSTn5mRz', 'R5Np0HPpBH', 'iLC2RikhL3', 'xUv2Tl56dU', 'Ai2pCedWWS', 'jiflPG7Xd1', 'aftT9aLur9', 'epR9xFDRTh', 'djdZqG7osL', 'TqFUnEDiie', 'umHzK7AkTT'] 
 #             supersurb,    Anand N.,     Andrew W.,    Tristan H.,   Caren B.,     Adarsh K.,    Justin B.,    akritish,     Sai G.,       Devansh K.,   Ishan N.     
 
-blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ', 'Ok4Jhbxqen', 'TvXEq0Bl0d', 'V71YkER7ka', 'X0qvVAfjgw', 'UNF2h9Uyg1', '7ea3cG2b80']
-#             Samvit J.,    Ananya J.,    Sanjay J.,    Vishakha A.,  Sunny B.,     Little P.,    Alex M.,      Ishan R.,     Meg H.,       Jacob K.,     Nick W.
+blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ', 'Ok4Jhbxqen', 'TvXEq0Bl0d', 'V71YkER7ka', 'X0qvVAfjgw', 'UNF2h9Uyg1', '7ea3cG2b80', 't8DgS2nJ0i']
+#             Samvit J.,    Ananya J.,    Sanjay J.,    Vishakha A.,  Sunny B.,     Little P.,    Alex M.,      Ishan R.,     Meg H.,       Jacob K.,     Nick W.,      Deena S.
 
 start_date = datetime.datetime(2015, 7, 22, 2, 27, 00, tzinfo=pytz.utc)
 # file_date = "07:23:15"
 
-link_data = returnLinkData()
+link_data = returnClassData("Link")
 # with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/Link.json" % file_date) as link_json:
 #     link_data = json.load(link_json)
 
@@ -95,7 +97,7 @@ print candidateIdList
 
 print "\nCandidates\n--------------"
 
-user_data = returnUserData()
+user_data = returnClassData("_User")
 # with open("/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Exported Parse Data/%s/_User.json" % file_date) as user_json:
 #     user_data = json.load(user_json)
 #     user_list = user_data['results']

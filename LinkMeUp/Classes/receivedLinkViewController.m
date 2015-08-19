@@ -80,11 +80,11 @@
     }
     
     // update local copy
-    [self.sharedData likeLink:self.sharedData.selectedLink];
+    [self likeLink:self.sharedData.selectedLink];
     [self setData];
     
-    // update data in Parse
-    [self updateLinkInServerForReaction:kReactionLike sendPush:shouldSendPush];
+    // retrieve link from Parse and update
+    [self updateLinkWithReaction:kReactionLike sendPush:shouldSendPush];
 }
 
 - (void)loveButtonPressed:(id)sender
@@ -124,16 +124,16 @@
     }
     
     // update local copy
-    [self.sharedData loveLink:self.sharedData.selectedLink];
+    [self loveLink:self.sharedData.selectedLink];
     [self setData];
     
-    // update data in Parse
-    [self updateLinkInServerForReaction:kReactionLove sendPush:shouldSendPush];
+    // retrieve link from Parse and update
+    [self updateLinkWithReaction:kReactionLove sendPush:shouldSendPush];
 }
 
-# pragma mark - Server update method
+#pragma mark - Like/love update methods
 
-- (void)updateLinkInServerForReaction:(ReactionType)reaction sendPush:(BOOL)shouldSendPush
+- (void)updateLinkWithReaction:(ReactionType)reaction sendPush:(BOOL)shouldSendPush
 {
     PFUser *me = self.sharedData.me;
     NSString *senderId = self.sharedData.selectedLink.sender.objectId;
@@ -145,7 +145,7 @@
         {
             // update server copy
             Link *link = (Link *)object;
-            (reaction == kReactionLike ? [self.sharedData likeLink:link] : [self.sharedData loveLink:link]);
+            (reaction == kReactionLike ? [self likeLink:link] : [self loveLink:link]);
             
             // update local pointers, if applicable
             if ([self.sharedData.selectedLink.objectId isEqualToString:link.objectId])
@@ -186,6 +186,84 @@
             NSLog(@"Error retrieving link %@ %@", error, [error userInfo]);
         }
     }];
+}
+
+#pragma mark - receiversData update methods
+
+- (void)likeLink:(Link *)link
+{
+    NSMutableDictionary *receiverData = [self.sharedData receiverDataForUserId:self.sharedData.me.objectId inLink:link];
+    
+    NSDate *now = [NSDate date];
+    
+    // link not currently "liked"
+    if ([[receiverData objectForKey:@"liked"] boolValue] == NO)
+    {
+        receiverData[@"liked"] = [NSNumber numberWithBool:YES];
+        receiverData[@"timeLiked"] = now;
+        
+        // if previously "loved", demote status but do not tell sender
+        if ([[receiverData objectForKey:@"loved"] boolValue] == YES)
+        {
+            receiverData[@"loved"] = [NSNumber numberWithBool:NO];
+        }
+        
+        else // tell sender!
+        {
+            // update status for sender
+            link.lastReceiverUpdate = [NSNumber numberWithInt:kLastUpdateNewLike];
+            link.lastReceiverUpdateTime = now;
+            
+            // update for sender's messages summary table
+            receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionLiked];
+            receiverData[@"lastReceiverActionTime"] = now;
+            receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:NO];
+        }
+    }
+    
+    // link currently "liked"
+    else
+    {
+        // demote staus but do not tell sender
+        receiverData[@"liked"] = [NSNumber numberWithBool:NO];
+    }
+}
+
+- (void)loveLink:(Link *)link
+{
+    NSMutableDictionary *receiverData = [self.sharedData receiverDataForUserId:self.sharedData.me.objectId inLink:link];
+    
+    NSDate *now = [NSDate date];
+    
+    // link not currently "loved"
+    if ([[receiverData objectForKey:@"loved"] boolValue] == NO)
+    {
+        receiverData[@"loved"] = [NSNumber numberWithBool:YES];
+        receiverData[@"timeLoved"] = now;
+        
+        // if previously "liked", promote status!
+        if ([[receiverData objectForKey:@"liked"] boolValue] == YES)
+        {
+            // link no longer just "liked"
+            receiverData[@"liked"] = [NSNumber numberWithBool:NO];
+        }
+        
+        // update status for sender
+        link.lastReceiverUpdate = [NSNumber numberWithInt:kLastUpdateNewLove];
+        link.lastReceiverUpdateTime = now;
+        
+        // update for sender's messages summary table
+        receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionLoved];
+        receiverData[@"lastReceiverActionTime"] = now;
+        receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:NO];
+    }
+    
+    // link currently "loved"
+    else
+    {
+        // demote status but do not tell sender
+        receiverData[@"loved"] = [NSNumber numberWithBool:NO];
+    }
 }
 
 #pragma mark - Load toolbar

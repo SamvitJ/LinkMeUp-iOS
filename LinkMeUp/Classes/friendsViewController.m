@@ -303,7 +303,7 @@
     [super viewWillAppear:animated];
     
     // update friend suggestions section state
-    self.showFriendSuggestions = self.sharedData.isLinkedWithFB;
+    // self.showFriendSuggestions = self.sharedData.isLinkedWithFB;
     
     // if refreshing, continue...
     UIRefreshControl *refreshControl = (UIRefreshControl *)[self.tableView viewWithTag:@"Refresh Control"];
@@ -481,7 +481,7 @@
     [self.tableView setContentOffset:CGPointMake(0, -refreshControl.frame.size.height) animated:YES];
 }
 
-#pragma mark - Setting button
+#pragma mark - Settings button
 
 - (void)settingsButtonPressed:(id)sender
 {
@@ -775,26 +775,34 @@
             // get the user's data from Facebook
             [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error)
              {
-                 NSLog(@"Linked your facebook account!");
+                 if (!error)
+                 {
+                     NSLog(@"Linked your facebook account!");
+                     
+                     // *HIGH PRIORITY UPDATES*
+                     [self.sharedData updateLinkWithFacebookStatus];
+                     [self.sharedData loadConnections];
+                     
+                     // critical info
+                     me[@"facebook_id"] = fbUser.objectID;
+                     me[@"name"] = [[fbUser.first_name stringByAppendingString:@" "] stringByAppendingString:fbUser.last_name];
+                     
+                     // supplemental info
+                     me[@"first_name"] = fbUser.first_name;
+                     me[@"facebook_email"] = [fbUser objectForKey:@"email"];;
+                     
+                     [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                         if (error)
+                         {
+                             NSLog(@"Error saving user after linking with Facebook %@", error);
+                         }
+                     }];
+                 }
                  
-                 // *HIGH PRIORITY UPDATES*
-                 [self.sharedData updateLinkWithFacebookStatus];
-                 [self.sharedData loadConnections];
-                 
-                 // critical info
-                 me[@"facebook_id"] = fbUser.objectID;
-                 me[@"name"] = [[fbUser.first_name stringByAppendingString:@" "] stringByAppendingString:fbUser.last_name];
-                 
-                 // supplemental info
-                 me[@"first_name"] = fbUser.first_name;
-                 me[@"facebook_email"] = [fbUser objectForKey:@"email"];;
-                 
-                 [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                     if (error)
-                     {
-                         NSLog(@"Error saving user after linking with Facebook %@", error);
-                     }
-                 }];
+                 else
+                 {
+                     
+                 }
              }];
         }
         
@@ -812,12 +820,12 @@
             
             NSLog(@"Error linking accounts %@ %@", error, [error userInfo]);
             
-            self.showFriendSuggestions = NO;
+            // self.showFriendSuggestions = NO;
             [self.tableView reloadData];
         }
     }];
     
-    self.showFriendSuggestions = YES;
+    // self.showFriendSuggestions = YES;
     [self.tableView reloadData];
 }
 
@@ -952,43 +960,40 @@
     }
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
+/* // Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
 
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+    else if (editingStyle == UITableViewCellEditingStyleInsert)
+    {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }
+}
 
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+ 
+}
 
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+} */
+
 
 #pragma mark - Table view delegate
 

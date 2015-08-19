@@ -38,6 +38,6 @@
 
 // status
 @property (nonatomic) BOOL receivedPush;
-@property (nonatomic) BOOL showFriendSuggestions;
+// @property (nonatomic) BOOL showFriendSuggestions;
 
 @end

@@ -90,8 +90,8 @@
     [textView resignFirstResponder];
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
     if ([text isEqualToString:@"\n"])
     {
         // done editing
@@ -119,7 +119,7 @@
         
         // update local copy
         NSString *linkRecipientId = (self.isLinkSender ? self.contactId : me.objectId);
-        [self.sharedData updateLink:self.sharedData.selectedLink sentToRecipientWithId:linkRecipientId withMessage:message];
+        [self addMessage:message toLink:self.sharedData.selectedLink sentToRecipientWithId:linkRecipientId];
         [self setData];
         
         // update data in Parse
@@ -130,7 +130,7 @@
             {
                 // update server copy
                 Link *link = (Link *)object;
-                [self.sharedData updateLink:link sentToRecipientWithId:linkRecipientId withMessage:message];
+                [self addMessage:message toLink:link sentToRecipientWithId:linkRecipientId];
                 
                 // update local pointers, if applicable
                 if ([self.sharedData.selectedLink.objectId isEqualToString:link.objectId])
@@ -142,7 +142,7 @@
                 [self.sharedData.selectedLink saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (!error)
                     {
-                        // send push notifications to recipients
+                        // send push notification to recipient
                         NSString *channel = (self.isLinkSender ? [NSString stringWithFormat:@"user_%@", [self.receiverData objectForKey:@"identity"]] : [NSString stringWithFormat:@"user_%@", self.sharedData.selectedLink.sender.objectId]);
                         
                         NSString *alert = [NSString stringWithFormat:@"New message from %@", [Constants nameElseUsername:me]];;
@@ -177,6 +177,54 @@
     }
     
     return YES;
+}
+
+#pragma mark - receiversData update methods
+
+- (void)addMessage:(NSDictionary *)message toLink:(Link *)link sentToRecipientWithId:(NSString *)recipientId
+{
+    NSDate *now = [NSDate date];
+    
+    // if link was sent BY me
+    if ([link.sender.objectId isEqualToString:self.sharedData.me.objectId])
+    {
+        // find receiver data of link recipient
+        NSMutableDictionary *receiverData = [self.sharedData receiverDataForUserId:recipientId inLink:link];
+        
+        // update status for receiver
+        receiverData[@"lastSenderUpdate"] = [NSNumber numberWithInt:kLastUpdateNewMessage];
+        receiverData[@"lastSenderUpdateTime"] = now;
+        
+        // update for my summary table
+        receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionNoAction];
+        
+        // add new message to array
+        [[receiverData objectForKey:@"messages"] addObject:message];
+    }
+    
+    else // link sent TO me
+    {
+        // update status for sender
+        link.lastReceiverUpdate = [NSNumber numberWithInt:kLastUpdateNewMessage];
+        link.lastReceiverUpdateTime = now;
+        
+        // find my receiver data
+        NSMutableDictionary *receiverData = [self.sharedData receiverDataForUserId:recipientId inLink:link];
+        
+        // if I hadn't yet responded, set responded to YES
+        if ([[receiverData objectForKey:@"responded"] boolValue] == NO)
+        {
+            receiverData[@"responded"] = [NSNumber numberWithBool:YES];
+        }
+        
+        // update for sender's messages summary table
+        receiverData[@"lastReceiverAction"] = [NSNumber numberWithInt:kLastActionResponded];
+        receiverData[@"lastReceiverActionTime"] = now;
+        receiverData[@"lastReceiverActionSeen"] = [NSNumber numberWithBool:NO];
+        
+        // add new message to array
+        [[receiverData objectForKey:@"messages"] addObject:message];
+    }
 }
 
 #pragma mark - Swipe gestures

@@ -56,8 +56,5 @@
 // session logs
 - (void)saveSessionLogsToParse;
 
-// logout
-- (void)logOut;
-
 @end
 

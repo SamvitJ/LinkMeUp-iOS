@@ -132,19 +132,13 @@
 - (void)loadReceivedLinks:(DataUpdatePriority)priority;
 - (void)loadSentLinks:(DataUpdatePriority)priority;
     
-// convenience method
+// convenience methods
 - (NSMutableDictionary *)receiverDataForUserId:(NSString *)userId inLink:(Link *)link;
 - (NSMutableDictionary *)receiverDataForUserId:(NSString *)userId inReceiversData:(NSDictionary *)receiversData;
 
 // local data update methods
 - (BOOL)receivedLinkSeen:(Link *)link;
 - (BOOL)sentLinkSeen:(Link *)link;
-- (void)receiverActionByUserWithId:(NSString *)userId seenOnSentLink:(Link *)link;
-
-- (void)likeLink:(Link *)link;
-- (void)loveLink:(Link *)link;
-
-- (void)updateLink:(Link *)link sentToRecipientWithId:(NSString *)recipientId withMessage:(NSDictionary *)message;
 // *****************************************************************
 
 @end
