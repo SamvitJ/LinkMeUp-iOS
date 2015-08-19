@@ -775,26 +775,34 @@
             // get the user's data from Facebook
             [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *fbUser, NSError *error)
              {
-                 NSLog(@"Linked your facebook account!");
+                 if (!error)
+                 {
+                     NSLog(@"Linked your facebook account!");
+                     
+                     // *HIGH PRIORITY UPDATES*
+                     [self.sharedData updateLinkWithFacebookStatus];
+                     [self.sharedData loadConnections];
+                     
+                     // critical info
+                     me[@"facebook_id"] = fbUser.objectID;
+                     me[@"name"] = [[fbUser.first_name stringByAppendingString:@" "] stringByAppendingString:fbUser.last_name];
+                     
+                     // supplemental info
+                     me[@"first_name"] = fbUser.first_name;
+                     me[@"facebook_email"] = [fbUser objectForKey:@"email"];;
+                     
+                     [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                         if (error)
+                         {
+                             NSLog(@"Error saving user after linking with Facebook %@", error);
+                         }
+                     }];
+                 }
                  
-                 // *HIGH PRIORITY UPDATES*
-                 [self.sharedData updateLinkWithFacebookStatus];
-                 [self.sharedData loadConnections];
-                 
-                 // critical info
-                 me[@"facebook_id"] = fbUser.objectID;
-                 me[@"name"] = [[fbUser.first_name stringByAppendingString:@" "] stringByAppendingString:fbUser.last_name];
-                 
-                 // supplemental info
-                 me[@"first_name"] = fbUser.first_name;
-                 me[@"facebook_email"] = [fbUser objectForKey:@"email"];;
-                 
-                 [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                     if (error)
-                     {
-                         NSLog(@"Error saving user after linking with Facebook %@", error);
-                     }
-                 }];
+                 else
+                 {
+                     
+                 }
              }];
         }
         

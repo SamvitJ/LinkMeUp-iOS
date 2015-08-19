@@ -588,11 +588,11 @@
             
             for (__strong NSString *phone in phones)
             {
-                // remove all non-numeric characters
-                phone = [Constants removeNonNumericFromPhoneNumber:phone];
+                // remove all characters besides digits (0-9) and + sign from phone number
+                phone = [Constants sanitizePhoneNumber:phone];
                 
-                // add both variants of phone number (with and without country code)
-                [allPhoneNumbers addObjectsFromArray:[Constants allVariantsOfPhoneNumber:phone]];
+                // add all variants of phone number (with and without U.S. country code)
+                [allPhoneNumbers addObjectsFromArray:[Constants allVariantsOfContactNumber:phone]];
             }
         }
         
@@ -628,8 +628,8 @@
                 {
                     for (PFUser *user in allUsers)
                     {
-                        // remove all non-numeric characters
-                        phone = [Constants removeNonNumericFromPhoneNumber:phone];
+                        // remove all characters besides digits (0-9) and + sign from phone number
+                        phone = [Constants sanitizePhoneNumber:phone];
                         
                         NSString *userNumber = user[@"mobile_number"];
                         
@@ -819,9 +819,8 @@
                 {
                     NSString *phone = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(ABRphoneNumbers, index);
                     
-                    // remove all non-numeric characters
-                    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-                    phone = [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
+                    // remove all characters besides digits (0-9) and + sign from phone number
+                    phone = [Constants sanitizePhoneNumber:phone];
                     
                     [phoneNumbers addObject:phone];
                 }

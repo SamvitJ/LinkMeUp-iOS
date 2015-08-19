@@ -31,6 +31,7 @@ Production and Analytics/Analytics/
 !Production and Analytics/Analytics/rank_users.py
 Production and Analytics/Beta Testing/
 Production and Analytics/Crash Reports/
+Production and Analytics/EC2 Files/
 Production and Analytics/Export IPAs/
 Production and Analytics/Subscription List/
 !Production and Analytics/Subscription List/extract_emails.py
@@ -42,3 +43,4 @@ Android Development/Employment_Contract_Signed.pdf
 Android Development/Meeting Notes.docx
 Android Development/Signup and Launch Flow/
 Android Development/To Do Lists/iOS Code Documentation.docx
+Android Development/To Do Lists/Auxiliary Work.docx

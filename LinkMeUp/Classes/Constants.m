@@ -25,7 +25,7 @@ const CGFloat k90DegreesCounterClockwiseAngle = (CGFloat) -(90 * M_PI / 180.0);
 
 // PHONE NUMBERS -------------------------------------------------------------
 
-const NSInteger kPhoneLengthSansUSCC = 10; // phone # length w/o U.S. country code
+const NSInteger kPhoneLengthSansUSCountryCode = 10; // phone # length w/o U.S. country code
 
 //----------------------------------------------------------------------------
 
@@ -219,31 +219,68 @@ NSString *const kSelected = @"selected";                        // unused
 
 #pragma mark - Phone numbers
 
-// remove all non-numeric characters (i.e. (, ), -) from phone number
-+ (NSString *)removeNonNumericFromPhoneNumber:(NSString *)phone
+// remove all characters besides digits (0-9) and + sign from phone number
++ (NSString *)sanitizePhoneNumber:(NSString *)phone
 {
-    NSCharacterSet *excludedChars = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    NSMutableCharacterSet *allowedCharacters = [NSMutableCharacterSet decimalDigitCharacterSet];
+    [allowedCharacters formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"+"]];
+    
+    NSCharacterSet *excludedChars = [allowedCharacters invertedSet];
     return [[phone componentsSeparatedByCharactersInSet: excludedChars] componentsJoinedByString:@""];
 }
 
-// return array containing both variants of phone number (w/ and w/o country code), if applicable
-+ (NSArray *)allVariantsOfPhoneNumber:(NSString *)phone
+// return array containing all applicable variants of phone number (with and without U.S. country code)
++ (NSArray *)allVariantsOfContactNumber:(NSString *)contactNumber /*givenUserNumber:(NSString *)userNumber*/
 {
     NSMutableArray *allPhoneNumbers = [[NSMutableArray alloc] init];
     
     // add original
-    [allPhoneNumbers addObject:phone];
+    [allPhoneNumbers addObject: contactNumber];
     
     // add other variant if applicable
-    if ([phone length] > kPhoneLengthSansUSCC)
+    if ([contactNumber length] == kPhoneLengthSansUSCountryCode + 2)
     {
-        NSString *phoneSansCC = [phone substringFromIndex:[phone length] - kPhoneLengthSansUSCC];
-        [allPhoneNumbers addObject:phoneSansCC];
+        if ([[contactNumber substringToIndex:2] isEqualToString:@"+1"])
+        {
+            // number with U.S. country code, but without leading plus sign
+            NSString *phoneSansPlus = [contactNumber substringFromIndex:[contactNumber length] - (kPhoneLengthSansUSCountryCode + 1)];
+            [allPhoneNumbers addObject: phoneSansPlus];
+            
+            // number without U.S. country code
+            NSString *phoneSansCC = [contactNumber substringFromIndex:[contactNumber length] - kPhoneLengthSansUSCountryCode];
+            [allPhoneNumbers addObject: phoneSansCC];
+        }
+        else // non standard (i.e. international)
+        {
+            // do nothing
+        }
     }
-    else if ([phone length] == kPhoneLengthSansUSCC)
+    else if ([contactNumber length] == kPhoneLengthSansUSCountryCode + 1)
     {
-        NSString *phoneWithCC = [@"1" stringByAppendingString:phone];
+        if ([[contactNumber substringToIndex:1] isEqualToString:@"1"])
+        {
+            // number with leading plus sign
+            NSString *phoneWithPlusCC = [@"+" stringByAppendingString: contactNumber];
+            [allPhoneNumbers addObject:phoneWithPlusCC];
+            
+            // number without U.S. country code
+            NSString *phoneSansCC = [contactNumber substringFromIndex:[contactNumber length] - kPhoneLengthSansUSCountryCode];
+            [allPhoneNumbers addObject: phoneSansCC];
+        }
+        else // non standard (i.e. international)
+        {
+            // do nothing
+        }
+    }
+    else if ([contactNumber length] == kPhoneLengthSansUSCountryCode)
+    {
+        // number with U.S. country code, but without plus sign
+        NSString *phoneWithCC = [@"1" stringByAppendingString: contactNumber];
         [allPhoneNumbers addObject:phoneWithCC];
+        
+        // number with leading plus sign
+        NSString *phoneWithPlusCC = [@"+1" stringByAppendingString: contactNumber];
+        [allPhoneNumbers addObject:phoneWithPlusCC];
     }
     else // non standard (i.e. international)
     {
@@ -256,8 +293,8 @@ NSString *const kSelected = @"selected";                        // unused
 // returns true if phone numbers are equal, else return false
 + (BOOL)comparePhone1:(NSString *)phone1 withPhone2:(NSString *)phone2
 {
-    NSArray *allVariantsPhone1 = [Constants allVariantsOfPhoneNumber:phone1];
-    NSArray *allVariantsPhone2 = [Constants allVariantsOfPhoneNumber:phone2];
+    NSArray *allVariantsPhone1 = [Constants allVariantsOfContactNumber:phone1];
+    NSArray *allVariantsPhone2 = [Constants allVariantsOfContactNumber:phone2];
     
     for (NSString *phone1Variant in allVariantsPhone1)
     {

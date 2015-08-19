@@ -41,6 +41,9 @@
 {
     LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    // update installation with latest user info
+    [self setUserInfoOnInstallation];
+    
     // post session logs to Parse (pre-launch)
     [appDelegate saveSessionLogsToParse];
     
@@ -327,6 +330,104 @@
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
 }
 
+#pragma mark - PFLogInViewControllerDelegate
+
+// Sent to the delegate to determine whether the log in request should be submitted to the server.
+- (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password
+{
+    // Check if both fields are completed
+    if (username && password && username.length != 0 && password.length != 0)
+        return YES; // Begin login process
+    
+    [[[UIAlertView alloc] initWithTitle:@"Missing Information"
+                                message:@"Make sure you fill out all of the information!"
+                               delegate:nil
+                      cancelButtonTitle:@"OK"
+                      otherButtonTitles:nil] show];
+    return NO; // Interrupt login process
+}
+
+// Sent to the delegate when a PFUser is logged in.
+- (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
+{
+    NSLog(@"Callback -logInVC: didLogInUser: entered");
+    
+    // set user/name property on session logs and installation
+    [self setUserInfoInSessionLogs];
+    [self setUserInfoOnInstallation];
+    
+    // post session logs to Parse
+    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate saveSessionLogsToParse];
+    
+    // new account via Facebook
+    PFUser *me = [PFUser currentUser];
+    if (me.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
+    {
+        // check granted Facebook permissions
+        bool hasProfile = [self hasProfilePermission];
+        bool hasEmail = [self hasEmailPermission];
+        
+        // NSLog(@"%u %u", hasProfile, hasEmail);
+        
+        // if declined both permissions, show alert and return
+        if (!hasProfile && !hasEmail)
+        {
+            [self handleDeniedPermissions];
+            return;
+        }
+
+        // set NSUserDefault statuses
+        [self setVerificationAndLaunchStatuses];
+        
+        // set mobile verification status in Parse
+        me[@"mobileVerified"] = [NSNumber numberWithBool:NO];
+        
+        // use FB data to set PFUser info, if possible
+        [self getUserDataFromFacebook];
+        
+        // continue signup process
+        verificationViewController *vvc = [[verificationViewController alloc] init];
+        [self.myLogIn presentViewController:vvc animated:YES completion:nil];
+    }
+    
+    else
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+// Sent to the delegate when the log in attempt fails.
+- (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error
+{
+    NSLog(@"Failed to log in... %@", error);
+    
+    // Internal server error || ConnectionFailed || Failed to initialize mongo connection
+    if (error.code == 1 || error.code == 100 || error.code == 159)
+    {
+        [[[UIAlertView alloc] initWithTitle:@"Server Issues"
+                                    message:@"We're sorry, but we're experiencing server issues :( \nPlease try again in a bit."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+    }
+    else if (error.code == 101)
+    {
+        [[[UIAlertView alloc] initWithTitle:@"Incorrect username or password"
+                                    message:@""
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+    }
+}
+
+// Sent to the delegate when the log in screen is dismissed.
+- (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController
+{
+    NSLog(@"Login cancelled");
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - Signup with Facebook
 
 - (void)getUserDataFromFacebook
@@ -518,104 +619,6 @@
 {
     // do nothing
     return;
-}
-
-#pragma mark - PFLogInViewControllerDelegate
-
-// Sent to the delegate to determine whether the log in request should be submitted to the server.
-- (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password
-{
-    // Check if both fields are completed
-    if (username && password && username.length != 0 && password.length != 0)
-        return YES; // Begin login process
-    
-    [[[UIAlertView alloc] initWithTitle:@"Missing Information"
-                                message:@"Make sure you fill out all of the information!"
-                               delegate:nil
-                      cancelButtonTitle:@"OK"
-                      otherButtonTitles:nil] show];
-    return NO; // Interrupt login process
-}
-
-// Sent to the delegate when a PFUser is logged in.
-- (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
-{
-    NSLog(@"Callback -logInVC: didLogInUser: entered");
-    
-    // set user/name property on session logs and installation
-    [self setUserInfoInSessionLogs];
-    [self setUserInfoOnInstallation];
-    
-    // post session logs to Parse
-    LinkMeUpAppDelegate *appDelegate = (LinkMeUpAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate saveSessionLogsToParse];
-    
-    // new account via Facebook
-    PFUser *me = [PFUser currentUser];
-    if (me.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
-    {
-        // check granted Facebook permissions
-        bool hasProfile = [self hasProfilePermission];
-        bool hasEmail = [self hasEmailPermission];
-        
-        // NSLog(@"%u %u", hasProfile, hasEmail);
-        
-        // if declined both permissions, show alert and return
-        if (!hasProfile && !hasEmail)
-        {
-            [self handleDeniedPermissions];
-            return;
-        }
-
-        // set NSUserDefault statuses
-        [self setVerificationAndLaunchStatuses];
-        
-        // set mobile verification status in Parse
-        me[@"mobileVerified"] = [NSNumber numberWithBool:NO];
-        
-        // use FB data to set PFUser info, if possible
-        [self getUserDataFromFacebook];
-        
-        // continue signup process
-        verificationViewController *vvc = [[verificationViewController alloc] init];
-        [self.myLogIn presentViewController:vvc animated:YES completion:nil];
-    }
-    
-    else
-    {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-}
-
-// Sent to the delegate when the log in attempt fails.
-- (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error
-{
-    NSLog(@"Failed to log in... %@", error);
-    
-    // Internal server error || ConnectionFailed || Failed to initialize mongo connection
-    if (error.code == 1 || error.code == 100 || error.code == 159)
-    {
-        [[[UIAlertView alloc] initWithTitle:@"Server Issues"
-                                    message:@"We're sorry, but we're experiencing server issues :( \nPlease try again in a bit."
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-    }
-    else if (error.code == 101)
-    {
-        [[[UIAlertView alloc] initWithTitle:@"Incorrect username or password"
-                                    message:@""
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-    }
-}
-
-// Sent to the delegate when the log in screen is dismissed.
-- (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController
-{
-    NSLog(@"Login cancelled");
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - PFSignUpViewControllerDelegate

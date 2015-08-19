@@ -42,93 +42,7 @@
     else
     {
         NSLog(@"\"Verify code\" button pressed");
-        
-        // correct code entered
-        if ([self.codeTextField.text isEqualToString:self.code])
-        {
-            NSLog(@"Correct code entered!");
-            
-            PFUser *me = [PFUser currentUser];
-            
-            // user completed verification process
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_%@", me.objectId, kDidNotVerifyNumber]];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            me[@"mobile_number"] = self.phoneNumber;
-            me[@"mobileVerified"] = [NSNumber numberWithBool:YES];
-            
-            [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (error)
-                {
-                    NSLog(@"Error saving mobile number and verification status (true) %@ %@", error, [error userInfo]);
-                }
-            }];
-            
-            
-            // remove code fields and display activity indicator
-            [self.codeVerificationLabel removeFromSuperview];
-            [self.codeTextField removeFromSuperview];
-            [self.backLabel removeFromSuperview];
-            [self.activityIndicator startAnimating];
-            
-            // pause
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                
-                // display findContactsViewController
-                if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied ||
-                    ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
-                {
-                    findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
-                    [self presentViewController:cwfvc animated:YES completion:nil];
-                }
-                else
-                {
-                    // climb up through presenting view controller hierarchy...
-                    PFUser *user = [PFUser currentUser];
-                    
-                    if (user.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
-                    {
-                        myLogInViewController *logIn = (myLogInViewController *) self.presentingViewController;
-                        DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
-                        
-                        [defaultSettings dismissViewControllerAnimated:YES completion:nil];
-                    }
-                    
-                    else if (user.isNew) // new user, but not created via Facebook
-                    {
-                        mySignUpViewController *signUp = (mySignUpViewController *) self.presentingViewController;
-                        myLogInViewController *logIn = (myLogInViewController *) signUp.presentingViewController;
-                        DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
-                        
-                        [defaultSettings dismissViewControllerAnimated:YES completion:nil];
-                    }
-                    
-                    else // existing user
-                    {
-                        UIViewController *presenting = self.presentingViewController;
-                        
-                        [presenting dismissViewControllerAnimated:YES completion:nil];
-                    }
-                }
-            });
-        }
-        
-        else
-        {
-            NSLog(@"Incorrect code entered");
-            
-            self.codeTextField.text = @"";
-            
-            // disable button
-            [Constants disableButton:self.verificationButton];
-            
-            NSString *message = @"Please enter your code again";
-            [[[UIAlertView alloc] initWithTitle:@"Incorrect Code"
-                                        message:message
-                                       delegate:nil
-                              cancelButtonTitle:@"Enter again"
-                              otherButtonTitles:nil, nil] show];
-        }
+        [self verifyCode];
     }
 }
 
@@ -148,7 +62,8 @@
     [self.verificationScreen addSubview: self.activityIndicator];
     
     // set phone number
-    self.phoneNumber = self.mobileNumberTextField.text;
+    self.phoneNumber = [[self.mobileNumberTextField.text componentsSeparatedByCharactersInSet:MOBILE_PUNCT_SET] componentsJoinedByString:@""];
+    // [Constants sanitizePhoneNumber:self.mobileNumberTextField.text];
     
     // check for existing accounts
     PFQuery *mobileNumberQuery = [PFUser query];
@@ -182,7 +97,7 @@
             [PFCloud callFunctionInBackground:@"inviteWithTwilio" withParameters:params block:^(id object, NSError *error) {
                 if (!error)
                 {
-                    NSLog(@"Verification SMS sent");
+                    NSLog(@"User entered number '%@'. Verification SMS sent to '%@'", self.mobileNumberTextField.text, self.phoneNumber);
                     
                     [self.activityIndicator stopAnimating];
                     
@@ -197,7 +112,7 @@
                 
                 else
                 {
-                    NSLog(@"Error sending verification code to provided number %@ %@", error, [error userInfo]);
+                    NSLog(@"User entered number '%@'. Error sending verification code to number '%@' %@ %@", self.mobileNumberTextField.text, self.phoneNumber, error, [error userInfo]);
                     
                     [self.activityIndicator stopAnimating];
                     [self.verificationScreen removeFromSuperview];
@@ -212,6 +127,96 @@
             }];
         }
     }];
+}
+
+- (void)verifyCode
+{
+    // correct code entered
+    if ([self.codeTextField.text isEqualToString:self.code])
+    {
+        NSLog(@"Correct code entered!");
+        
+        PFUser *me = [PFUser currentUser];
+        
+        // user completed verification process
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_%@", me.objectId, kDidNotVerifyNumber]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        me[@"mobile_number"] = self.phoneNumber;
+        me[@"mobileVerified"] = [NSNumber numberWithBool:YES];
+        
+        [me saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (error)
+            {
+                NSLog(@"Error saving mobile number and verification status (true) %@ %@", error, [error userInfo]);
+            }
+        }];
+        
+        
+        // remove code fields and display activity indicator
+        [self.codeVerificationLabel removeFromSuperview];
+        [self.codeTextField removeFromSuperview];
+        [self.backLabel removeFromSuperview];
+        [self.activityIndicator startAnimating];
+        
+        // pause
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            // display findContactsViewController
+            if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied ||
+                ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
+            {
+                findContactsViewController *cwfvc = [[findContactsViewController alloc] init];
+                [self presentViewController:cwfvc animated:YES completion:nil];
+            }
+            else
+            {
+                // climb up through presenting view controller hierarchy...
+                PFUser *user = [PFUser currentUser];
+                
+                if (user.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
+                {
+                    myLogInViewController *logIn = (myLogInViewController *) self.presentingViewController;
+                    DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+                    
+                    [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+                }
+                
+                else if (user.isNew) // new user, but not created via Facebook
+                {
+                    mySignUpViewController *signUp = (mySignUpViewController *) self.presentingViewController;
+                    myLogInViewController *logIn = (myLogInViewController *) signUp.presentingViewController;
+                    DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+                    
+                    [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+                }
+                
+                else // existing user
+                {
+                    UIViewController *presenting = self.presentingViewController;
+                    
+                    [presenting dismissViewControllerAnimated:YES completion:nil];
+                }
+            }
+        });
+    }
+    
+    else
+    {
+        NSLog(@"Incorrect code entered");
+        
+        self.codeTextField.text = @"";
+        
+        // disable button
+        [Constants disableButton:self.verificationButton];
+        
+        NSString *message = @"Please enter your code again";
+        [[[UIAlertView alloc] initWithTitle:@"Incorrect Code"
+                                    message:message
+                                   delegate:nil
+                          cancelButtonTitle:@"Enter again"
+                          otherButtonTitles:nil, nil] show];
+    }
 }
 
 - (void)backLabelPressed:(id)sender
@@ -363,7 +368,7 @@
     self.mobileNumberTextField.layer.borderWidth = 2.0f;
     
     self.mobileNumberTextField.placeholder = @"Mobile Number";
-    self.mobileNumberTextField.keyboardType = UIKeyboardTypePhonePad;
+    self.mobileNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     self.mobileNumberTextField.textAlignment = NSTextAlignmentCenter;
     self.mobileNumberTextField.font = HELV_18;
     
