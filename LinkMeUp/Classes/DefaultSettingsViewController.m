@@ -330,7 +330,7 @@
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
 }
 
-#pragma mark - PFLogInViewControllerDelegate
+#pragma mark - PFLogInViewController delegate methods
 
 // Sent to the delegate to determine whether the log in request should be submitted to the server.
 - (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password
@@ -621,7 +621,7 @@
     return;
 }
 
-#pragma mark - PFSignUpViewControllerDelegate
+#pragma mark - PFSignUpViewController delegate methods
 
 // Sent to the delegate to determine whether the sign up request should be submitted to the server.
 - (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:(NSDictionary *)info

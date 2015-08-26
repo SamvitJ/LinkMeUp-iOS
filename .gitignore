@@ -16,6 +16,9 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+# Python
+*.pyc
+
 # Large media files
 *.mov
 *.mp3
@@ -44,3 +47,4 @@ Android Development/Meeting Notes.docx
 Android Development/Signup and Launch Flow/
 Android Development/To Do Lists/iOS Code Documentation.docx
 Android Development/To Do Lists/Auxiliary Work.docx
+Android Development/To Do Lists/Screenshots/
