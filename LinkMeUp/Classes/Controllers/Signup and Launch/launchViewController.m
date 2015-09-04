@@ -1,12 +1,14 @@
 //
-//  DefaultSettingsViewController.m
+//  LaunchViewController.m
+//  (Before 9/4/15) DefaultSettingsViewController.m
+//
 //  LinkMeUp
 //
 //  Created by Samvit Jain on 6/19/14.
 //
 //
 
-#import "DefaultSettingsViewController.h"
+#import "launchViewController.h"
 
 #import "Constants.h"
 #import "Data.h"
@@ -22,11 +24,11 @@
 #import "inboxViewController.h"
 #import "friendsViewController.h"
 
-@interface DefaultSettingsViewController ()
+@interface launchViewController ()
 
 @end
 
-@implementation DefaultSettingsViewController
+@implementation launchViewController
 
 
 

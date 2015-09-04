@@ -1,5 +1,7 @@
 //
-//  DefaultSettingsViewController.h
+//  LaunchViewController.h
+//  (Before 9/4/15) DefaultSettingsViewController.h
+//
 //  LinkMeUp
 //
 //  Created by Samvit Jain on 6/19/14.
@@ -15,7 +17,7 @@
 #import "mySignUpViewController.h"
 #import "verificationViewController.h"
 
-@interface DefaultSettingsViewController : UIViewController <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UIAlertViewDelegate>
+@interface launchViewController : UIViewController <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) myLogInViewController *myLogIn;
 

@@ -49,10 +49,6 @@
 		F1F8F3691B9A27D200F3B5EB /* searchResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3141B9A27D200F3B5EB /* searchResultsViewController.m */; };
 		F1F8F36A1B9A27D200F3B5EB /* searchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3161B9A27D200F3B5EB /* searchViewController.m */; };
 		F1F8F36B1B9A27D200F3B5EB /* songInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3181B9A27D200F3B5EB /* songInfoViewController.m */; };
-		F1F8F36C1B9A27D200F3B5EB /* DefaultSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F31B1B9A27D200F3B5EB /* DefaultSettingsViewController.m */; };
-		F1F8F36D1B9A27D200F3B5EB /* myLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F31D1B9A27D200F3B5EB /* myLogInViewController.m */; };
-		F1F8F36E1B9A27D200F3B5EB /* mySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F31F1B9A27D200F3B5EB /* mySignUpViewController.m */; };
-		F1F8F36F1B9A27D200F3B5EB /* verificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3211B9A27D200F3B5EB /* verificationViewController.m */; };
 		F1F8F3701B9A27D200F3B5EB /* Data.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3241B9A27D200F3B5EB /* Data.m */; };
 		F1F8F3711B9A27D200F3B5EB /* FriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3271B9A27D200F3B5EB /* FriendRequest.m */; };
 		F1F8F3721B9A27D200F3B5EB /* Link.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3291B9A27D200F3B5EB /* Link.m */; };
@@ -82,7 +78,7 @@
 		F1F8F3B71B9A28AC00F3B5EB /* searchResultsViewControlleriOS8.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F3A31B9A28AC00F3B5EB /* searchResultsViewControlleriOS8.xib */; };
 		F1F8F3B81B9A28AC00F3B5EB /* searchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F3A41B9A28AC00F3B5EB /* searchViewController.xib */; };
 		F1F8F3B91B9A28AC00F3B5EB /* songInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F3A51B9A28AC00F3B5EB /* songInfoViewController.xib */; };
-		F1F8F3BA1B9A28AC00F3B5EB /* DefaultSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F3A71B9A28AC00F3B5EB /* DefaultSettingsViewController.xib */; };
+		F1F8F3BA1B9A28AC00F3B5EB /* launchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F3A71B9A28AC00F3B5EB /* launchViewController.xib */; };
 		F1F8F3BB1B9A28AC00F3B5EB /* verificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F3A81B9A28AC00F3B5EB /* verificationViewController.xib */; };
 		F1F8F3C31B9A28FA00F3B5EB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F3BF1B9A28FA00F3B5EB /* main.m */; };
 		F1F8F4271B9A29E200F3B5EB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F3CE1B9A29E100F3B5EB /* Credits.rtf */; };
@@ -125,7 +121,11 @@
 		F1F8F4691B9A29E200F3B5EB /* glyphicons_343_thumbs_up_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F4261B9A29E200F3B5EB /* glyphicons_343_thumbs_up_selected.png */; };
 		F1F8F4761B9A2E1200F3B5EB /* NSLogExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F4721B9A2E1200F3B5EB /* NSLogExtension.m */; };
 		F1F8F4771B9A2E1200F3B5EB /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F4751B9A2E1200F3B5EB /* Reachability.m */; };
-		F1FF125119BA885C00FBAD8C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1FF125019BA885C00FBAD8C /* Images.xcassets */; };
+		F1F8F47F1B9A3A9B00F3B5EB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1F8F47E1B9A3A9B00F3B5EB /* Images.xcassets */; };
+		F1F8F4891B9A3CDC00F3B5EB /* launchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F4821B9A3CDC00F3B5EB /* launchViewController.m */; };
+		F1F8F48A1B9A3CDC00F3B5EB /* myLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F4841B9A3CDC00F3B5EB /* myLogInViewController.m */; };
+		F1F8F48B1B9A3CDC00F3B5EB /* mySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F4861B9A3CDC00F3B5EB /* mySignUpViewController.m */; };
+		F1F8F48C1B9A3CDC00F3B5EB /* verificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F8F4881B9A3CDC00F3B5EB /* verificationViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -221,14 +221,6 @@
 		F1F8F3161B9A27D200F3B5EB /* searchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = searchViewController.m; sourceTree = "<group>"; };
 		F1F8F3171B9A27D200F3B5EB /* songInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = songInfoViewController.h; sourceTree = "<group>"; };
 		F1F8F3181B9A27D200F3B5EB /* songInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = songInfoViewController.m; sourceTree = "<group>"; };
-		F1F8F31A1B9A27D200F3B5EB /* DefaultSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultSettingsViewController.h; sourceTree = "<group>"; };
-		F1F8F31B1B9A27D200F3B5EB /* DefaultSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultSettingsViewController.m; sourceTree = "<group>"; };
-		F1F8F31C1B9A27D200F3B5EB /* myLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myLogInViewController.h; sourceTree = "<group>"; };
-		F1F8F31D1B9A27D200F3B5EB /* myLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myLogInViewController.m; sourceTree = "<group>"; };
-		F1F8F31E1B9A27D200F3B5EB /* mySignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mySignUpViewController.h; sourceTree = "<group>"; };
-		F1F8F31F1B9A27D200F3B5EB /* mySignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mySignUpViewController.m; sourceTree = "<group>"; };
-		F1F8F3201B9A27D200F3B5EB /* verificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = verificationViewController.h; sourceTree = "<group>"; };
-		F1F8F3211B9A27D200F3B5EB /* verificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = verificationViewController.m; sourceTree = "<group>"; };
 		F1F8F3231B9A27D200F3B5EB /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		F1F8F3241B9A27D200F3B5EB /* Data.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Data.m; sourceTree = "<group>"; };
 		F1F8F3261B9A27D200F3B5EB /* FriendRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequest.h; sourceTree = "<group>"; };
@@ -270,7 +262,7 @@
 		F1F8F3A31B9A28AC00F3B5EB /* searchResultsViewControlleriOS8.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = searchResultsViewControlleriOS8.xib; sourceTree = "<group>"; };
 		F1F8F3A41B9A28AC00F3B5EB /* searchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = searchViewController.xib; sourceTree = "<group>"; };
 		F1F8F3A51B9A28AC00F3B5EB /* songInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = songInfoViewController.xib; sourceTree = "<group>"; };
-		F1F8F3A71B9A28AC00F3B5EB /* DefaultSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DefaultSettingsViewController.xib; sourceTree = "<group>"; };
+		F1F8F3A71B9A28AC00F3B5EB /* launchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = launchViewController.xib; sourceTree = "<group>"; };
 		F1F8F3A81B9A28AC00F3B5EB /* verificationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = verificationViewController.xib; sourceTree = "<group>"; };
 		F1F8F3BF1B9A28FA00F3B5EB /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F1F8F3CE1B9A29E100F3B5EB /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
@@ -317,7 +309,15 @@
 		F1F8F4721B9A2E1200F3B5EB /* NSLogExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSLogExtension.m; sourceTree = "<group>"; };
 		F1F8F4741B9A2E1200F3B5EB /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		F1F8F4751B9A2E1200F3B5EB /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		F1FF125019BA885C00FBAD8C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Images.xcassets; path = LinkMeUp/Images.xcassets; sourceTree = "<group>"; };
+		F1F8F47E1B9A3A9B00F3B5EB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F1F8F4811B9A3CDC00F3B5EB /* launchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = launchViewController.h; sourceTree = "<group>"; };
+		F1F8F4821B9A3CDC00F3B5EB /* launchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = launchViewController.m; sourceTree = "<group>"; };
+		F1F8F4831B9A3CDC00F3B5EB /* myLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myLogInViewController.h; sourceTree = "<group>"; };
+		F1F8F4841B9A3CDC00F3B5EB /* myLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myLogInViewController.m; sourceTree = "<group>"; };
+		F1F8F4851B9A3CDC00F3B5EB /* mySignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mySignUpViewController.h; sourceTree = "<group>"; };
+		F1F8F4861B9A3CDC00F3B5EB /* mySignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mySignUpViewController.m; sourceTree = "<group>"; };
+		F1F8F4871B9A3CDC00F3B5EB /* verificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = verificationViewController.h; sourceTree = "<group>"; };
+		F1F8F4881B9A3CDC00F3B5EB /* verificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = verificationViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -381,7 +381,6 @@
 		29B97317FDCFA39411CA2CEA /* Asset Catalog */ = {
 			isa = PBXGroup;
 			children = (
-				F1FF125019BA885C00FBAD8C /* Images.xcassets */,
 			);
 			name = "Asset Catalog";
 			sourceTree = "<group>";
@@ -464,11 +463,11 @@
 		F1F8F2F41B9A27D200F3B5EB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F1F8F2F51B9A27D200F3B5EB /* Friends Tab */,
-				F1F8F2FC1B9A27D200F3B5EB /* Inbox Tab */,
+				F1F8F4801B9A3CDC00F3B5EB /* Signup and Launch */,
 				F1F8F30B1B9A27D200F3B5EB /* Permissions */,
+				F1F8F2FC1B9A27D200F3B5EB /* Inbox Tab */,
 				F1F8F3101B9A27D200F3B5EB /* Send Link Tab */,
-				F1F8F3191B9A27D200F3B5EB /* Setup and Launch */,
+				F1F8F2F51B9A27D200F3B5EB /* Friends Tab */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -535,31 +534,16 @@
 		F1F8F3101B9A27D200F3B5EB /* Send Link Tab */ = {
 			isa = PBXGroup;
 			children = (
-				F1F8F3111B9A27D200F3B5EB /* contactsViewController.h */,
-				F1F8F3121B9A27D200F3B5EB /* contactsViewController.m */,
-				F1F8F3131B9A27D200F3B5EB /* searchResultsViewController.h */,
-				F1F8F3141B9A27D200F3B5EB /* searchResultsViewController.m */,
 				F1F8F3151B9A27D200F3B5EB /* searchViewController.h */,
 				F1F8F3161B9A27D200F3B5EB /* searchViewController.m */,
+				F1F8F3131B9A27D200F3B5EB /* searchResultsViewController.h */,
+				F1F8F3141B9A27D200F3B5EB /* searchResultsViewController.m */,
 				F1F8F3171B9A27D200F3B5EB /* songInfoViewController.h */,
 				F1F8F3181B9A27D200F3B5EB /* songInfoViewController.m */,
+				F1F8F3111B9A27D200F3B5EB /* contactsViewController.h */,
+				F1F8F3121B9A27D200F3B5EB /* contactsViewController.m */,
 			);
 			path = "Send Link Tab";
-			sourceTree = "<group>";
-		};
-		F1F8F3191B9A27D200F3B5EB /* Setup and Launch */ = {
-			isa = PBXGroup;
-			children = (
-				F1F8F31A1B9A27D200F3B5EB /* DefaultSettingsViewController.h */,
-				F1F8F31B1B9A27D200F3B5EB /* DefaultSettingsViewController.m */,
-				F1F8F31C1B9A27D200F3B5EB /* myLogInViewController.h */,
-				F1F8F31D1B9A27D200F3B5EB /* myLogInViewController.m */,
-				F1F8F31E1B9A27D200F3B5EB /* mySignUpViewController.h */,
-				F1F8F31F1B9A27D200F3B5EB /* mySignUpViewController.m */,
-				F1F8F3201B9A27D200F3B5EB /* verificationViewController.h */,
-				F1F8F3211B9A27D200F3B5EB /* verificationViewController.m */,
-			);
-			path = "Setup and Launch";
 			sourceTree = "<group>";
 		};
 		F1F8F3221B9A27D200F3B5EB /* Models */ = {
@@ -643,6 +627,7 @@
 		F1F8F38E1B9A28AC00F3B5EB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F1F8F47E1B9A3A9B00F3B5EB /* Images.xcassets */,
 				F1F8F3CD1B9A29E100F3B5EB /* Legal */,
 				F1F8F3D11B9A29E100F3B5EB /* Images */,
 				F1F8F38F1B9A28AC00F3B5EB /* XIB Files */,
@@ -718,7 +703,7 @@
 		F1F8F3A61B9A28AC00F3B5EB /* Signup and Launch */ = {
 			isa = PBXGroup;
 			children = (
-				F1F8F3A71B9A28AC00F3B5EB /* DefaultSettingsViewController.xib */,
+				F1F8F3A71B9A28AC00F3B5EB /* launchViewController.xib */,
 				F1F8F3A81B9A28AC00F3B5EB /* verificationViewController.xib */,
 			);
 			path = "Signup and Launch";
@@ -908,6 +893,21 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
+		F1F8F4801B9A3CDC00F3B5EB /* Signup and Launch */ = {
+			isa = PBXGroup;
+			children = (
+				F1F8F4811B9A3CDC00F3B5EB /* launchViewController.h */,
+				F1F8F4821B9A3CDC00F3B5EB /* launchViewController.m */,
+				F1F8F4831B9A3CDC00F3B5EB /* myLogInViewController.h */,
+				F1F8F4841B9A3CDC00F3B5EB /* myLogInViewController.m */,
+				F1F8F4851B9A3CDC00F3B5EB /* mySignUpViewController.h */,
+				F1F8F4861B9A3CDC00F3B5EB /* mySignUpViewController.m */,
+				F1F8F4871B9A3CDC00F3B5EB /* verificationViewController.h */,
+				F1F8F4881B9A3CDC00F3B5EB /* verificationViewController.m */,
+			);
+			path = "Signup and Launch";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1009,7 +1009,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1F8F3BA1B9A28AC00F3B5EB /* DefaultSettingsViewController.xib in Resources */,
+				F1F8F3BA1B9A28AC00F3B5EB /* launchViewController.xib in Resources */,
 				F1F8F4661B9A29E200F3B5EB /* glyphicons_211_right_arrow.png in Resources */,
 				F1F8F4491B9A29E200F3B5EB /* glyphicons_174_pause.png in Resources */,
 				F1F8F3AC1B9A28AC00F3B5EB /* linkTableViewCell.xib in Resources */,
@@ -1024,6 +1024,7 @@
 				F1F8F4641B9A29E200F3B5EB /* glyphicons_048_dislikes.png in Resources */,
 				F1F8F4381B9A29E200F3B5EB /* login-button-small.png in Resources */,
 				F1F8F4431B9A29E200F3B5EB /* LaunchImage@2x.png in Resources */,
+				F1F8F47F1B9A3A9B00F3B5EB /* Images.xcassets in Resources */,
 				F1F8F3B01B9A28AC00F3B5EB /* linkViewController.xib in Resources */,
 				F1F8F4691B9A29E200F3B5EB /* glyphicons_343_thumbs_up_selected.png in Resources */,
 				F1F8F43F1B9A29E200F3B5EB /* buttonRequest.png in Resources */,
@@ -1045,7 +1046,6 @@
 				F1F8F4681B9A29E200F3B5EB /* glyphicons_343_thumbs_up.png in Resources */,
 				F1F8F4411B9A29E200F3B5EB /* Default-568h@2x.png in Resources */,
 				F1F8F3AA1B9A28AC00F3B5EB /* legalInfoViewController.xib in Resources */,
-				F1FF125119BA885C00FBAD8C /* Images.xcassets in Resources */,
 				F1F8F44E1B9A29E200F3B5EB /* MagnifyingGlass.png in Resources */,
 				F1F8F3B21B9A28AC00F3B5EB /* MainWindow.xib in Resources */,
 				F1F8F3B81B9A28AC00F3B5EB /* searchViewController.xib in Resources */,
@@ -1077,6 +1077,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F8F4891B9A3CDC00F3B5EB /* launchViewController.m in Sources */,
 				F1F8F3701B9A27D200F3B5EB /* Data.m in Sources */,
 				F1F8F3861B9A27D200F3B5EB /* settingsTableViewCell.m in Sources */,
 				F1F8F36A1B9A27D200F3B5EB /* searchViewController.m in Sources */,
@@ -1087,14 +1088,12 @@
 				F1F8F3601B9A27D200F3B5EB /* likeloveStatusViewController.m in Sources */,
 				F1F8F3671B9A27D200F3B5EB /* pushNotifViewController.m in Sources */,
 				F1F8F3871B9A27D200F3B5EB /* linkTableViewCell.m in Sources */,
+				F1F8F48B1B9A3CDC00F3B5EB /* mySignUpViewController.m in Sources */,
 				F1F8F35E1B9A27D200F3B5EB /* legalInfoViewController.m in Sources */,
-				F1F8F36E1B9A27D200F3B5EB /* mySignUpViewController.m in Sources */,
 				F1F8F3891B9A27D200F3B5EB /* reactionTableViewCell.m in Sources */,
 				F1F8F3691B9A27D200F3B5EB /* searchResultsViewController.m in Sources */,
 				F1F8F35C1B9A27D200F3B5EB /* Constants.m in Sources */,
-				F1F8F36F1B9A27D200F3B5EB /* verificationViewController.m in Sources */,
 				F1F8F3711B9A27D200F3B5EB /* FriendRequest.m in Sources */,
-				F1F8F36C1B9A27D200F3B5EB /* DefaultSettingsViewController.m in Sources */,
 				F1F8F3721B9A27D200F3B5EB /* Link.m in Sources */,
 				F1F8F38C1B9A27D200F3B5EB /* contactsTableViewCell.m in Sources */,
 				F1F8F3621B9A27D200F3B5EB /* inboxViewController.m in Sources */,
@@ -1108,10 +1107,11 @@
 				F1F8F3641B9A27D200F3B5EB /* receivedLinkViewController.m in Sources */,
 				F1F8F35B1B9A27D200F3B5EB /* LinkMeUpAppDelegate.m in Sources */,
 				F1F8F38D1B9A27D200F3B5EB /* videoTableViewCell.m in Sources */,
-				F1F8F36D1B9A27D200F3B5EB /* myLogInViewController.m in Sources */,
 				F1F8F38A1B9A27D200F3B5EB /* SearchBarNoCancel.m in Sources */,
 				F1F8F35D1B9A27D200F3B5EB /* friendsViewController.m in Sources */,
 				F1F8F4771B9A2E1200F3B5EB /* Reachability.m in Sources */,
+				F1F8F48C1B9A3CDC00F3B5EB /* verificationViewController.m in Sources */,
+				F1F8F48A1B9A3CDC00F3B5EB /* myLogInViewController.m in Sources */,
 				F1F8F3731B9A27D200F3B5EB /* Logs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

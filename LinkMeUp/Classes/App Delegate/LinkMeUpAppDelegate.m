@@ -16,7 +16,7 @@
 #import "Link.h"
 #import "FriendRequest.h"
 
-#import "DefaultSettingsViewController.h"
+#import "launchViewController.h"
 
 #import "inboxViewController.h"
 #import "searchViewController.h"
@@ -59,8 +59,8 @@
     }];
     
     // Initialize view controllers
-    self.ds = [[DefaultSettingsViewController alloc] init];
-    [self.window setRootViewController:self.ds];
+    self.launchVC = [[launchViewController alloc] init];
+    [self.window setRootViewController:self.launchVC];
     [self.window makeKeyAndVisible];
     
     // Set didShowPushVCThisSession to NO
@@ -628,7 +628,7 @@
         [vc popToRootViewControllerAnimated:NO];
     
     // display login screen
-    [self.window setRootViewController:self.ds];
+    [self.window setRootViewController:self.launchVC];
     
     // set logout status and post session logs to Parse
     NSLog(@"Logging out");

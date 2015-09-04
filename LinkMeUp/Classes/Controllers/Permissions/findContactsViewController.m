@@ -285,9 +285,9 @@
         {
             verificationViewController *verify = (verificationViewController *) presenting;
             myLogInViewController *logIn = (myLogInViewController *) verify.presentingViewController;
-            DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+            launchViewController *launch = (launchViewController *) logIn.presentingViewController;
             
-            [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+            [launch dismissViewControllerAnimated:YES completion:nil];
         }
         
         else if (user.isNew) // new user, but not created via FB login
@@ -295,9 +295,9 @@
             verificationViewController *verify = (verificationViewController *) presenting;
             mySignUpViewController *signUp = (mySignUpViewController *) verify.presentingViewController;
             myLogInViewController *logIn = (myLogInViewController *) signUp.presentingViewController;
-            DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+            launchViewController *launch = (launchViewController *) logIn.presentingViewController;
             
-            [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+            [launch dismissViewControllerAnimated:YES completion:nil];
         }
         
         else // V1 user who previously denied address book permissions - case not currently reachable

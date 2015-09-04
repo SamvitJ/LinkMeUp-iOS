@@ -12,7 +12,7 @@
 
 #import "Constants.h"
 
-#import "DefaultSettingsViewController.h"
+#import "launchViewController.h"
 #import "mySignUpViewController.h"
 #import "myLogInViewController.h"
 #import "findContactsViewController.h"
@@ -177,18 +177,18 @@
                 if (user.isNew && [PFFacebookUtils isLinkedWithUser:(PFUser *)user])
                 {
                     myLogInViewController *logIn = (myLogInViewController *) self.presentingViewController;
-                    DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+                    launchViewController *launch = (launchViewController *) logIn.presentingViewController;
                     
-                    [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+                    [launch dismissViewControllerAnimated:YES completion:nil];
                 }
                 
                 else if (user.isNew) // new user, but not created via Facebook
                 {
                     mySignUpViewController *signUp = (mySignUpViewController *) self.presentingViewController;
                     myLogInViewController *logIn = (myLogInViewController *) signUp.presentingViewController;
-                    DefaultSettingsViewController *defaultSettings = (DefaultSettingsViewController *) logIn.presentingViewController;
+                    launchViewController *launch = (launchViewController *) logIn.presentingViewController;
                     
-                    [defaultSettings dismissViewControllerAnimated:YES completion:nil];
+                    [launch dismissViewControllerAnimated:YES completion:nil];
                 }
                 
                 else // existing user

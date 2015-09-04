@@ -9,7 +9,7 @@
 
 #import "Data.h"
 
-#import "DefaultSettingsViewController.h"
+#import "LaunchViewController.h"
 
 #import "Logs.h"
 
@@ -25,7 +25,7 @@
 @property (nonatomic, strong) IBOutlet UIWindow *window;
 
 // associated VCs
-@property (nonatomic, strong) DefaultSettingsViewController *ds;
+@property (nonatomic, strong) launchViewController *launchVC;
 @property (nonatomic, strong) UITabBarController *tbc;
 
 // data refresh timer (if push notifications off)
