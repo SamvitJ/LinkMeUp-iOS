@@ -50,9 +50,9 @@
 {
     [super viewDidLayoutSubviews];
     
-    [self.logInView.logo setFrame:CGRectMake((self.logInView.bounds.size.width - 200.0f)/2, (IS_IPHONE5 ? 100.0f : 60.0f), 200.0f, 50.0f)];
+    [self.logInView.logo setFrame:CGRectMake((self.logInView.bounds.size.width - 200.0f)/2, (IS_IPHONE_5 ? 100.0f : 60.0f), 200.0f, 50.0f)];
     
-    if (IS_IPHONE5)
+    if (IS_IPHONE_5)
     {
         /*// add background to cover white margin on bottom
         UIImageView *grayBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];

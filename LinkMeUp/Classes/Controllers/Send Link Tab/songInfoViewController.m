@@ -137,7 +137,7 @@
     
     // start activity indicator
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    self.activityIndicator.center = CGPointMake(self.view.frame.size.width / 2.0, 170.0f + (IS_IPHONE5 ? 30.0f : 0.0f));
+    self.activityIndicator.center = CGPointMake(self.view.frame.size.width / 2.0, 170.0f + (IS_IPHONE_5 ? 30.0f : 0.0f));
     [self.activityIndicator startAnimating];
     [self.view addSubview: self.activityIndicator];
     
@@ -277,7 +277,7 @@
     paragraphStyle.alignment = NSTextAlignmentCenter;
     paragraphStyle.lineSpacing = 4.0;
     
-    UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 300.0f)/2, 170.0f + (IS_IPHONE5 ? 30.0f : 0.0f), 300.0f, 65.0f)];
+    UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 300.0f)/2, 170.0f + (IS_IPHONE_5 ? 30.0f : 0.0f), 300.0f, 65.0f)];
     errorLabel.numberOfLines = 0;
     errorLabel.lineBreakMode = NSLineBreakByWordWrapping;
     errorLabel.attributedText = [[NSMutableAttributedString alloc] initWithString:errorMessage
@@ -298,7 +298,7 @@
     paragraphStyle.alignment = NSTextAlignmentCenter;
     paragraphStyle.lineSpacing = 4.0;
     
-    UILabel *noMatchLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 290.0f)/2, 170.0f + (IS_IPHONE5 ? 30.0f : 0.0f), 290.0f, 65.0f)];
+    UILabel *noMatchLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 290.0f)/2, 170.0f + (IS_IPHONE_5 ? 30.0f : 0.0f), 290.0f, 65.0f)];
     noMatchLabel.numberOfLines = 0;
     noMatchLabel.lineBreakMode = NSLineBreakByWordWrapping;
     noMatchLabel.attributedText = [[NSMutableAttributedString alloc] initWithString:(@"No match found.\nSwipe right to try again.")
@@ -325,17 +325,17 @@
             
             // thumbnail art
             self.artImageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:data]];
-            [self.artImageView setFrame:(IS_IPHONE5 ? CGRectMake(50.0f, 110.0f, 220.0f, 165.0f) : CGRectMake(70.0f, 95.0f, 180.0f, 135.0f))];
+            [self.artImageView setFrame:(IS_IPHONE_5 ? CGRectMake(50.0f, 110.0f, 220.0f, 165.0f) : CGRectMake(70.0f, 95.0f, 180.0f, 135.0f))];
             
             // labels
-            self.titleLabel = [[UILabel alloc] initWithFrame:(IS_IPHONE5 ? CGRectMake(50.0f, 285.0f, 220.0f, 40.0f) : CGRectMake(70.0f, 235.0f, 180.0f, 40.0f))];
+            self.titleLabel = [[UILabel alloc] initWithFrame:(IS_IPHONE_5 ? CGRectMake(50.0f, 285.0f, 220.0f, 40.0f) : CGRectMake(70.0f, 235.0f, 180.0f, 40.0f))];
             self.titleLabel.font = GILL_14;
             self.titleLabel.textAlignment = NSTextAlignmentLeft;
             self.titleLabel.numberOfLines = 0;
             self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
             self.titleLabel.text = self.sharedData.youtubeVideoTitle;
             
-            self.channelLabel = [[UILabel alloc] initWithFrame:(IS_IPHONE5 ? CGRectMake(50.0f, 325.0f, 115.0f, 15.0f) : CGRectMake(70.0f, 275.0f, 95.0f, 15.0f))];
+            self.channelLabel = [[UILabel alloc] initWithFrame:(IS_IPHONE_5 ? CGRectMake(50.0f, 325.0f, 115.0f, 15.0f) : CGRectMake(70.0f, 275.0f, 95.0f, 15.0f))];
             self.channelLabel.font = GILL_12;
             self.channelLabel.textColor = DARK_BLUE_GRAY;
             self.channelLabel.textAlignment = NSTextAlignmentLeft;
@@ -343,7 +343,7 @@
             self.channelLabel.lineBreakMode = NSLineBreakByWordWrapping;
             self.channelLabel.text = self.sharedData.youtubeVideoChannel;
             
-            self.viewsLabel = [[UILabel alloc] initWithFrame:(IS_IPHONE5 ? CGRectMake(168.0f, 326.0f, 102.0f, 15.0f) : CGRectMake(168.0f, 276.0f, 82.0f, 15.0f))];
+            self.viewsLabel = [[UILabel alloc] initWithFrame:(IS_IPHONE_5 ? CGRectMake(168.0f, 326.0f, 102.0f, 15.0f) : CGRectMake(168.0f, 276.0f, 82.0f, 15.0f))];
             self.viewsLabel.font = GILL_10;
             self.viewsLabel.textColor = BLUE_GRAY;
             self.viewsLabel.textAlignment = NSTextAlignmentRight;
@@ -385,20 +385,20 @@
             
             // album art
             self.artImageView = [[UIImageView alloc] initWithImage: [UIImage imageWithData:data]];
-            [self.artImageView setFrame:(IS_IPHONE5 ? CGRectMake((self.view.bounds.size.width - 180.0f)/2, 110.0f, 180.0f, 180.0f) : CGRectMake((self.view.bounds.size.width - 150.0f)/2, 95.0f, 150.0f, 150.0f))];
+            [self.artImageView setFrame:(IS_IPHONE_5 ? CGRectMake((self.view.bounds.size.width - 180.0f)/2, 110.0f, 180.0f, 180.0f) : CGRectMake((self.view.bounds.size.width - 150.0f)/2, 95.0f, 150.0f, 150.0f))];
             
             // title and artist labels
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.alignment = NSTextAlignmentCenter;
             
-            self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 290.0f)/2, 255.0f + (IS_IPHONE5 ? 50.0f : 0.0f), 290.0f, 30.0f)];
+            self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 290.0f)/2, 255.0f + (IS_IPHONE_5 ? 50.0f : 0.0f), 290.0f, 30.0f)];
             self.titleLabel.attributedText = [[NSMutableAttributedString alloc] initWithString:(self.sharedData.iTunesTitle ? self.sharedData.iTunesTitle : @"")
                                                                                     attributes: @{ NSParagraphStyleAttributeName: paragraphStyle,
                                                                                                    NSFontAttributeName: HELV_22,
                                                                                                    NSForegroundColorAttributeName: [UIColor whiteColor]}];
             self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             
-            self.artistLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 290.0f)/2, 285.0f + (IS_IPHONE5 ? 50.0f : 0.0f), 290.0f, 20.0f)];
+            self.artistLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 290.0f)/2, 285.0f + (IS_IPHONE_5 ? 50.0f : 0.0f), 290.0f, 20.0f)];
             self.artistLabel.attributedText = [[NSMutableAttributedString alloc] initWithString:(self.sharedData.iTunesArtist ? self.sharedData.iTunesArtist : @"")
                                                                                      attributes: @{ NSParagraphStyleAttributeName: paragraphStyle,
                                                                                                     NSFontAttributeName: HELV_16,
@@ -428,7 +428,7 @@
 - (void)displayAnnotationView
 {
     // annotation text view
-    self.annotationView = [[UITextView alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 300.0f)/2, 310.0f + (IS_IPHONE5 ? 55.0f : 0.0f), 300.0f, 47.0f)];
+    self.annotationView = [[UITextView alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 300.0f)/2, 310.0f + (IS_IPHONE_5 ? 55.0f : 0.0f), 300.0f, 47.0f)];
     self.annotationView.backgroundColor = [UIColor clearColor];
     
     self.annotationView.scrollEnabled = NO;

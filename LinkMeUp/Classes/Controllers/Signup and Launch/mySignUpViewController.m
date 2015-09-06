@@ -85,9 +85,9 @@
     [super viewDidLayoutSubviews];
     
     // move contents up
-    [self.signUpView.logo setFrame:CGRectMake((self.signUpView.bounds.size.width - 200.0f)/2, (IS_IPHONE5 ? 90.0f : 75.0f), 200.0f, 50.0f)];
+    [self.signUpView.logo setFrame:CGRectMake((self.signUpView.bounds.size.width - 200.0f)/2, (IS_IPHONE_5 ? 90.0f : 75.0f), 200.0f, 50.0f)];
     
-    CGFloat distance = (IS_IPHONE5 ? -60.0f : -30.0f);
+    CGFloat distance = (IS_IPHONE_5 ? -60.0f : -30.0f);
     
     UIView *fieldsBackground = self.signUpView.subviews[0];
     fieldsBackground.transform = CGAffineTransformTranslate(fieldsBackground.transform, 0.0f, distance);
@@ -121,7 +121,7 @@
 {
     // create legal label
     if (!self.legalLabel)
-        self.legalLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0f, (IS_IPHONE5 ? 340.0f: 320.0f), 250.0f, 100.0f)];
+        self.legalLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0f, (IS_IPHONE_5 ? 340.0f: 320.0f), 250.0f, 100.0f)];
     
     self.legalLabel.numberOfLines = 0;
     self.legalLabel.lineBreakMode = NSLineBreakByWordWrapping;

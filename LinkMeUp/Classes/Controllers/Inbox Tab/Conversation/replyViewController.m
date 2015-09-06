@@ -72,7 +72,7 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    [self.replyTable setContentOffset:CGPointMake(0.0f, MESSAGES_ROW_HEIGHT * ([self.messages count] - 1) + (IS_IPHONE5 ? 0.0f : MESSAGES_ROW_HEIGHT/2.0 - 5.0f)) animated:YES];
+    [self.replyTable setContentOffset:CGPointMake(0.0f, MESSAGES_ROW_HEIGHT * ([self.messages count] - 1) + (IS_IPHONE_5 ? 0.0f : MESSAGES_ROW_HEIGHT/2.0 - 5.0f)) animated:YES];
     
     if ([textView.text isEqualToString:@"Enter reply here..."])
         textView.text = @"";
@@ -82,7 +82,7 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-    [self.replyTable setContentOffset:CGPointMake(0.0f, MAX(0.0f, MESSAGES_ROW_HEIGHT * ([self.messages count] - 1) - (IS_IPHONE5 ? MESSAGES_ROW_HEIGHT : MESSAGES_ROW_HEIGHT/2.0 + 5.0f))) animated:YES];
+    [self.replyTable setContentOffset:CGPointMake(0.0f, MAX(0.0f, MESSAGES_ROW_HEIGHT * ([self.messages count] - 1) - (IS_IPHONE_5 ? MESSAGES_ROW_HEIGHT : MESSAGES_ROW_HEIGHT/2.0 + 5.0f))) animated:YES];
     
     if ([textView.text isEqualToString:@""])
         textView.text = @"Enter reply here...";
@@ -409,11 +409,11 @@
         initialOffset = YES;
         
         // whether setContentOffset will animate table
-        BOOL willAnimate = (IS_IPHONE5 && [self.messages count] == 1 ? NO : YES);
+        BOOL willAnimate = (IS_IPHONE_5 && [self.messages count] == 1 ? NO : YES);
         
         if (willAnimate)
         {
-            [self.replyTable setContentOffset:CGPointMake(0.0f, MESSAGES_ROW_HEIGHT * ([self.messages count] - 1) + (IS_IPHONE5 ? 0.0f : MESSAGES_ROW_HEIGHT/2.0 - 5.0f)) animated:YES];
+            [self.replyTable setContentOffset:CGPointMake(0.0f, MESSAGES_ROW_HEIGHT * ([self.messages count] - 1) + (IS_IPHONE_5 ? 0.0f : MESSAGES_ROW_HEIGHT/2.0 - 5.0f)) animated:YES];
         }
         
         else
