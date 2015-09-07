@@ -36,8 +36,9 @@ Production and Analytics/Beta Testing/
 Production and Analytics/Crash Reports/
 Production and Analytics/EC2 Files/
 Production and Analytics/Export IPAs/
-Production and Analytics/Subscription List/
-!Production and Analytics/Subscription List/extract_emails.py
+Production and Analytics/Subscription List/Emails/
+Production and Analytics/Subscription List/Mobile Numbers/
+Production and Analytics/Subscription List/Leads/
 
 Android Development/App Walkthrough.pptx
 Android Development/ConnectionsLogic.txt
