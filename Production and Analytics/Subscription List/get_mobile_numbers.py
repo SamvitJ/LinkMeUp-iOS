@@ -1,6 +1,7 @@
 import os 
 import json
 import sys
+import datetime
 
 sys.path.insert(0, '/Users/sanjain/Documents/Samvit Jain/LinkMeUp/Production and Analytics/Data Requests')
 
@@ -17,8 +18,11 @@ user_data = returnClassData("_User")
 for user in user_data:
 
     user_mobile_number = user.get("mobile_number", None)
+    user_createdAt = user.get("createdAt", None)
 
-    if user_mobile_number is not None:
+    three_days_ago = datetime.datetime.utcnow() - datetime.timedelta(days=3)
+
+    if user_mobile_number is not None and user_createdAt <= three_days_ago.isoformat():
         print user_mobile_number
         mobile_number_list.append(user_mobile_number)
 
