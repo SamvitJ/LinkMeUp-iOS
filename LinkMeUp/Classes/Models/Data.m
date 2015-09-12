@@ -10,7 +10,7 @@
 
 @interface Data()
 {
-    /*// internal inst. variables ******
+    /* internal inst. variables ******
      
      // load connections
     int newReceivedRequestUpdates;

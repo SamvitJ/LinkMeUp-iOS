@@ -42,7 +42,6 @@
     self.sortedData = [[NSMutableArray alloc] initWithArray:[self.receiversData sortedArrayUsingDescriptors:sortDescriptors]];
 
     // remove "me", if also sent to myself
-    
     for (NSDictionary *receiver in self.sortedData)
     {
         if ([receiver[@"identity"] isEqualToString:@"me"])
