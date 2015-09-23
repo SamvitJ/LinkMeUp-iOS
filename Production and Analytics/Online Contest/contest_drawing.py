@@ -42,8 +42,8 @@ participantList = []
 whiteList = ['aiuSTn5mRz', 'R5Np0HPpBH', 'iLC2RikhL3', 'xUv2Tl56dU', 'Ai2pCedWWS', 'jiflPG7Xd1', 'aftT9aLur9', 'epR9xFDRTh', 'djdZqG7osL', 'TqFUnEDiie', 'umHzK7AkTT'] 
 #             supersurb,    Anand N.,     Andrew W.,    Tristan H.,   Caren B.,     Adarsh K.,    Justin B.,    akritish,     Sai G.,       Devansh K.,   Ishan N.     
 
-blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ', 'Ok4Jhbxqen', 'TvXEq0Bl0d', 'V71YkER7ka', 'X0qvVAfjgw', 'UNF2h9Uyg1', '7ea3cG2b80', 't8DgS2nJ0i']
-#             Samvit J.,    Ananya J.,    Sanjay J.,    Vishakha A.,  Sunny B.,     Little P.,    Alex M.,      Ishan R.,     Meg H.,       Jacob K.,     Nick W.,      Deena S.
+blackList = ['ZRbJayScs3', 'QBjQaNUYOW', 'e4AmThaawe', '4RH2O9bjTN', 'oaluUW5QPZ', 'Ok4Jhbxqen', 'TvXEq0Bl0d', 'V71YkER7ka', 'X0qvVAfjgw', 'UNF2h9Uyg1', '7ea3cG2b80', 't8DgS2nJ0i', '0NSA1byi10', 'do1CSgzC09', 'FEoK16gQPb']
+#             Samvit J.,    Ananya J.,    Sanjay J.,    Vishakha A.,  Sunny B.,     Little P.,    Alex M.,      Ishan R.,     Meg H.,       Jacob K.,     Nick W.,      Deena S.      Jihoon L.     David A. H.   Sanjay J.
 
 start_date = datetime.datetime(2015, 7, 22, 2, 27, 00, tzinfo=pytz.utc)
 # file_date = "07:23:15"
@@ -125,10 +125,10 @@ for candidateId in candidateIdList:
             # check if Greater Seattle Area resident
             if user_phone is not None:
 
-                if ((user_phone[0:3] == '425' or user_phone[0:4] == '1425' or 
-                     user_phone[0:3] == '206' or user_phone[0:4] == '1206' or 
-                     user_phone[0:3] == '253' or user_phone[0:4] == '1253' or
-                     user_phone[0:3] == '360' or user_phone[0:4] == '1360') 
+                if ((user_phone[0:3] == '425' or user_phone[0:4] == '1425' or user_phone[0:5] == '+1425' or
+                     user_phone[0:3] == '206' or user_phone[0:4] == '1206' or user_phone[0:5] == '+1206' or
+                     user_phone[0:3] == '253' or user_phone[0:4] == '1253' or user_phone[0:5] == '+1253' or
+                     user_phone[0:3] == '360' or user_phone[0:4] == '1360' or user_phone[0:5] == '+1360')
                     and user_id not in blackList):
 
                     participantList.append(user)

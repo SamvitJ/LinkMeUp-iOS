@@ -16,6 +16,9 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+# Python
+*.pyc
+
 # Large media files
 *.mov
 *.mp3
@@ -24,23 +27,25 @@ DerivedData
 
 # Other files/folders
 Documents/Promotional/Promo Codes/*
-Documents/Promotional/Team/*.jpg
 Documents/Promotional/App Reviews/*
 
-Production and Analytics/Analytics/
-!Production and Analytics/Analytics/rank_users.py
+Production and Analytics/Analytics/user_stats.txt
 Production and Analytics/Beta Testing/
 Production and Analytics/Crash Reports/
 Production and Analytics/EC2 Files/
 Production and Analytics/Export IPAs/
-Production and Analytics/Subscription List/
-!Production and Analytics/Subscription List/extract_emails.py
+Production and Analytics/Subscription List/Emails/
+Production and Analytics/Subscription List/Mobile Numbers/
+Production and Analytics/Subscription List/Leads/
 
 Android Development/App Walkthrough.pptx
 Android Development/ConnectionsLogic.txt
 Android Development/Debugger Logs/
 Android Development/Employment_Contract_Signed.pdf
 Android Development/Meeting Notes.docx
-Android Development/Signup and Launch Flow/
+Android Development/Signup and Launch Flow/*
+!Android Development/Signup and Launch Flow/Launch Flow.docx
+!Android Development/Signup and Launch Flow/Signup Flow.docx
 Android Development/To Do Lists/iOS Code Documentation.docx
 Android Development/To Do Lists/Auxiliary Work.docx
+Android Development/To Do Lists/Bug Screenshots/
